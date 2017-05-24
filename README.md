@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.2**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.9
+
 **v1.0.1**:
 
 - Fixed an issue where the found class declarations would be reset for each new file.
