@@ -24,7 +24,7 @@ test("blabla", t => {
 		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IBar, Bar>();
 		${DIConfig.exportName}.${DIConfig.getName}<IBar>();
 	`);
-
+	
 	// An exception didn't occur. Success!
 	t.true(true);
 });

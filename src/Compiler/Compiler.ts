@@ -13,7 +13,7 @@ import {ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
  * @author Frederik Wessberg
  */
 export class Compiler implements ICompiler {
-	private static classes: ClassIndexer;
+	private static classes: ClassIndexer = {};
 	private static readonly mappedInterfaces: IMappedInterfaceToImplementationMap = {};
 	private static readonly blacklistedFilepaths: RegExp[] = [
 		/node_modules\/tslib\/tslib\.[^.]*\.(js|ts)/,
@@ -54,7 +54,7 @@ export class Compiler implements ICompiler {
 		const statements = host.addFile(filepath, code);
 
 		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
-		Compiler.classes = host.getClassDeclarations(statements, true);
+		Object.assign(Compiler.classes, host.getClassDeclarations(statements, true));
 
 		// Finds all references to the DIContainer instance.
 		const identifiers = this.containerReferenceFinder.find({host, statements});

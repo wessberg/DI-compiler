@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.1**:
+
+- Fixed an issue where the found class declarations would be reset for each new file.
+
 **v1.0.0**:
 
 - First release.
