@@ -1,0 +1,51 @@
+{
+  "name": "@wessberg/di-compiler",
+  "version": "1.0.0",
+  "description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es2015/index.js",
+  "browser": "./dist/es2015/index.js",
+  "types": "./dist/es2015/index.d.ts",
+  "typings": "./dist/es2015/index.d.ts",
+  "scripts": {
+    "clean:dist": "rm -r -f dist",
+    "clean:compiled": "rm -r -f compiled",
+    "clean": "npm run clean:dist && npm run clean:compiled",
+    "build:pre": "npm run clean && mkdir -p dist/cjs/interface && mkdir -p dist/es2015/interface",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs -p tsconfig.dist.json",
+    "build:es2015": "tsc --module es2015 --outDir dist/es2015 -p tsconfig.dist.json",
+    "build": "npm run build:pre && npm run build:cjs && npm run build:es2015",
+    "test:pre": "npm run clean:compiled && tsc --module commonjs --target es2017 --sourceMap",
+    "test": "NODE_ENV=TEST npm run test:pre && ava"
+  },
+  "keywords": [
+    "DI",
+    "dependency injection",
+    "ioc",
+    "inversion",
+    "service",
+    "container",
+    "newable",
+    "reflection",
+    "singleton",
+    "transient",
+    "compiler"
+  ],
+  "author": "Frederik Wessberg",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^7.0.22",
+    "@wessberg/di": "^1.0.15",
+    "ava": "^0.19.1",
+    "typescript": "2.3.3"
+  },
+  "dependencies": {
+    "@wessberg/codeanalyzer": "^1.0.8",
+    "@wessberg/fileloader": "^1.0.2",
+    "@wessberg/globalobject": "^1.0.3",
+    "@wessberg/marshaller": "^1.0.22",
+    "@wessberg/typedetector": "^1.0.5",
+    "magic-string": "^0.20.0",
+    "tslib": "^1.7.1"
+  }
+}

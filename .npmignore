@@ -1,0 +1,7 @@
+/src/
+tsconfig.*
+.gitignore
+/test/
+/compiled/
+.idea
+/typings/
