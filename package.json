@@ -1,6 +1,6 @@
 {
   "name": "@wessberg/di-compiler",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
   "main": "./dist/cjs/index.js",
   "module": "./dist/es2015/index.js",
