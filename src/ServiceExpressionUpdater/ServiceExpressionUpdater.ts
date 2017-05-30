@@ -28,7 +28,7 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 				Object.assign(mappedInterfaces, this.handleRegisterExpression({codeContainer, expression, classes}));
 			}
 
-			if (expression.identifier === this.config.getName) {
+			if (expression.identifier === this.config.getName || expression.identifier === this.config.hasName) {
 				this.handleGetExpression(codeContainer, expression);
 			}
 		});

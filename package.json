@@ -35,17 +35,17 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^7.0.22",
-    "@wessberg/di": "^1.0.15",
+    "@wessberg/di": "^1.0.16",
     "ava": "^0.19.1",
-    "typescript": "2.3.3"
+    "typescript": "2.3.4"
   },
   "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.11",
+    "@wessberg/codeanalyzer": "^1.0.17",
     "@wessberg/fileloader": "^1.0.2",
     "@wessberg/globalobject": "^1.0.3",
     "@wessberg/marshaller": "^1.0.22",
     "@wessberg/typedetector": "^1.0.5",
-    "magic-string": "^0.20.0",
+    "magic-string": "^0.21.3",
     "tslib": "^1.7.1"
   }
 }

@@ -3,5 +3,6 @@ export interface IDIConfig {
 	registerTransientName: string;
 	registerSingletonName: string;
 	getName: string;
+	hasName: string;
 	interfaceConstructorArgumentsMapName: string;
 }

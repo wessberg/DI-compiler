@@ -5,5 +5,6 @@ export const DIConfig: IDIConfig = {
 	registerSingletonName: "registerSingleton",
 	registerTransientName: "registerTransient",
 	getName: "get",
+	hasName: "has",
 	interfaceConstructorArgumentsMapName: "___interfaceConstructorArgumentsMap___"
 };

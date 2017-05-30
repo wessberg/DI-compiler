@@ -24,6 +24,12 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.5**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.17
+- Bumped DI dependency to ^v1.0.16
+- `has` expressions can now be handled.
+
 **v1.0.4**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.11

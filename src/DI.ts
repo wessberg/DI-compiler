@@ -2,7 +2,6 @@ import {Marshaller} from "@wessberg/marshaller";
 import {CodeAnalyzer} from "@wessberg/codeanalyzer";
 import {TypeDetector} from "@wessberg/typedetector";
 import * as MagicString from "magic-string";
-import * as ts from "typescript";
 import {ClassConstructorArgumentsStringifier} from "./ClassConstructorArgumentsStringifier/ClassConstructorArgumentsStringifier";
 import {ClassConstructorArgumentsValidator} from "./ClassConstructorArgumentsValidator/ClassConstructorArgumentsValidator";
 import {Compiler} from "./Compiler/Compiler";
@@ -21,7 +20,7 @@ export interface ICompileFileResult extends IHasAlteredable {
 const typeDetector = new TypeDetector();
 const marshaller = new Marshaller(typeDetector);
 const compiler = new Compiler(
-	new CodeAnalyzer(marshaller, new FileLoader(), ts),
+	new CodeAnalyzer(marshaller, new FileLoader()),
 	new ContainerReferenceFinder(DIConfig),
 	new ServiceExpressionFinder(),
 	new ServiceExpressionUpdater(DIConfig, typeDetector),
