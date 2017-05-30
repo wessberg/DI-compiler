@@ -4,7 +4,7 @@ import {IServiceExpressionFinder} from "../ServiceExpressionFinder/Interface/ISe
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgumentsStringifier/Interface/IClassConstructorArgumentsStringifier";
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
-import {ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
+import {BindingIdentifier, ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
 
 /**
  * The compiler will upgrade the source code. It looks for every time a service is registered and mimics reflection.
@@ -52,9 +52,14 @@ export class Compiler implements ICompiler {
 		const code = codeContainer.code.toString();
 		const {host} = this;
 		const statements = host.addFile(filepath, code);
+		const imports = host.getImportDeclarationsForFile(filepath, true);
+		const paths: Set<string> = new Set([filepath, ...imports.map(importDeclaration => {
+			if (importDeclaration.source instanceof BindingIdentifier) return "";
+			return importDeclaration.source.fullPath();
+		}).filter(part => part.length > 0)]);
 
 		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
-		Object.assign(Compiler.classes, host.getClassDeclarations(statements, true));
+		paths.forEach(path => Object.assign(Compiler.classes, host.getClassDeclarationsForFile(path, true)));
 
 		// Finds all references to the DIContainer instance.
 		const identifiers = this.containerReferenceFinder.find({host, statements});
@@ -67,4 +72,5 @@ export class Compiler implements ICompiler {
 
 		return codeContainer;
 	}
+
 }

@@ -20,7 +20,8 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 	 * @returns {string}
 	 */
 	public getClassConstructorArgumentsStringified (classes: ClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string {
-		let map = `${GlobalObjectIdentifier}.${this.config.interfaceConstructorArgumentsMapName} = {\n`;
+		const identifier = `${GlobalObjectIdentifier}.${this.config.interfaceConstructorArgumentsMapName}`;
+		let map = "{\n";
 		const keys = Object.keys(mappedInterfaces);
 		const classKeys = Object.keys(classes);
 
@@ -35,7 +36,8 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 			map += "\n";
 		});
 		map += "};";
-		return map;
+		const returnValue = `const ${this.config.interfaceConstructorArgumentsMapName} = ${map}`;
+		return returnValue + `\n${identifier} = ${identifier} != null ? Object.assign(${identifier}, ${this.config.interfaceConstructorArgumentsMapName}) : ${this.config.interfaceConstructorArgumentsMapName};`;
 	}
 
 	/**

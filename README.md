@@ -24,6 +24,11 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.6**:
+
+- The Compiler will now parse all imports for classes before proceeding.
+- The Compiler will now check if another global constructor arguments map exists and assign to it if it exists instead of overwriting it.
+
 **v1.0.5**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.17

@@ -2,9 +2,7 @@ import {test} from "ava";
 import {compile} from "../src/DI";
 import {DIConfig} from "../src/DIConfig/DIConfig";
 
-
-
-test("blabla", t => {
+test("will compile without throwing exceptions. #1", t => {
 	compile("a_file.ts", `
 		interface IFoo {}
 		interface IBar {}
@@ -24,7 +22,18 @@ test("blabla", t => {
 		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IBar, Bar>();
 		${DIConfig.exportName}.${DIConfig.getName}<IBar>();
 	`);
-	
+
+	// An exception didn't occur. Success!
+	t.true(true);
+});
+
+test("will compile without throwing exceptions. #2", t => {
+	compile("a_file.ts", `
+		import {IFoo, Foo} from "test/Static/Service";
+
+		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IFoo, Foo>();
+	`);
+
 	// An exception didn't occur. Success!
 	t.true(true);
 });
