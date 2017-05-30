@@ -40,7 +40,7 @@
     "typescript": "2.3.4"
   },
   "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.17",
+    "@wessberg/codeanalyzer": "^1.0.18",
     "@wessberg/fileloader": "^1.0.2",
     "@wessberg/globalobject": "^1.0.3",
     "@wessberg/marshaller": "^1.0.22",

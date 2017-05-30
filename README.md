@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.8**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.18
+
 **v1.0.7**:
 
 - The Compiler will now recursively parse all imports, rather than just one step up.
