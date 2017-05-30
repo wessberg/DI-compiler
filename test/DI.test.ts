@@ -37,3 +37,14 @@ test("will compile without throwing exceptions. #2", t => {
 	// An exception didn't occur. Success!
 	t.true(true);
 });
+
+test("will compile without throwing exceptions. #3", t => {
+	compile("a_file.ts", `
+		import {IFoo, Foo} from "test/Static/ReExport";
+
+		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IFoo, Foo>();
+	`);
+
+	// An exception didn't occur. Success!
+	t.true(true);
+});

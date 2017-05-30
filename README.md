@@ -24,6 +24,11 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.7**:
+
+- The Compiler will now recursively parse all imports, rather than just one step up.
+- The Compiler will now also check exports in case modules are exported from another file.
+
 **v1.0.6**:
 
 - The Compiler will now parse all imports for classes before proceeding.

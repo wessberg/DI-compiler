@@ -14,6 +14,7 @@ import {BindingIdentifier, ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanal
  */
 export class Compiler implements ICompiler {
 	private static classes: ClassIndexer = {};
+	private static resolvedPaths: Set<string> = new Set();
 	private static readonly mappedInterfaces: IMappedInterfaceToImplementationMap = {};
 	private static readonly blacklistedFilepaths: RegExp[] = [
 		/node_modules\/tslib\/tslib\.[^.]*\.(js|ts)/,
@@ -52,14 +53,7 @@ export class Compiler implements ICompiler {
 		const code = codeContainer.code.toString();
 		const {host} = this;
 		const statements = host.addFile(filepath, code);
-		const imports = host.getImportDeclarationsForFile(filepath, true);
-		const paths: Set<string> = new Set([filepath, ...imports.map(importDeclaration => {
-			if (importDeclaration.source instanceof BindingIdentifier) return "";
-			return importDeclaration.source.fullPath();
-		}).filter(part => part.length > 0)]);
-
-		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
-		paths.forEach(path => Object.assign(Compiler.classes, host.getClassDeclarationsForFile(path, true)));
+		this.resolveDependencies(filepath);
 
 		// Finds all references to the DIContainer instance.
 		const identifiers = this.containerReferenceFinder.find({host, statements});
@@ -71,6 +65,38 @@ export class Compiler implements ICompiler {
 		this.serviceExpressionUpdater.update({codeContainer, expressions, classes: Compiler.classes, mappedInterfaces: Compiler.mappedInterfaces});
 
 		return codeContainer;
+	}
+
+	private resolveDependencies (filepath: string): void {
+		Compiler.resolvedPaths.add(filepath);
+		const imports = this.host.getImportDeclarationsForFile(filepath, true);
+		const exports = this.host.getExportDeclarationsForFile(filepath, true);
+
+		// Take all relevant import paths.
+		const importPaths: string[] = imports.map(importDeclaration => {
+			if (importDeclaration.source instanceof BindingIdentifier) return "";
+			return importDeclaration.source.fullPath();
+		}).filter(part => part.length > 0);
+
+		// Take all relevant export paths.
+		const exportPaths: string[] = exports.map(exportDeclaration => {
+			if (exportDeclaration.source instanceof BindingIdentifier) return "";
+			const fullPath = exportDeclaration.source.fullPath();
+			if (fullPath === exportDeclaration.filePath) return "";
+			return fullPath;
+		}).filter(part => part.length > 0);
+
+		// Dedupe and add with existing filepath.
+		const paths = new Set([filepath, ...importPaths, ...exportPaths]);
+
+		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
+		paths.forEach(path => {
+			const classes = this.host.getClassDeclarationsForFile(path, true);
+			Object.assign(Compiler.classes, classes);
+
+			// Recurse all through the tree of dependencies.
+			if (!Compiler.resolvedPaths.has(path)) this.resolveDependencies(path);
+		});
 	}
 
 }
