@@ -4,17 +4,17 @@ import {IGetOptions, IRegisterOptions} from "@wessberg/di";
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater, IServiceExpressionUpdaterRegisterExpressionHandlerOptions, IServiceExpressionUpdaterUpdateMethodOptions} from "./Interface/IServiceExpressionUpdater";
 import {ICallExpression} from "@wessberg/codeanalyzer";
 import {ITypeDetector} from "@wessberg/typedetector";
-import {IdentifierValidator, IIdentifierValidator} from "@wessberg/compiler-common";
+import {IIdentifierValidator} from "@wessberg/compiler-common";
 
 /**
  * Walks through all call expressions on the DIContainer instance and upgrades their arguments.
  * @author Frederik Wessberg
  */
 export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
-	private identifierValidator: IIdentifierValidator = new IdentifierValidator();
 
 	constructor (private config: IDIConfig,
-							 private typeDetector: ITypeDetector) {
+							 private typeDetector: ITypeDetector,
+							 private identifierValidator: IIdentifierValidator) {
 	}
 
 	/**

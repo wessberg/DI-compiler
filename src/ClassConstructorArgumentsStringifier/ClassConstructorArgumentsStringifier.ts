@@ -3,13 +3,15 @@ import {IDIConfig} from "../DIConfig/Interface/IDIConfig";
 import {IMappedInterfaceToImplementationMap} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {ClassIndexer, IParameter} from "@wessberg/codeanalyzer";
 import {GlobalObjectIdentifier} from "@wessberg/globalobject";
+import {IIdentifierValidator} from "@wessberg/compiler-common";
 
 /**
  * This class generates a stringified map between classes and the services that their constructors depend on.
  * @author Frederik Wessberg
  */
 export class ClassConstructorArgumentsStringifier implements IClassConstructorArgumentsStringifier {
-	constructor (private config: IDIConfig) {
+	constructor (private config: IDIConfig,
+							 private identifierValidator: IIdentifierValidator) {
 	}
 
 	/**
@@ -26,9 +28,10 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 		const classKeys = Object.keys(classes);
 
 		keys.forEach((key, index) => {
-			const classDeclaration = classes[mappedInterfaces[key]];
-			if (classDeclaration == null) throw new ReferenceError(`${this.constructor.name} could not get class constructor arguments: The interface "${key}" had no matching class implementation. Have you registered it as a service?`);
-			const mappedArguments = classDeclaration.constructor == null ? [] : classDeclaration.constructor.parameters.parametersList.map(parameter => this.normalizeConstructorParameter(parameter, mappedInterfaces)).join(", ");
+			const className = mappedInterfaces[key];
+			const classDeclaration = classes[className];
+			if (classDeclaration == null && !this.identifierValidator.isBuiltIn(className)) throw new ReferenceError(`${this.constructor.name} could not get class constructor arguments: The interface "${key}" had no matching class implementation. Have you registered it as a service?`);
+			const mappedArguments = classDeclaration == null || classDeclaration.constructor == null ? [] : classDeclaration.constructor.parameters.parametersList.map(parameter => this.normalizeConstructorParameter(parameter, mappedInterfaces)).join(", ");
 
 			map += `\t${key}: `;
 			map += `[${mappedArguments}]`;

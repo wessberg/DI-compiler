@@ -24,9 +24,13 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.12**:
+
+- Fixed a bug.
+
 **v1.0.11**:
 
-- Built-in constructors (for example "Proxy" or anything that is a native part of the environment) can now be added as services too.
+- Built-in constructors can now be added as services too.
 
 **v1.0.10**:
 

@@ -11,6 +11,7 @@ import {DIConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
 import {FileLoader} from "@wessberg/fileloader";
+import {IdentifierValidator} from "@wessberg/compiler-common";
 
 export interface ICompileFileResult extends IHasAlteredable {
 	code: string;
@@ -19,13 +20,14 @@ export interface ICompileFileResult extends IHasAlteredable {
 
 const typeDetector = new TypeDetector();
 const marshaller = new Marshaller(typeDetector);
+const identifierValidator = new IdentifierValidator();
 const compiler = new Compiler(
 	new CodeAnalyzer(marshaller, new FileLoader()),
 	new ContainerReferenceFinder(DIConfig),
 	new ServiceExpressionFinder(),
-	new ServiceExpressionUpdater(DIConfig, typeDetector),
+	new ServiceExpressionUpdater(DIConfig, typeDetector, identifierValidator),
 	new ClassConstructorArgumentsValidator(),
-	new ClassConstructorArgumentsStringifier(DIConfig)
+	new ClassConstructorArgumentsStringifier(DIConfig, identifierValidator)
 );
 
 /**
