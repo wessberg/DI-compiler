@@ -5,6 +5,7 @@ import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater} from "..
 import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgumentsStringifier/Interface/IClassConstructorArgumentsStringifier";
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
 import {BindingIdentifier, ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
+import {IPathValidator, PathValidator} from "@wessberg/compiler-common";
 
 /**
  * The compiler will upgrade the source code. It looks for every time a service is registered and mimics reflection.
@@ -16,11 +17,7 @@ export class Compiler implements ICompiler {
 	private static classes: ClassIndexer = {};
 	private static resolvedPaths: Set<string> = new Set();
 	private static readonly mappedInterfaces: IMappedInterfaceToImplementationMap = {};
-	private static readonly blacklistedFilepaths: RegExp[] = [
-		/tslib\.[^.]*\.(js|ts)/,
-		/typescript-helpers/,
-		/rollup-plugin-/
-	];
+	private pathValidator: IPathValidator = new PathValidator();
 
 	constructor (private host: ICodeAnalyzer,
 							 private containerReferenceFinder: IContainerReferenceFinder,
@@ -48,7 +45,7 @@ export class Compiler implements ICompiler {
 	 * @returns {ICompilerResult}
 	 */
 	public compile (filepath: string, codeContainer: ICompilerResult): ICompilerResult {
-		if (Compiler.blacklistedFilepaths.some(path => path.test(filepath))) return {hasAltered: false, code: codeContainer.code};
+		if (this.pathValidator.isBlacklisted(filepath)) return {hasAltered: false, code: codeContainer.code};
 
 		const code = codeContainer.code.toString();
 		const {host} = this;

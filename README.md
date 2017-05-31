@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.10**:
+
+- The package began depending on 'compiler-common' rather than setting up its own blacklist filter.
+
 **v1.0.9**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.18
