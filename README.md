@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.17**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.24.
+
 **v1.0.16**:
 
 - The DI-compiler will now skip classes that has a 'noInject' decorator.
