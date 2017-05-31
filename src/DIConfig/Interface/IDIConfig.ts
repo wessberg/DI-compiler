@@ -1,3 +1,7 @@
+export interface IDIConfigDecoratorConfig {
+	noInjectName: string;
+}
+
 export interface IDIConfig {
 	exportName: string;
 	registerTransientName: string;
@@ -5,4 +9,5 @@ export interface IDIConfig {
 	getName: string;
 	hasName: string;
 	interfaceConstructorArgumentsMapName: string;
+	decorator: IDIConfigDecoratorConfig;
 }

@@ -6,5 +6,8 @@ export const DIConfig: IDIConfig = {
 	registerTransientName: "registerTransient",
 	getName: "get",
 	hasName: "has",
-	interfaceConstructorArgumentsMapName: "___interfaceConstructorArgumentsMap___"
+	interfaceConstructorArgumentsMapName: "___interfaceConstructorArgumentsMap___",
+	decorator: {
+		noInjectName: "noInject"
+	}
 };

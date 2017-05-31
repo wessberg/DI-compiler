@@ -35,12 +35,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^7.0.22",
-    "@wessberg/di": "^1.0.16",
+    "@wessberg/di": "^1.0.17",
     "ava": "^0.19.1",
     "typescript": "2.3.4"
   },
   "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.22",
+    "@wessberg/codeanalyzer": "^1.0.23",
     "@wessberg/compiler-common": "^1.0.0",
     "@wessberg/fileloader": "^1.0.2",
     "@wessberg/globalobject": "^1.0.5",

@@ -6,6 +6,7 @@ import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgument
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
 import {BindingIdentifier, ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
 import {IPathValidator, PathValidator} from "@wessberg/compiler-common";
+import {DIConfig} from "../DIConfig/DIConfig";
 
 /**
  * The compiler will upgrade the source code. It looks for every time a service is registered and mimics reflection.
@@ -88,12 +89,27 @@ export class Compiler implements ICompiler {
 
 		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
 		paths.forEach(path => {
-			const classes = this.host.getClassDeclarationsForFile(path, true);
+			const classes = this.filterOutNoInjectClasses(this.host.getClassDeclarationsForFile(path, true));
 			Object.assign(Compiler.classes, classes);
 
 			// Recurse all through the tree of dependencies.
 			if (!Compiler.resolvedPaths.has(path)) this.resolveDependencies(path);
 		});
+	}
+
+	/**
+	 * Returns a new class indexer will all classes that doesn't have a @noInject decorator.
+	 * @param classes
+	 * @returns {ClassIndexer}
+	 */
+	private filterOutNoInjectClasses (classes: ClassIndexer): ClassIndexer {
+		const newClassIndexer: ClassIndexer = {};
+		Object.keys(classes).forEach(key => {
+			const declaration = classes[key];
+			const hasNoInjectDecorator = declaration.decorators[DIConfig.decorator.noInjectName] != null;
+			if (!hasNoInjectDecorator) newClassIndexer[key] = declaration;
+		});
+		return newClassIndexer;
 	}
 
 }
