@@ -24,6 +24,11 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.9**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.18
+- Fixed issue where files matching *tslib* would be parsed.
+
 **v1.0.8**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.18

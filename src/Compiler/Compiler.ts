@@ -17,7 +17,7 @@ export class Compiler implements ICompiler {
 	private static resolvedPaths: Set<string> = new Set();
 	private static readonly mappedInterfaces: IMappedInterfaceToImplementationMap = {};
 	private static readonly blacklistedFilepaths: RegExp[] = [
-		/node_modules\/tslib\/tslib\.[^.]*\.(js|ts)/,
+		/tslib\.[^.]*\.(js|ts)/,
 		/typescript-helpers/,
 		/rollup-plugin-/
 	];
