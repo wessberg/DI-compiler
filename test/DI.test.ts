@@ -2,7 +2,7 @@ import {test} from "ava";
 import {compile} from "../src/DI";
 import {DIConfig} from "../src/DIConfig/DIConfig";
 
-test("will compile without throwing exceptions. #1", t => {
+test.only("will compile without throwing exceptions. #1", t => {
 	compile("a_file.ts", `
 		interface IFoo {}
 		interface IBar {}
