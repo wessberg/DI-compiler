@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.14**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.22.
+
 **v1.0.13**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.21.
