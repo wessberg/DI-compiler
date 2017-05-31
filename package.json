@@ -43,7 +43,7 @@
     "@wessberg/codeanalyzer": "^1.0.22",
     "@wessberg/compiler-common": "^1.0.0",
     "@wessberg/fileloader": "^1.0.2",
-    "@wessberg/globalobject": "^1.0.3",
+    "@wessberg/globalobject": "^1.0.5",
     "@wessberg/marshaller": "^1.0.22",
     "@wessberg/typedetector": "^1.0.5",
     "magic-string": "^0.21.3",

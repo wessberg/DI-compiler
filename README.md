@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.15**:
+
+- A shim for the global object will now be added before the class constructor arguments map so that `global` is defined in any environment.
+
 **v1.0.14**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.22.

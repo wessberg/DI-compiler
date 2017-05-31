@@ -2,7 +2,7 @@ import {IClassConstructorArgumentsStringifier} from "./Interface/IClassConstruct
 import {IDIConfig} from "../DIConfig/Interface/IDIConfig";
 import {IMappedInterfaceToImplementationMap} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {ClassIndexer, IParameter} from "@wessberg/codeanalyzer";
-import {GlobalObjectIdentifier} from "@wessberg/globalobject";
+import {shimGlobalObjectStringified} from "@wessberg/globalobject";
 import {IIdentifierValidator} from "@wessberg/compiler-common";
 
 /**
@@ -22,7 +22,8 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 	 * @returns {string}
 	 */
 	public getClassConstructorArgumentsStringified (classes: ClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string {
-		const identifier = `${GlobalObjectIdentifier}.${this.config.interfaceConstructorArgumentsMapName}`;
+		const globalShim = `${shimGlobalObjectStringified}\n`;
+		const identifier = `global.${this.config.interfaceConstructorArgumentsMapName}`;
 		let map = "{\n";
 		const keys = Object.keys(mappedInterfaces);
 		const classKeys = Object.keys(classes);
@@ -39,7 +40,7 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 			map += "\n";
 		});
 		map += "};";
-		const returnValue = `const ${this.config.interfaceConstructorArgumentsMapName} = ${map}`;
+		const returnValue = `${globalShim}\nconst ${this.config.interfaceConstructorArgumentsMapName} = ${map}`;
 		return returnValue + `\n${identifier} = ${identifier} != null ? Object.assign(${identifier}, ${this.config.interfaceConstructorArgumentsMapName}) : ${this.config.interfaceConstructorArgumentsMapName};`;
 	}
 
