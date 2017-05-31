@@ -4,12 +4,15 @@ import {IGetOptions, IRegisterOptions} from "@wessberg/di";
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater, IServiceExpressionUpdaterRegisterExpressionHandlerOptions, IServiceExpressionUpdaterUpdateMethodOptions} from "./Interface/IServiceExpressionUpdater";
 import {ICallExpression} from "@wessberg/codeanalyzer";
 import {ITypeDetector} from "@wessberg/typedetector";
+import {IdentifierValidator, IIdentifierValidator} from "@wessberg/compiler-common";
 
 /**
  * Walks through all call expressions on the DIContainer instance and upgrades their arguments.
  * @author Frederik Wessberg
  */
 export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
+	private identifierValidator: IIdentifierValidator = new IdentifierValidator();
+
 	constructor (private config: IDIConfig,
 							 private typeDetector: ITypeDetector) {
 	}
@@ -46,7 +49,9 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 		if (expression.type.bindings == null) throw new TypeError(`${this.handleRegisterExpression.name} could not handle a register expression: No generic type arguments were given!`);
 		const [identifier, implementation] = expression.type.bindings;
 		const classDeclaration = classes[implementation.name];
-		if (classDeclaration == null) throw new ReferenceError(`${this.constructor.name} could not find a class declaration for the implementation: ${implementation.name}`);
+
+		// If the class hasn't been registered and it isn't a built-in part of the language or environment, throw an error.
+		if (classDeclaration == null && !this.identifierValidator.isBuiltIn(implementation.name)) throw new ReferenceError(`${this.constructor.name} could not find a class declaration for the implementation: ${implementation.name}`);
 
 		const config: IRegisterOptions<string> = {
 			// The identifier for the service will be the first generic argument - the interface.
