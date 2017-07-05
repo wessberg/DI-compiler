@@ -34,18 +34,18 @@
   "author": "Frederik Wessberg",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^7.0.22",
+    "@types/node": "^8.0.7",
     "@wessberg/di": "^1.0.17",
-    "ava": "^0.19.1",
-    "typescript": "2.3.4"
+    "ava": "^0.20.0",
+    "typescript": "2.4.1"
   },
   "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.25",
+    "@wessberg/codeanalyzer": "^1.0.30",
     "@wessberg/compiler-common": "^1.0.0",
-    "@wessberg/fileloader": "^1.0.2",
+    "@wessberg/fileloader": "^1.0.3",
     "@wessberg/globalobject": "^1.0.5",
-    "@wessberg/marshaller": "^1.0.22",
-    "@wessberg/typedetector": "^1.0.5",
+    "@wessberg/marshaller": "^1.0.24",
+    "@wessberg/typedetector": "^1.0.6",
     "magic-string": "^0.21.3",
     "tslib": "^1.7.1"
   }
