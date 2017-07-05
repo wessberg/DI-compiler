@@ -26,7 +26,7 @@ const intro = getIntro();
 
 **v1.0.19**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.30.
+- Bumped CodeAnalyzer dependency to ^v1.0.31.
 
 **v1.0.18**:
 
