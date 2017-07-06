@@ -32,10 +32,13 @@ const compiler = new Compiler(
  * It will upgrade the code (see the Compiler class description) and return the upgraded code and generate a sourcemap.
  * @param {string} id
  * @param {string} code
+ * @param {RegExp|RegExp[]|Set<RegExp>} [excludePaths]
  * @returns {ICompileFileResult}
  */
-export function compile (id: string, code: string): ICompileFileResult {
+export function compile (id: string, code: string, excludePaths?: RegExp|RegExp[]|Set<RegExp>): ICompileFileResult {
 	const magicString = new (<any>MagicString)(code);
+	if (excludePaths != null) compiler.excludeFiles(excludePaths);
+
 	const codeContainer: ICompilerResult = {
 		code: magicString,
 		hasAltered: false

@@ -28,6 +28,10 @@ export class Compiler implements ICompiler {
 							 private classConstructorArgumentsStringifier: IClassConstructorArgumentsStringifier) {
 	}
 
+	public excludeFiles (match: RegExp|RegExp[]|Set<RegExp>): void {
+		this.host.excludeFiles(match);
+	}
+
 	/**
 	 * Validates that all constructor references to services are actually being registered as services
 	 * before then moving on to generating a map between class/service identifiers and the ordered dependencies

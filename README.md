@@ -24,7 +24,11 @@ const intro = getIntro();
 
 ## Changelog:
 
-**v1.0.23**:
+**v1.0.25**:
+
+- Bumped CodeAnalyzer dependency to ^v1.0.38. Added an 'excludeFiles' third (optional) argument to the exported function 'compile'.
+
+**v1.0.24**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.36.
 
