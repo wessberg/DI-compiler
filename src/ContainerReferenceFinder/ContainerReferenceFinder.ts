@@ -93,7 +93,7 @@ export class ContainerReferenceFinder implements IContainerReferenceFinder {
 	 * @returns {Set<string>}
 	 */
 	private findMatchingIdentifiers ({host, statements}: IContainerReferenceFinderFindMethodOptions, aliases: Set<string>): Set<string> {
-		const assignments = host.getVariableAssignments(statements, true);
+		const assignments = host.getVariableDeclarations(statements, true);
 		return new Set(Object.keys(assignments).filter(name => this.isRelevantIdentifier(name, aliases)));
 	}
 

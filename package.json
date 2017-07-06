@@ -40,11 +40,9 @@
     "typescript": "2.4.1"
   },
   "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.34",
+    "@wessberg/codeanalyzer": "^1.0.36",
     "@wessberg/compiler-common": "^1.0.0",
-    "@wessberg/fileloader": "^1.0.3",
     "@wessberg/globalobject": "^1.0.5",
-    "@wessberg/marshaller": "^1.0.24",
     "@wessberg/typedetector": "^1.0.6",
     "magic-string": "^0.21.3",
     "tslib": "^1.7.1"

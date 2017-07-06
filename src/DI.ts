@@ -1,4 +1,3 @@
-import {Marshaller} from "@wessberg/marshaller";
 import {CodeAnalyzer} from "@wessberg/codeanalyzer";
 import {TypeDetector} from "@wessberg/typedetector";
 import * as MagicString from "magic-string";
@@ -10,7 +9,6 @@ import {ContainerReferenceFinder} from "./ContainerReferenceFinder/ContainerRefe
 import {DIConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
-import {FileLoader} from "@wessberg/fileloader";
 import {IdentifierValidator} from "@wessberg/compiler-common";
 
 export interface ICompileFileResult extends IHasAlteredable {
@@ -19,10 +17,9 @@ export interface ICompileFileResult extends IHasAlteredable {
 }
 
 const typeDetector = new TypeDetector();
-const marshaller = new Marshaller(typeDetector);
 const identifierValidator = new IdentifierValidator();
 const compiler = new Compiler(
-	new CodeAnalyzer(marshaller, new FileLoader()),
+	new CodeAnalyzer(),
 	new ContainerReferenceFinder(DIConfig),
 	new ServiceExpressionFinder(),
 	new ServiceExpressionUpdater(DIConfig, typeDetector, identifierValidator),
