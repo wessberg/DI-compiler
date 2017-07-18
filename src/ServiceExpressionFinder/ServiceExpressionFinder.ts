@@ -19,13 +19,19 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 		const expressions = host.getCallExpressions(statements, true);
 		return expressions.filter(exp => {
 			if (exp.property == null || !identifiers.has(exp.property.toString())) return false;
-			this.assertNoArguments(exp, filepath).property;
+			this.assertNoArguments(exp, filepath);
 			return true;
 		});
 	}
 
-	private assertNoArguments (expression: ICallExpression, filepath: string): ICallExpression {
-		if (expression.arguments.argumentsList.length === 0) return expression;
+	/**
+	 * Asserts that no arguments are given to the provided expression.
+	 * @param {ICallExpression} expression
+	 * @param {string} filepath
+	 * @returns {void}
+	 */
+	private assertNoArguments (expression: ICallExpression, filepath: string): void {
+		if (expression.arguments.argumentsList.length === 0) return;
 		const formattedExpression = `${expression.property}.${expression.identifier}<${expression.type.flattened}>(${expression.arguments.argumentsList.map(arg => arg.value.hasDoneFirstResolve() ? arg.value.resolved : arg.value.resolve()).join(", ")})`;
 
 		if (expression.type.bindings == null || expression.type.bindings.length < 2) {
@@ -35,7 +41,6 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 		if (expression.arguments.argumentsList.length > 0) {
 			throw new TypeError(`Found an issue in ${filepath}: You shouldn't pass any arguments here: ${formattedExpression}. Instead, let the compiler do it for you.`);
 		}
-		return expression;
 	}
 
 }

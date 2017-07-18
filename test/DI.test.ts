@@ -6,7 +6,7 @@ test("will compile without throwing exceptions. #1", t => {
 	compile("a_file.ts", `
 		interface IFoo {}
 		interface IBar {}
-		
+
 		class Foo implements IFoo {
 			a: string = "foo";
 		}

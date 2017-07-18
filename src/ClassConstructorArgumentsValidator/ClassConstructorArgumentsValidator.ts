@@ -1,6 +1,6 @@
 import {IClassConstructorArgumentsValidator} from "./Interface/IClassConstructorArgumentsValidator";
 import {IMappedInterfaceToImplementationMap} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
-import {ClassIndexer} from "@wessberg/codeanalyzer";
+import {IClassIndexer} from "@wessberg/codeanalyzer";
 
 /**
  * Validates that any class that expects a service as constructor argument either registers the service or initializes
@@ -11,10 +11,10 @@ export class ClassConstructorArgumentsValidator implements IClassConstructorArgu
 
 	/**
 	 * Checks each argument and validates it as described in the class description.
-	 * @param {ClassIndexer} classes
+	 * @param {IClassIndexer} classes
 	 * @param {IMappedInterfaceToImplementationMap} mappedInterfaces
 	 */
-	public validate (classes: ClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): void {
+	public validate (classes: IClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): void {
 		Object.keys(classes).forEach(key => {
 			const declaration = classes[key];
 			if (declaration.constructor == null) return;

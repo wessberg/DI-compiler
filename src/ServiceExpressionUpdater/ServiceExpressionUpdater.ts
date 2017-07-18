@@ -1,6 +1,6 @@
 import {ICompilerResult} from "../Compiler/Interface/ICompiler";
 import {IDIConfig} from "../DIConfig/Interface/IDIConfig";
-import {IGetOptions, IRegisterOptions} from "@wessberg/di";
+import {IGetOptions} from "@wessberg/di";
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater, IServiceExpressionUpdaterRegisterExpressionHandlerOptions, IServiceExpressionUpdaterUpdateMethodOptions} from "./Interface/IServiceExpressionUpdater";
 import {ICallExpression} from "@wessberg/codeanalyzer";
 import {ITypeDetector} from "@wessberg/typedetector";
@@ -53,10 +53,10 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 		// If the class hasn't been registered and it isn't a built-in part of the language or environment, throw an error.
 		if (classDeclaration == null && !this.identifierValidator.isBuiltIn(implementation.name)) throw new ReferenceError(`${this.constructor.name} could not find a class declaration for the implementation: ${implementation.name}`);
 
-		const config: IRegisterOptions<string> = {
+		const config = {
 			// The identifier for the service will be the first generic argument - the interface.
 			identifier: `"${identifier.name}"`,
-			implementation: <any>implementation.name
+			implementation: implementation.name
 		};
 
 		codeContainer.code.appendLeft(

@@ -24,6 +24,10 @@ const intro = getIntro();
 
 ## Changelog:
 
+**v1.0.26**:
+
+- Bumped CodeAnalyzer dependency. Fixed an issue where super class constructor arguments wouldn't be dependency injected correctly.
+
 **v1.0.25**:
 
 - Bumped CodeAnalyzer dependency to ^v1.0.38. Added an 'excludeFiles' third (optional) argument to the exported function 'compile'.

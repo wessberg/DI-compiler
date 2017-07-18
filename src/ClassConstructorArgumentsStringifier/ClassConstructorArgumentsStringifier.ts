@@ -1,7 +1,7 @@
 import {IClassConstructorArgumentsStringifier} from "./Interface/IClassConstructorArgumentsStringifier";
 import {IDIConfig} from "../DIConfig/Interface/IDIConfig";
 import {IMappedInterfaceToImplementationMap} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
-import {ClassIndexer, IParameter} from "@wessberg/codeanalyzer";
+import {IClassIndexer, IParameter} from "@wessberg/codeanalyzer";
 import {shimGlobalObjectStringified} from "@wessberg/globalobject";
 import {IIdentifierValidator} from "@wessberg/compiler-common";
 
@@ -17,11 +17,11 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 	/**
 	 * This method will generate a stringified map between service interfaces and the (ordered) identifiers for services that should be dependency injected upon their
 	 * corresponding implementations constructors upon instantiation.
-	 * @param {ClassIndexer} classes
+	 * @param {IClassIndexer} classes
 	 * @param {IMappedInterfaceToImplementationMap} mappedInterfaces
 	 * @returns {string}
 	 */
-	public getClassConstructorArgumentsStringified (classes: ClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string {
+	public getClassConstructorArgumentsStringified (classes: IClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string {
 		const globalShim = `${shimGlobalObjectStringified}\n`;
 		const identifier = `global.${this.config.interfaceConstructorArgumentsMapName}`;
 		let map = "{\n";
@@ -32,6 +32,7 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 			const className = mappedInterfaces[key];
 			const classDeclaration = classes[className];
 			if (classDeclaration == null && !this.identifierValidator.isBuiltIn(className)) throw new ReferenceError(`${this.constructor.name} could not get class constructor arguments: The interface "${key}" had no matching class implementation. Have you registered it as a service?`);
+			if (classDeclaration != null) classDeclaration.mergeWithParent();
 			const mappedArguments = classDeclaration == null || classDeclaration.constructor == null ? [] : classDeclaration.constructor.parameters.parametersList.map(parameter => this.normalizeConstructorParameter(parameter, mappedInterfaces)).join(", ");
 
 			map += `\t${key}: `;

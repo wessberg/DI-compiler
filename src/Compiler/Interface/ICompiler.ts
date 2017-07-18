@@ -3,7 +3,9 @@ export interface IHasAlteredable {
 }
 
 export interface ICodeable {
-	code: any;
+	code: /*tslint:disable:no-any*/any
+	/*tslint:enable:no-any*/
+	;
 }
 
 export interface ICompilerResult extends ICodeable, IHasAlteredable {

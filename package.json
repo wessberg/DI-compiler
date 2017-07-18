@@ -1,50 +1,80 @@
 {
-  "name": "@wessberg/di-compiler",
-  "version": "1.0.25",
-  "description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/es2015/index.js",
-  "browser": "./dist/es2015/index.js",
-  "types": "./dist/es2015/index.d.ts",
-  "typings": "./dist/es2015/index.d.ts",
-  "scripts": {
-    "clean:dist": "rm -r -f dist",
-    "clean:compiled": "rm -r -f compiled",
-    "clean": "npm run clean:dist && npm run clean:compiled",
-    "build:pre": "npm run clean && mkdir -p dist/cjs/interface && mkdir -p dist/es2015/interface",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs -p tsconfig.dist.json",
-    "build:es2015": "tsc --module es2015 --outDir dist/es2015 -p tsconfig.dist.json",
-    "build": "npm run build:pre && npm run build:cjs && npm run build:es2015",
-    "test:pre": "npm run clean:compiled && tsc --module commonjs --target es2017 --sourceMap",
-    "test": "NODE_ENV=TEST npm run test:pre && ava"
-  },
-  "keywords": [
-    "DI",
-    "dependency injection",
-    "ioc",
-    "inversion",
-    "service",
-    "container",
-    "newable",
-    "reflection",
-    "singleton",
-    "transient",
-    "compiler"
-  ],
-  "author": "Frederik Wessberg",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^8.0.7",
-    "@wessberg/di": "^1.0.17",
-    "ava": "^0.20.0",
-    "typescript": "2.4.1"
-  },
-  "dependencies": {
-    "@wessberg/codeanalyzer": "^1.0.38",
-    "@wessberg/compiler-common": "^1.0.0",
-    "@wessberg/globalobject": "^1.0.5",
-    "@wessberg/typedetector": "^1.0.6",
-    "magic-string": "^0.21.3",
-    "tslib": "^1.7.1"
-  }
+	"name": "@wessberg/di-compiler",
+	"version": "1.0.25",
+	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
+	"scripts": {
+		"clean:dist": "rm -r -f dist",
+		"clean:compiled": "rm -r -f compiled",
+		"clean": "npm run clean:dist && npm run clean:compiled",
+		"tsc:dist:cjs": "tsc --module commonjs --outDir dist/cjs -p tsconfig.dist.json",
+		"tsc:dist:es2015": "tsc --module es2015 --outDir dist/es2015 -p tsconfig.dist.json",
+		"tsc:test": "tsc --module commonjs --target es2017 --sourceMap",
+		"build:pre": "npm run clean",
+		"build:cjs": "npm run tsc:dist:cjs",
+		"build:es2015": "npm run tsc:dist:es2015",
+		"build": "npm run build:pre && npm run build:cjs && npm run build:es2015",
+		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"validate": "npm run tslint && npm run test",
+		"pretest": "npm run clean:compiled && npm run tsc:test",
+		"test": "NODE_ENV=TEST ava",
+		"posttest": "npm run clean:compiled",
+		"prepublishOnly": "npm run validate && npm run build",
+		"precommit": "npm run validate && exit 0",
+		"prepush": "npm run validate && exit 0",
+		"publish:major": "npm version major && git push && npm publish",
+		"publish:minor": "npm version minor && git push && npm publish",
+		"publish:patch": "npm version patch && git push && npm publish"
+	},
+	"keywords": [
+		"DI",
+		"dependency injection",
+		"ioc",
+		"inversion",
+		"service",
+		"container",
+		"newable",
+		"reflection",
+		"singleton",
+		"transient",
+		"compiler"
+	],
+	"author": {
+		"name": "Frederik Wessberg",
+		"email": "frederikwessberg@hotmail.com",
+		"url": "https://github.com/wessberg"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^8.0.14",
+		"@wessberg/di": "^1.0.17",
+		"@wessberg/ts-config": "0.0.15",
+		"ava": "^0.21.0",
+		"typescript": "2.4.1",
+		"tslint": "latest",
+		"husky": "latest"
+	},
+	"dependencies": {
+		"@wessberg/codeanalyzer": "^1.0.42",
+		"@wessberg/compiler-common": "^1.0.0",
+		"@wessberg/globalobject": "^1.0.5",
+		"@wessberg/typedetector": "^1.0.6",
+		"magic-string": "^0.22.2",
+		"tslib": "^1.7.1"
+	},
+	"main": "./dist/cjs/index.js",
+	"module": "./dist/es2015/index.js",
+	"browser": "./dist/es2015/index.js",
+	"types": "./dist/es2015/index.d.ts",
+	"typings": "./dist/es2015/index.d.ts",
+	"es2015": "./dist/es2015/index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wessberg/di-compiler.git"
+	},
+	"bugs": {
+		"url": "https://github.com/wessberg/di-compiler/issues"
+	},
+	"engines": {
+		"node": ">=7.4.0"
+	}
 }

@@ -4,7 +4,7 @@ import {IServiceExpressionFinder} from "../ServiceExpressionFinder/Interface/ISe
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgumentsStringifier/Interface/IClassConstructorArgumentsStringifier";
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
-import {BindingIdentifier, ClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
+import {BindingIdentifier, IClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
 import {IPathValidator, PathValidator} from "@wessberg/compiler-common";
 import {DIConfig} from "../DIConfig/DIConfig";
 
@@ -15,9 +15,28 @@ import {DIConfig} from "../DIConfig/DIConfig";
  * @author Frederik Wessberg
  */
 export class Compiler implements ICompiler {
-	private static classes: ClassIndexer = {};
+	/**
+	 * A collection of all classes discovered by parsing the input files
+	 * @type {IClassIndexer}
+	 */
+	private static classes: IClassIndexer = {};
+
+	/**
+	 * A Set of all the paths that has been resolved.
+	 * @type {Set<string>}
+	 */
 	private static resolvedPaths: Set<string> = new Set();
+
+	/**
+	 * A collection of all interfaces that has been mapped to actual implementations.
+	 * @type {{}}
+	 */
 	private static readonly mappedInterfaces: IMappedInterfaceToImplementationMap = {};
+
+	/**
+	 * A PathValidator validates input files.
+	 * @type {PathValidator}
+	 */
 	private pathValidator: IPathValidator = new PathValidator();
 
 	constructor (private host: ICodeAnalyzer,
@@ -28,6 +47,10 @@ export class Compiler implements ICompiler {
 							 private classConstructorArgumentsStringifier: IClassConstructorArgumentsStringifier) {
 	}
 
+	/**
+	 * Excludes files from the compiler that matches the provided Regular Expression(s)
+	 * @param {RegExp | RegExp[] | Set<RegExp>} match
+	 */
 	public excludeFiles (match: RegExp|RegExp[]|Set<RegExp>): void {
 		this.host.excludeFiles(match);
 	}
@@ -69,6 +92,10 @@ export class Compiler implements ICompiler {
 		return codeContainer;
 	}
 
+	/**
+	 * Resolves all dependencies for the provided filepath
+	 * @param {string} filepath
+	 */
 	private resolveDependencies (filepath: string): void {
 		Compiler.resolvedPaths.add(filepath);
 		const imports = this.host.getImportDeclarationsForFile(filepath, true);
@@ -104,10 +131,10 @@ export class Compiler implements ICompiler {
 	/**
 	 * Returns a new class indexer will all classes that doesn't have a @noInject decorator.
 	 * @param classes
-	 * @returns {ClassIndexer}
+	 * @returns {IClassIndexer}
 	 */
-	private filterOutNoInjectClasses (classes: ClassIndexer): ClassIndexer {
-		const newClassIndexer: ClassIndexer = {};
+	private filterOutNoInjectClasses (classes: IClassIndexer): IClassIndexer {
+		const newClassIndexer: IClassIndexer = {};
 		Object.keys(classes).forEach(key => {
 			const declaration = classes[key];
 			const hasNoInjectDecorator = declaration.decorators[DIConfig.decorator.noInjectName] != null;

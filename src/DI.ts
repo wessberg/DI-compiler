@@ -36,7 +36,7 @@ const compiler = new Compiler(
  * @returns {ICompileFileResult}
  */
 export function compile (id: string, code: string, excludePaths?: RegExp|RegExp[]|Set<RegExp>): ICompileFileResult {
-	const magicString = new (<any>MagicString)(code);
+	const magicString = new (</*tslint:disable:no-any*/any/*tslint:enable:no-any*/>MagicString)(code);
 	if (excludePaths != null) compiler.excludeFiles(excludePaths);
 
 	const codeContainer: ICompilerResult = {

@@ -1,3 +1,4 @@
+/*tslint:disable*/
 export interface IFoo {
 
 }
@@ -7,3 +8,4 @@ export class Foo implements IFoo {
 		console.log(lolz);
 	}
 }
+/*tslint:enable*/

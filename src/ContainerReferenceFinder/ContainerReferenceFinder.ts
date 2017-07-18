@@ -7,7 +7,13 @@ import {IContainerReferenceFinder, IContainerReferenceFinderFindMethodOptions} f
  * @author Frederik Wessberg
  */
 export class ContainerReferenceFinder implements IContainerReferenceFinder {
+
+	/**
+	 * A Set of all aliases that has been exported for the DIContainer
+	 * @type {Set<string>}
+	 */
 	private static exportedAliases: Set<string>;
+
 	constructor (private config: IDIConfig) {
 		if (ContainerReferenceFinder.exportedAliases == null) {
 			ContainerReferenceFinder.exportedAliases = new Set([config.exportName]);
