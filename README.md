@@ -26,7 +26,7 @@ If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-pl
 
 ## Changelog:
 
-**v1.0.26**:
+**v1.0.27**:
 
 - Bumped CodeAnalyzer dependency. Fixed an issue where super class constructor arguments wouldn't be dependency injected correctly.
 
