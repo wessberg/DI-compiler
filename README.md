@@ -1,4 +1,4 @@
-# DI-Compiler (The compiler for DI) [![NPM version][npm-image]][npm-url]
+# DI-Compiler (The compiler for [DI](https://www.npmjs.com/package/@wessberg/di)) [![NPM version][npm-image]][npm-url]
 > The compiler for [DI](https://www.npmjs.com/package/@wessberg/di)
 
 ## Installation
@@ -21,6 +21,8 @@ const compiled = compile(
 // and at best in top of your bundle.
 const intro = getIntro();
 ```
+
+If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-plugin-di](https://github.com/wessberg/rollup-plugin-di) to compile your code automatically as part of your bundle, rather than using this compiler.
 
 ## Changelog:
 
