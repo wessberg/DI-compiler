@@ -1,6 +1,6 @@
 import {test} from "ava";
 import {compile} from "../src/DI";
-import {DIConfig} from "../src/DIConfig/DIConfig";
+import {diConfig} from "../src/DIConfig/DIConfig";
 
 test("will compile without throwing exceptions. #1", t => {
 	compile("a_file.ts", `
@@ -18,9 +18,9 @@ test("will compile without throwing exceptions. #1", t => {
 			}
 		}
 
-		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IFoo, Foo>();
-		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IBar, Bar>();
-		${DIConfig.exportName}.${DIConfig.getName}<IBar>();
+		${diConfig.exportName}.${diConfig.registerSingletonName}<IFoo, Foo>();
+		${diConfig.exportName}.${diConfig.registerSingletonName}<IBar, Bar>();
+		${diConfig.exportName}.${diConfig.getName}<IBar>();
 	`);
 
 	// An exception didn't occur. Success!
@@ -31,7 +31,7 @@ test("will compile without throwing exceptions. #2", t => {
 	compile("a_file.ts", `
 		import {IFoo, Foo} from "test/Static/Service";
 
-		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IFoo, Foo>();
+		${diConfig.exportName}.${diConfig.registerSingletonName}<IFoo, Foo>();
 	`);
 
 	// An exception didn't occur. Success!
@@ -42,7 +42,7 @@ test("will compile without throwing exceptions. #3", t => {
 	compile("a_file.ts", `
 		import {IFoo, Foo} from "test/Static/ReExport";
 
-		${DIConfig.exportName}.${DIConfig.registerSingletonName}<IFoo, Foo>();
+		${diConfig.exportName}.${diConfig.registerSingletonName}<IFoo, Foo>();
 	`);
 
 	// An exception didn't occur. Success!

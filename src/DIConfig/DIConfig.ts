@@ -1,6 +1,6 @@
 import {IDIConfig} from "./Interface/IDIConfig";
 
-export const DIConfig: IDIConfig = {
+export const diConfig: IDIConfig = {
 	exportName: "DIContainer",
 	registerSingletonName: "registerSingleton",
 	registerTransientName: "registerTransient",

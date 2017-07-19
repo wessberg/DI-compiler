@@ -38,8 +38,8 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 			throw new TypeError(`Found an issue in ${filepath}: You must pass an implementation as the second generic type parameter here: ${formattedExpression}`);
 		}
 
-		if (expression.arguments.argumentsList.length > 0) {
-			throw new TypeError(`Found an issue in ${filepath}: You shouldn't pass any arguments here: ${formattedExpression}. Instead, let the compiler do it for you.`);
+		if (expression.arguments.argumentsList.length > 1) {
+			throw new TypeError(`Found an issue in ${filepath}: You shouldn't pass a second argument around here: ${formattedExpression}. Instead, let the compiler do it for you.`);
 		}
 	}
 

@@ -59,10 +59,19 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 			implementation: implementation.name
 		};
 
-		codeContainer.code.appendLeft(
-			expression.arguments.startsAt,
-			this.stringifyObject(config)
-		);
+		// If no arguments has been given, pass in "undefined" as the first argument before providing the options object":
+		if (expression.arguments.argumentsList.length < 1) {
+			codeContainer.code.appendLeft(
+				expression.arguments.startsAt,
+				`undefined, ${this.stringifyObject(config)}`
+			);
+		} else {
+			// If a custom function to return a new instance of the service has been provided, place the options object as the second argument.
+			codeContainer.code.appendLeft(
+				expression.arguments.argumentsList[0].endsAt,
+				`, ${this.stringifyObject(config)}`
+			);
+		}
 		codeContainer.hasAltered = true;
 		return {[identifier.name]: implementation.name};
 	}

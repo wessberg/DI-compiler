@@ -6,7 +6,7 @@ import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgument
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
 import {BindingIdentifier, IClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
 import {IPathValidator, PathValidator} from "@wessberg/compiler-common";
-import {DIConfig} from "../DIConfig/DIConfig";
+import {diConfig} from "../DIConfig/DIConfig";
 
 /**
  * The compiler will upgrade the source code. It looks for every time a service is registered and mimics reflection.
@@ -137,7 +137,7 @@ export class Compiler implements ICompiler {
 		const newClassIndexer: IClassIndexer = {};
 		Object.keys(classes).forEach(key => {
 			const declaration = classes[key];
-			const hasNoInjectDecorator = declaration.decorators[DIConfig.decorator.noInjectName] != null;
+			const hasNoInjectDecorator = declaration.decorators[diConfig.decorator.noInjectName] != null;
 			if (!hasNoInjectDecorator) newClassIndexer[key] = declaration;
 		});
 		return newClassIndexer;

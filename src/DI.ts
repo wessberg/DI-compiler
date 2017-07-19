@@ -6,7 +6,7 @@ import {ClassConstructorArgumentsValidator} from "./ClassConstructorArgumentsVal
 import {Compiler} from "./Compiler/Compiler";
 import {ICompilerResult, IHasAlteredable} from "./Compiler/Interface/ICompiler";
 import {ContainerReferenceFinder} from "./ContainerReferenceFinder/ContainerReferenceFinder";
-import {DIConfig} from "./DIConfig/DIConfig";
+import {diConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
 import {IdentifierValidator} from "@wessberg/compiler-common";
@@ -20,11 +20,11 @@ const typeDetector = new TypeDetector();
 const identifierValidator = new IdentifierValidator();
 const compiler = new Compiler(
 	new CodeAnalyzer(),
-	new ContainerReferenceFinder(DIConfig),
+	new ContainerReferenceFinder(diConfig),
 	new ServiceExpressionFinder(),
-	new ServiceExpressionUpdater(DIConfig, typeDetector, identifierValidator),
+	new ServiceExpressionUpdater(diConfig, typeDetector, identifierValidator),
 	new ClassConstructorArgumentsValidator(),
-	new ClassConstructorArgumentsStringifier(DIConfig, identifierValidator)
+	new ClassConstructorArgumentsStringifier(diConfig, identifierValidator)
 );
 
 /**
