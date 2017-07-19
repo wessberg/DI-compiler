@@ -45,7 +45,7 @@
 	],
 	"devDependencies": {
 		"@types/node": "^8.0.14",
-		"@wessberg/di": "^1.0.18",
+		"@wessberg/di": "^1.0.19",
 		"@wessberg/ts-config": "0.0.20",
 		"ava": "^0.21.0",
 		"typescript": "2.4.1",
