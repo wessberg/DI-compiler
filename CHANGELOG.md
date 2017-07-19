@@ -1,3 +1,12 @@
+<a name="1.0.32"></a>
+## 1.0.32 (2017-07-19)
+
+* 1.0.32 ([3f05bca](https://github.com/wessberg/di-compiler/commit/3f05bca))
+* Bumped dependency on DI ([1ae2966](https://github.com/wessberg/di-compiler/commit/1ae2966))
+* Bumped version ([3a2c97c](https://github.com/wessberg/di-compiler/commit/3a2c97c))
+
+
+
 <a name="1.0.31"></a>
 ## 1.0.31 (2017-07-19)
 
