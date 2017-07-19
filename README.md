@@ -1,4 +1,19 @@
 # DI-Compiler (The compiler for [DI](https://www.npmjs.com/package/@wessberg/di)) [![NPM version][npm-image]][npm-url]
+[![Dev Dependencies][dev-dependencies-image]][dev-dependencies-url]
+
+[dev-dependencies-url]: https://david-dm.org/wessberg/typedetector?type=dev
+
+[dev-dependencies-image]: https://david-dm.org/hub.com/wessberg/di-compiler/dev-status.svg
+[![deps][deps-image]][deps-url]
+
+[deps-url]: https://david-dm.org/wessberg/typedetector
+
+[deps-image]: https://david-dm.org/hub.com/wessberg/di-compiler/status.svg
+[![License-mit][license-mit-image]][license-mit-url]
+
+[license-mit-url]: https://opensource.org/licenses/MIT
+
+[license-mit-image]: https://img.shields.io/badge/License-MIT-yellow.svg
 > The compiler for [DI](https://www.npmjs.com/package/@wessberg/di)
 
 ## Installation
@@ -24,116 +39,234 @@ const intro = getIntro();
 
 If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-plugin-di](https://github.com/wessberg/rollup-plugin-di) to compile your code automatically as part of your bundle, rather than using this compiler.
 
-## Changelog:
+## Changelog
 
-**v1.0.27**:
+<a name="1.0.28"></a>
+## 1.0.28 (2017-07-19)
 
-- Bumped CodeAnalyzer dependency. Fixed an issue where super class constructor arguments wouldn't be dependency injected correctly.
+* 1.0.28 ([b0b2f06](https://github.com/wessberg/di-compiler/commit/b0b2f06))
+* Updated compiler to correctly understand new features of DI ([4d574f2](https://github.com/wessberg/di-compiler/commit/4d574f2))
 
-**v1.0.25**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.38. Added an 'excludeFiles' third (optional) argument to the exported function 'compile'.
 
-**v1.0.24**:
+<a name="1.0.27"></a>
+## 1.0.27 (2017-07-18)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.36.
+* 1.0.27 ([47eb559](https://github.com/wessberg/di-compiler/commit/47eb559))
+* Updated README ([0747968](https://github.com/wessberg/di-compiler/commit/0747968))
 
-**v1.0.22**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.34.
 
-**v1.0.21**:
+<a name="1.0.26"></a>
+## 1.0.26 (2017-07-18)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.33.
+* 1.0.26 ([a397e1c](https://github.com/wessberg/di-compiler/commit/a397e1c))
+* Added untracked files ([6dd0237](https://github.com/wessberg/di-compiler/commit/6dd0237))
+* Bumped CodeAnalyzer dependency. Fixed an issue where super class constructor arguments wouldn't be d ([f36ef10](https://github.com/wessberg/di-compiler/commit/f36ef10))
+* Update package.json ([69e74e0](https://github.com/wessberg/di-compiler/commit/69e74e0))
+* Update README.md ([e782215](https://github.com/wessberg/di-compiler/commit/e782215))
 
-**v1.0.20**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.32.
 
-**v1.0.19**:
+<a name="1.0.25"></a>
+## 1.0.25 (2017-07-06)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.31.
+* 1.0.25 ([3e52902](https://github.com/wessberg/di-compiler/commit/3e52902))
+* Bumped CodeAnalyzer dependency to ^v1.0.38. Added an 'excludeFiles' third (optional) argument to the ([6ab0983](https://github.com/wessberg/di-compiler/commit/6ab0983))
 
-**v1.0.18**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.25.
 
-**v1.0.17**:
+<a name="1.0.24"></a>
+## 1.0.24 (2017-07-06)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.24.
+* 1.0.24 ([399369a](https://github.com/wessberg/di-compiler/commit/399369a))
+* Bumped CodeAnalyzer dependency to ^v1.0.36. ([653dbb2](https://github.com/wessberg/di-compiler/commit/653dbb2))
 
-**v1.0.16**:
 
-- The DI-compiler will now skip classes that has a 'noInject' decorator.
 
-**v1.0.15**:
+<a name="1.0.23"></a>
+## 1.0.23 (2017-07-05)
 
-- A shim for the global object will now be added before the class constructor arguments map so that `global` is defined in any environment.
+* 1.0.23 ([eef0051](https://github.com/wessberg/di-compiler/commit/eef0051))
+* Bumped CodeAnalyzer dependency to ^v1.0.34. ([f13c9b6](https://github.com/wessberg/di-compiler/commit/f13c9b6))
 
-**v1.0.14**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.22.
 
-**v1.0.13**:
+<a name="1.0.22"></a>
+## 1.0.22 (2017-07-05)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.21.
+* 1.0.22 ([353d52f](https://github.com/wessberg/di-compiler/commit/353d52f))
+* Bumped CodeAnalyzer dependency to ^v1.0.33. ([b2d1ca5](https://github.com/wessberg/di-compiler/commit/b2d1ca5))
 
-**v1.0.12**:
 
-- Fixed a bug.
 
-**v1.0.11**:
+<a name="1.0.21"></a>
+## 1.0.21 (2017-07-05)
 
-- Built-in constructors can now be added as services too.
+* 1.0.21 ([5a254ac](https://github.com/wessberg/di-compiler/commit/5a254ac))
+* Bumped CodeAnalyzer dependency to ^v1.0.32. ([5eefbfc](https://github.com/wessberg/di-compiler/commit/5eefbfc))
 
-**v1.0.10**:
 
-- The package began depending on 'compiler-common' rather than setting up its own blacklist filter.
 
-**v1.0.9**:
+<a name="1.0.20"></a>
+## 1.0.20 (2017-07-05)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.18
-- Fixed issue where files matching *tslib* would be parsed.
+* 1.0.20 ([c42fc59](https://github.com/wessberg/di-compiler/commit/c42fc59))
+* Bumped CodeAnalyzer dependency to ^v1.0.31. ([38163f0](https://github.com/wessberg/di-compiler/commit/38163f0))
 
-**v1.0.8**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.18
 
-**v1.0.7**:
+<a name="1.0.19"></a>
+## 1.0.19 (2017-07-05)
 
-- The Compiler will now recursively parse all imports, rather than just one step up.
-- The Compiler will now also check exports in case modules are exported from another file.
+* 1.0.19 ([4db402f](https://github.com/wessberg/di-compiler/commit/4db402f))
+* Bumped CodeAnalyzer dependency to ^v1.0.30. ([f47f424](https://github.com/wessberg/di-compiler/commit/f47f424))
 
-**v1.0.6**:
 
-- The Compiler will now parse all imports for classes before proceeding.
-- The Compiler will now check if another global constructor arguments map exists and assign to it if it exists instead of overwriting it.
 
-**v1.0.5**:
+<a name="1.0.18"></a>
+## 1.0.18 (2017-05-31)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.17
-- Bumped DI dependency to ^v1.0.16
-- `has` expressions can now be handled.
+* 1.0.18 ([e16343e](https://github.com/wessberg/di-compiler/commit/e16343e))
+* Bumped CodeAnalyzer dependency to ^v1.0.25. ([211203a](https://github.com/wessberg/di-compiler/commit/211203a))
 
-**v1.0.4**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.11
 
-**v1.0.3**:
+<a name="1.0.17"></a>
+## 1.0.17 (2017-05-31)
 
-- Bumped CodeAnalyzer dependency to ^v1.0.10
+* 1.0.17 ([73145f8](https://github.com/wessberg/di-compiler/commit/73145f8))
+* Bumped CodeAnalyzer dependency to ^v1.0.24. ([2acffa9](https://github.com/wessberg/di-compiler/commit/2acffa9))
 
-**v1.0.2**:
 
-- Bumped CodeAnalyzer dependency to ^v1.0.9
 
-**v1.0.1**:
+<a name="1.0.16"></a>
+## 1.0.16 (2017-05-31)
 
-- Fixed an issue where the found class declarations would be reset for each new file.
+* 1.0.16 ([450a117](https://github.com/wessberg/di-compiler/commit/450a117))
+* The DI-compiler will now skip classes that has a 'noInject' decorator. ([b20189a](https://github.com/wessberg/di-compiler/commit/b20189a))
 
-**v1.0.0**:
 
-- First release.
 
-[npm-url]: https://npmjs.org/package/@wessberg/di-compiler
-[npm-image]: https://badge.fury.io/js/@wessberg/di-compiler.svg
+<a name="1.0.15"></a>
+## 1.0.15 (2017-05-31)
+
+* 1.0.15 ([9d7ea5d](https://github.com/wessberg/di-compiler/commit/9d7ea5d))
+* A shim for the global object will now be added before the class constructor arguments map so that 'g ([60ac279](https://github.com/wessberg/di-compiler/commit/60ac279))
+
+
+
+<a name="1.0.14"></a>
+## 1.0.14 (2017-05-31)
+
+* 1.0.14 ([52c0881](https://github.com/wessberg/di-compiler/commit/52c0881))
+* Bumped CodeAnalyzer dependency to ^v1.0.22. ([bf4c089](https://github.com/wessberg/di-compiler/commit/bf4c089))
+
+
+
+<a name="1.0.13"></a>
+## 1.0.13 (2017-05-31)
+
+* 1.0.13 ([b181554](https://github.com/wessberg/di-compiler/commit/b181554))
+* Bumped CodeAnalyzer dependency to ^v1.0.21. ([9bf836b](https://github.com/wessberg/di-compiler/commit/9bf836b))
+
+
+
+<a name="1.0.12"></a>
+## 1.0.12 (2017-05-31)
+
+* 1.0.12 ([8ec9e54](https://github.com/wessberg/di-compiler/commit/8ec9e54))
+* Fixed a bug. ([064874f](https://github.com/wessberg/di-compiler/commit/064874f))
+
+
+
+<a name="1.0.11"></a>
+## 1.0.11 (2017-05-31)
+
+* 1.0.11 ([80d433d](https://github.com/wessberg/di-compiler/commit/80d433d))
+* Built-in constructors (for example Proxy or anything that is a native part of the environment) can n ([faaccad](https://github.com/wessberg/di-compiler/commit/faaccad))
+
+
+
+<a name="1.0.10"></a>
+## 1.0.10 (2017-05-31)
+
+* 1.0.10 ([dd507f7](https://github.com/wessberg/di-compiler/commit/dd507f7))
+* The package began depending on 'compiler-common' rather than setting up its own blacklist filter. ([6108201](https://github.com/wessberg/di-compiler/commit/6108201))
+
+
+
+<a name="1.0.9"></a>
+## 1.0.9 (2017-05-31)
+
+* - Bumped CodeAnalyzer dependency to ^v1.0.18 ([32e39cf](https://github.com/wessberg/di-compiler/commit/32e39cf))
+* 1.0.9 ([d811d25](https://github.com/wessberg/di-compiler/commit/d811d25))
+
+
+
+<a name="1.0.8"></a>
+## 1.0.8 (2017-05-30)
+
+* 1.0.8 ([d5d2677](https://github.com/wessberg/di-compiler/commit/d5d2677))
+* Bumped CodeAnalyzer dependency to ^v1.0.18 ([5b3a7b0](https://github.com/wessberg/di-compiler/commit/5b3a7b0))
+
+
+
+<a name="1.0.7"></a>
+## 1.0.7 (2017-05-30)
+
+* - The Compiler will now recursively parse all imports, rather than just one step up. ([9ef95e9](https://github.com/wessberg/di-compiler/commit/9ef95e9))
+* 1.0.7 ([6188a99](https://github.com/wessberg/di-compiler/commit/6188a99))
+
+
+
+<a name="1.0.6"></a>
+## 1.0.6 (2017-05-30)
+
+* - The Compiler will now parse all imports for classes before proceeding. ([ab87556](https://github.com/wessberg/di-compiler/commit/ab87556))
+* 1.0.6 ([43ee330](https://github.com/wessberg/di-compiler/commit/43ee330))
+
+
+
+<a name="1.0.5"></a>
+## 1.0.5 (2017-05-30)
+
+* - Bumped CodeAnalyzer dependency to ^v1.0.17 ([fd046e7](https://github.com/wessberg/di-compiler/commit/fd046e7))
+* 1.0.5 ([13e0373](https://github.com/wessberg/di-compiler/commit/13e0373))
+
+
+
+<a name="1.0.4"></a>
+## 1.0.4 (2017-05-25)
+
+* 1.0.4 ([6ae12d8](https://github.com/wessberg/di-compiler/commit/6ae12d8))
+* Bumped CodeAnalyzer dependency to ^v1.0.11 ([ccc5d33](https://github.com/wessberg/di-compiler/commit/ccc5d33))
+
+
+
+<a name="1.0.3"></a>
+## 1.0.3 (2017-05-25)
+
+* 1.0.3 ([bbd7e77](https://github.com/wessberg/di-compiler/commit/bbd7e77))
+* Bumped CodeAnalyzer dependency to ^v1.0.10 ([05cf98d](https://github.com/wessberg/di-compiler/commit/05cf98d))
+
+
+
+<a name="1.0.2"></a>
+## 1.0.2 (2017-05-24)
+
+* 1.0.2 ([a4d4722](https://github.com/wessberg/di-compiler/commit/a4d4722))
+* Bumped CodeAnalyzer dependency to ^v1.0.9 ([df814c2](https://github.com/wessberg/di-compiler/commit/df814c2))
+
+
+
+<a name="1.0.1"></a>
+## 1.0.1 (2017-05-24)
+
+* 1.0.1 ([716937e](https://github.com/wessberg/di-compiler/commit/716937e))
+* First commit ([385cd8d](https://github.com/wessberg/di-compiler/commit/385cd8d))
+* Fixed an issue where the found class declarations would be reset for each new file. ([4d5966e](https://github.com/wessberg/di-compiler/commit/4d5966e))
+
+
+
+
