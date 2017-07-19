@@ -1,3 +1,12 @@
+<a name="1.0.31"></a>
+## 1.0.31 (2017-07-19)
+
+* 1.0.31 ([75af389](https://github.com/wessberg/di-compiler/commit/75af389))
+* Bumped version ([1b72ade](https://github.com/wessberg/di-compiler/commit/1b72ade))
+* Stopped validating if a class exists before allowing a service to be registered. The type may not be ([663a097](https://github.com/wessberg/di-compiler/commit/663a097))
+
+
+
 <a name="1.0.30"></a>
 ## 1.0.30 (2017-07-19)
 
