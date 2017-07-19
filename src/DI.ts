@@ -9,7 +9,6 @@ import {ContainerReferenceFinder} from "./ContainerReferenceFinder/ContainerRefe
 import {diConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
-import {IdentifierValidator} from "@wessberg/compiler-common";
 
 export interface ICompileFileResult extends IHasAlteredable {
 	code: string;
@@ -17,14 +16,13 @@ export interface ICompileFileResult extends IHasAlteredable {
 }
 
 const typeDetector = new TypeDetector();
-const identifierValidator = new IdentifierValidator();
 const compiler = new Compiler(
 	new CodeAnalyzer(),
 	new ContainerReferenceFinder(diConfig),
 	new ServiceExpressionFinder(),
 	new ServiceExpressionUpdater(diConfig, typeDetector),
 	new ClassConstructorArgumentsValidator(),
-	new ClassConstructorArgumentsStringifier(diConfig, identifierValidator)
+	new ClassConstructorArgumentsStringifier(diConfig)
 );
 
 /**
