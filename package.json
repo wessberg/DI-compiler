@@ -54,7 +54,7 @@
 		"conventional-changelog-cli": "latest"
 	},
 	"dependencies": {
-		"@wessberg/codeanalyzer": "^1.0.45",
+		"@wessberg/codeanalyzer": "^1.0.46",
 		"@wessberg/compiler-common": "^1.0.0",
 		"@wessberg/globalobject": "^1.0.7",
 		"@wessberg/typedetector": "^1.0.6",

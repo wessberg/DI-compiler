@@ -4,7 +4,6 @@ import {IGetOptions} from "@wessberg/di";
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater, IServiceExpressionUpdaterRegisterExpressionHandlerOptions, IServiceExpressionUpdaterUpdateMethodOptions} from "./Interface/IServiceExpressionUpdater";
 import {ICallExpression} from "@wessberg/codeanalyzer";
 import {ITypeDetector} from "@wessberg/typedetector";
-import {IIdentifierValidator} from "@wessberg/compiler-common";
 
 /**
  * Walks through all call expressions on the DIContainer instance and upgrades their arguments.
@@ -13,22 +12,20 @@ import {IIdentifierValidator} from "@wessberg/compiler-common";
 export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 
 	constructor (private config: IDIConfig,
-							 private typeDetector: ITypeDetector,
-							 private identifierValidator: IIdentifierValidator) {
+							 private typeDetector: ITypeDetector) {
 	}
 
 	/**
 	 * Walks through all expressions and delegates the update work to other methods in order to upgrade the code.
 	 * @param {ICompilerResult} codeContainer
 	 * @param {ICallExpression[]} expressions
-	 * @param {Map<string, IClassDeclaration>} classes
 	 * @param {IMappedInterfaceToImplementationMap} mappedInterfaces
 	 */
-	public update ({codeContainer, expressions, classes, mappedInterfaces}: IServiceExpressionUpdaterUpdateMethodOptions): IMappedInterfaceToImplementationMap {
+	public update ({codeContainer, expressions, mappedInterfaces}: IServiceExpressionUpdaterUpdateMethodOptions): IMappedInterfaceToImplementationMap {
 
 		expressions.forEach(expression => {
 			if (expression.identifier === this.config.registerTransientName || expression.identifier === this.config.registerSingletonName) {
-				Object.assign(mappedInterfaces, this.handleRegisterExpression({codeContainer, expression, classes}));
+				Object.assign(mappedInterfaces, this.handleRegisterExpression({codeContainer, expression}));
 			}
 
 			if (expression.identifier === this.config.getName || expression.identifier === this.config.hasName) {
@@ -43,15 +40,10 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 	 * Handles all expressions where services are registered (like registerTransient and registerSingleton)
 	 * @param {ICompilerResult} codeContainer
 	 * @param {ICallExpression} expression
-	 * @param {Map<string, IClassDeclaration>} classes
 	 */
-	private handleRegisterExpression ({codeContainer, expression, classes}: IServiceExpressionUpdaterRegisterExpressionHandlerOptions): IMappedInterfaceToImplementationMap {
+	private handleRegisterExpression ({codeContainer, expression}: IServiceExpressionUpdaterRegisterExpressionHandlerOptions): IMappedInterfaceToImplementationMap {
 		if (expression.type.bindings == null) throw new TypeError(`${this.handleRegisterExpression.name} could not handle a register expression: No generic type arguments were given!`);
 		const [identifier, implementation] = expression.type.bindings;
-		const classDeclaration = classes[implementation.name];
-
-		// If the class hasn't been registered and it isn't a built-in part of the language or environment, throw an error.
-		if (classDeclaration == null && !this.identifierValidator.isBuiltIn(implementation.name)) throw new ReferenceError(`${this.constructor.name} could not find a class declaration for the implementation: ${implementation.name}`);
 
 		const config = {
 			// The identifier for the service will be the first generic argument - the interface.

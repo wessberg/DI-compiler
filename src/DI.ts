@@ -22,7 +22,7 @@ const compiler = new Compiler(
 	new CodeAnalyzer(),
 	new ContainerReferenceFinder(diConfig),
 	new ServiceExpressionFinder(),
-	new ServiceExpressionUpdater(diConfig, typeDetector, identifierValidator),
+	new ServiceExpressionUpdater(diConfig, typeDetector),
 	new ClassConstructorArgumentsValidator(),
 	new ClassConstructorArgumentsStringifier(diConfig, identifierValidator)
 );

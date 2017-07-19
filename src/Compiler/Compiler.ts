@@ -87,7 +87,7 @@ export class Compiler implements ICompiler {
 		const expressions = this.serviceExpressionFinder.find({host, statements, identifiers, filepath});
 
 		// Updates all expressions.
-		this.serviceExpressionUpdater.update({codeContainer, expressions, classes: Compiler.classes, mappedInterfaces: Compiler.mappedInterfaces});
+		this.serviceExpressionUpdater.update({codeContainer, expressions, mappedInterfaces: Compiler.mappedInterfaces});
 
 		return codeContainer;
 	}
