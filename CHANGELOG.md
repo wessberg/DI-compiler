@@ -1,50 +1,3 @@
-# DI-Compiler (The compiler for [DI](https://www.npmjs.com/package/@wessberg/di))
-[![NPM version][npm-version-image]][npm-version-url]
-[![Dev Dependencies][dev-dependencies-image]][dev-dependencies-url]
-
-[dev-dependencies-url]: https://david-dm.org/wessberg/typedetector?type=dev
-
-[dev-dependencies-image]: https://david-dm.org/hub.com/wessberg/di-compiler/dev-status.svg
-[![deps][deps-image]][deps-url]
-
-[deps-url]: https://david-dm.org/wessberg/typedetector
-
-[deps-image]: https://david-dm.org/hub.com/wessberg/di-compiler/status.svg
-[![License-mit][license-mit-image]][license-mit-url]
-
-[license-mit-url]: https://opensource.org/licenses/MIT
-
-[license-mit-image]: https://img.shields.io/badge/License-MIT-yellow.svg
-
-[npm-version-url]: https://www.npmjs.com/package/@wessberg/di-compiler
-
-[npm-version-image]: https://badge.fury.io/js/%40wessberg%2Fdi-compiler.svg
-
-## Installation
-Simply do: `npm install @wessberg/di-compiler`.
-
-## Usage
-```typescript
-import {compile, getIntro} from "@wessberg/di-compiler";
-
-// The 'compile' method will upgrade all service registrations and 'get' calls
-// throughout the code
-const compiled = compile(
-	"a_file.ts", `
-	class Foo implements IFoo {}
-	DIContainer.registerSingleton<IFoo, Foo>();
-	`);
-
-// The intro is a map between interface names and the constructor arguments
-// of their concrete implementations. Should only be injected once in your code
-// and at best in top of your bundle.
-const intro = getIntro();
-```
-
-If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-plugin-di](https://github.com/wessberg/rollup-plugin-di) to compile your code automatically as part of your bundle, rather than using this compiler.
-
-## Changelog
-
 <a name="1.0.28"></a>
 ## 1.0.28 (2017-07-19)
 
@@ -270,7 +223,6 @@ If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-pl
 * 1.0.1 ([716937e](https://github.com/wessberg/di-compiler/commit/716937e))
 * First commit ([385cd8d](https://github.com/wessberg/di-compiler/commit/385cd8d))
 * Fixed an issue where the found class declarations would be reset for each new file. ([4d5966e](https://github.com/wessberg/di-compiler/commit/4d5966e))
-
 
 
 
