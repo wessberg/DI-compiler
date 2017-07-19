@@ -1,3 +1,12 @@
+<a name="1.0.33"></a>
+## 1.0.33 (2017-07-19)
+
+* 1.0.33 ([2a6b369](https://github.com/wessberg/di-compiler/commit/2a6b369))
+* Bumped version ([2c6307b](https://github.com/wessberg/di-compiler/commit/2c6307b))
+* Stopped validating if constructor arguments could be found for an implementation for a service. It m ([59573f6](https://github.com/wessberg/di-compiler/commit/59573f6))
+
+
+
 <a name="1.0.32"></a>
 ## 1.0.32 (2017-07-19)
 
