@@ -1,6 +1,6 @@
 {
 	"name": "@wessberg/di-compiler",
-	"version": "1.0.32",
+	"version": "1.0.33",
 	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
 	"scripts": {
 		"changelog:generate": "conventional-changelog --outfile CHANGELOG.md --release-count 0",
