@@ -1,3 +1,12 @@
+<a name="1.0.29"></a>
+## 1.0.29 (2017-07-19)
+
+* 1.0.29 ([93adaf9](https://github.com/wessberg/di-compiler/commit/93adaf9))
+* Bumped version ([4c9f658](https://github.com/wessberg/di-compiler/commit/4c9f658))
+* Fixed an issue in the README ([ad567f7](https://github.com/wessberg/di-compiler/commit/ad567f7))
+
+
+
 <a name="1.0.28"></a>
 ## 1.0.28 (2017-07-19)
 
