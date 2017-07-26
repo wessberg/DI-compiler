@@ -48,7 +48,8 @@ export class ServiceExpressionUpdater implements IServiceExpressionUpdater {
 		const config = {
 			// The identifier for the service will be the first generic argument - the interface.
 			identifier: `"${identifier.name}"`,
-			implementation: implementation.name
+			// If a custom constructor has been given, pass 'null' as the name of the implementation.
+			implementation: expression.arguments.argumentsList.length < 1 ? implementation.name : null
 		};
 
 		// If no arguments has been given, pass in "undefined" as the first argument before providing the options object":

@@ -44,8 +44,8 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@types/node": "^8.0.14",
-		"@wessberg/di": "^1.0.21",
+		"@types/node": "^8.0.17",
+		"@wessberg/di": "^1.0.22",
 		"@wessberg/ts-config": "0.0.20",
 		"ava": "^0.21.0",
 		"typescript": "2.4.2",
@@ -58,7 +58,7 @@
 		"@wessberg/compiler-common": "^1.0.0",
 		"@wessberg/globalobject": "^1.0.7",
 		"@wessberg/typedetector": "^1.0.6",
-		"magic-string": "^0.22.2",
+		"magic-string": "^0.22.3",
 		"tslib": "^1.7.1"
 	},
 	"repository": {
