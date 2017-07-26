@@ -1,3 +1,11 @@
+<a name="1.0.35"></a>
+## 1.0.35 (2017-07-26)
+
+* Bumped dependencies ([3184f2f](https://github.com/wessberg/di-compiler/commit/3184f2f))
+* Bumped version ([835d74e](https://github.com/wessberg/di-compiler/commit/835d74e))
+
+
+
 <a name="1.0.34"></a>
 ## 1.0.34 (2017-07-20)
 
