@@ -1,8 +1,11 @@
-<a name="1.0.35"></a>
-## 1.0.35 (2017-07-26)
+<a name="1.0.36"></a>
+## 1.0.36 (2017-07-28)
 
+* 1.0.36 ([fbc00fd](https://github.com/wessberg/di-compiler/commit/fbc00fd))
 * Bumped dependencies ([3184f2f](https://github.com/wessberg/di-compiler/commit/3184f2f))
+* Bumped version ([9346919](https://github.com/wessberg/di-compiler/commit/9346919))
 * Bumped version ([835d74e](https://github.com/wessberg/di-compiler/commit/835d74e))
+* Made shimming the global object optional ([2f303f6](https://github.com/wessberg/di-compiler/commit/2f303f6))
 
 
 
