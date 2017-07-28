@@ -1,3 +1,12 @@
+<a name="1.0.37"></a>
+## 1.0.37 (2017-07-28)
+
+* 1.0.37 ([8b2ab51](https://github.com/wessberg/di-compiler/commit/8b2ab51))
+* Bumped dependency on CodeAnalyzer ([48cc095](https://github.com/wessberg/di-compiler/commit/48cc095))
+* Bumped version ([690cfeb](https://github.com/wessberg/di-compiler/commit/690cfeb))
+
+
+
 <a name="1.0.36"></a>
 ## 1.0.36 (2017-07-28)
 
