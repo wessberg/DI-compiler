@@ -9,6 +9,7 @@ import {ContainerReferenceFinder} from "./ContainerReferenceFinder/ContainerRefe
 import {diConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
+import {shimGlobalObjectStringified} from "@wessberg/globalobject";
 
 export interface ICompileFileResult extends IHasAlteredable {
 	code: string;
@@ -54,8 +55,10 @@ export function compile (id: string, code: string, excludePaths?: RegExp|RegExp[
 
 /**
  * Retrieves and returns a stringified map between class identifiers and their constructor arguments.
+ * @param {boolean} [shimGlobalObject=false]
  * @returns {string}
  */
-export function getIntro (): string {
-	return compiler.getClassConstructorArgumentsMapStringified();
+export function getIntro (shimGlobalObject: boolean = false): string {
+	const stringifiedMap = compiler.getClassConstructorArgumentsMapStringified();
+	return shimGlobalObject ? `${shimGlobalObjectStringified}\n${stringifiedMap}` : stringifiedMap;
 }

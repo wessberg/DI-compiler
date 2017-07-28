@@ -2,7 +2,6 @@ import {IClassConstructorArgumentsStringifier} from "./Interface/IClassConstruct
 import {IDIConfig} from "../DIConfig/Interface/IDIConfig";
 import {IMappedInterfaceToImplementationMap} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {IClassIndexer, IParameter} from "@wessberg/codeanalyzer";
-import {shimGlobalObjectStringified} from "@wessberg/globalobject";
 
 /**
  * This class generates a stringified map between classes and the services that their constructors depend on.
@@ -20,7 +19,6 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 	 * @returns {string}
 	 */
 	public getClassConstructorArgumentsStringified (classes: IClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string {
-		const globalShim = `${shimGlobalObjectStringified}\n`;
 		const identifier = `global.${this.config.interfaceConstructorArgumentsMapName}`;
 		let map = "{\n";
 		const keys = Object.keys(mappedInterfaces);
@@ -38,7 +36,7 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 			map += "\n";
 		});
 		map += "};";
-		const returnValue = `${globalShim}\nconst ${this.config.interfaceConstructorArgumentsMapName} = ${map}`;
+		const returnValue = `\nconst ${this.config.interfaceConstructorArgumentsMapName} = ${map}`;
 		return returnValue + `\n${identifier} = ${identifier} != null ? Object.assign(${identifier}, ${this.config.interfaceConstructorArgumentsMapName}) : ${this.config.interfaceConstructorArgumentsMapName};`;
 	}
 
