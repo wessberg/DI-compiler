@@ -1,3 +1,11 @@
+<a name="1.0.38"></a>
+## 1.0.38 (2017-07-28)
+
+* 1.0.38 ([ca147d8](https://github.com/wessberg/di-compiler/commit/ca147d8))
+* Bumped version ([258a5eb](https://github.com/wessberg/di-compiler/commit/258a5eb))
+
+
+
 <a name="1.0.37"></a>
 ## 1.0.37 (2017-07-28)
 
