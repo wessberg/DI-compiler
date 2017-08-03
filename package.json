@@ -44,7 +44,7 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@types/node": "^8.0.17",
+		"@types/node": "^8.0.19",
 		"@wessberg/di": "^1.0.22",
 		"@wessberg/ts-config": "0.0.20",
 		"ava": "^0.21.0",
@@ -54,11 +54,11 @@
 		"conventional-changelog-cli": "latest"
 	},
 	"dependencies": {
-		"@wessberg/codeanalyzer": "^1.0.48",
+		"@wessberg/codeanalyzer": "^1.0.49",
 		"@wessberg/compiler-common": "^1.0.0",
 		"@wessberg/globalobject": "^1.0.7",
 		"@wessberg/typedetector": "^1.0.6",
-		"magic-string": "^0.22.3",
+		"magic-string": "^0.22.4",
 		"tslib": "^1.7.1"
 	},
 	"repository": {
