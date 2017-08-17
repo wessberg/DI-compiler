@@ -44,14 +44,14 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@types/node": "^8.0.19",
+		"@types/node": "^8.0.24",
 		"@wessberg/di": "^1.0.22",
-		"@wessberg/ts-config": "0.0.20",
-		"ava": "^0.21.0",
-		"typescript": "2.4.2",
-		"tslint": "latest",
+		"@wessberg/ts-config": "0.0.21",
+		"ava": "^0.22.0",
+		"conventional-changelog-cli": "latest",
 		"husky": "latest",
-		"conventional-changelog-cli": "latest"
+		"tslint": "^5.6.0",
+		"typescript": "2.4.2"
 	},
 	"dependencies": {
 		"@wessberg/codeanalyzer": "^1.0.49",

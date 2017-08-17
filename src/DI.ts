@@ -42,6 +42,7 @@ export function compile (id: string, code: string, excludePaths?: RegExp|RegExp[
 		code: magicString,
 		hasAltered: false
 	};
+
 	const result = compiler.compile(id, codeContainer);
 
 	return {

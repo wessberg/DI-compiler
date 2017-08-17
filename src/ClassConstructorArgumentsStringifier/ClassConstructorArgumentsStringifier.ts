@@ -22,7 +22,6 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 		const identifier = `global.${this.config.interfaceConstructorArgumentsMapName}`;
 		let map = "{\n";
 		const keys = Object.keys(mappedInterfaces);
-		const classKeys = Object.keys(classes);
 
 		keys.forEach((key, index) => {
 			const className = mappedInterfaces[key];
@@ -32,7 +31,7 @@ export class ClassConstructorArgumentsStringifier implements IClassConstructorAr
 
 			map += `\t${key}: `;
 			map += `[${mappedArguments}]`;
-			if (index !== classKeys.length - 1) map += ",";
+			if (index !== keys.length - 1) map += ",";
 			map += "\n";
 		});
 		map += "};";
