@@ -77,15 +77,6 @@ export class Compiler implements ICompiler {
 	}
 
 	/**
-	 * Returns true if the given filepath should be excluded
-	 * @param {string} filepath
-	 * @returns {boolean}
-	 */
-	private isExcluded (filepath: string): boolean {
-		return this.pathValidator.isBlacklisted(filepath) || [...this.excludedFiles].some(regex => regex.test(filepath));
-	}
-
-	/**
 	 * The consumable method that upgrades the code as per the class description.
 	 * @param {string} filepath
 	 * @param {ICompilerResult} codeContainer
@@ -95,7 +86,10 @@ export class Compiler implements ICompiler {
 		if (this.isExcluded(filepath)) return {hasAltered: false, code: codeContainer.code};
 
 		const {host} = this;
-		this.resolveDependencies(filepath);
+
+		// Add the path (and the class declarations it contains) to the compiler
+		Compiler.resolvedPaths.add(filepath);
+		Compiler.classes.push(...this.filterOutNoInjectClasses(this.host.getClassesForFile(filepath)));
 
 		// Finds all references to the DIContainer instance.
 		const identifiers = new Set([diConfig.exportName]);
@@ -110,24 +104,12 @@ export class Compiler implements ICompiler {
 	}
 
 	/**
-	 * Resolves all dependencies for the provided filepath
+	 * Returns true if the given filepath should be excluded
 	 * @param {string} filepath
+	 * @returns {boolean}
 	 */
-	private resolveDependencies (filepath: string): void {
-		Compiler.resolvedPaths.add(filepath);
-		const imports = this.host.getImportedFilesForFile(filepath);
-
-		// Dedupe and add with existing filepath.
-		const paths = new Set([filepath, ...imports].filter(path => !this.isExcluded(path)));
-
-		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
-		paths.forEach(path => {
-			const classes = this.filterOutNoInjectClasses(this.host.getClassesForFile(path));
-			Compiler.classes.push(...classes);
-
-			// Recurse all through the tree of dependencies.
-			if (!Compiler.resolvedPaths.has(path)) this.resolveDependencies(path);
-		});
+	private isExcluded (filepath: string): boolean {
+		return this.pathValidator.isBlacklisted(filepath) || [...this.excludedFiles].some(regex => regex.test(filepath));
 	}
 
 	/**
