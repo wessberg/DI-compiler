@@ -1,3 +1,12 @@
+<a name="1.0.45"></a>
+## 1.0.45 (2017-08-28)
+
+* 1.0.45 ([d48376a](https://github.com/wessberg/di-compiler/commit/d48376a))
+* Bumped version ([edbf7aa](https://github.com/wessberg/di-compiler/commit/edbf7aa))
+* Qualified call expressions ([298768c](https://github.com/wessberg/di-compiler/commit/298768c))
+
+
+
 <a name="1.0.44"></a>
 ## 1.0.44 (2017-08-28)
 
