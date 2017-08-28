@@ -1,3 +1,12 @@
+<a name="1.0.44"></a>
+## 1.0.44 (2017-08-28)
+
+* 1.0.44 ([137d913](https://github.com/wessberg/di-compiler/commit/137d913))
+* Added the possibility of excluding files ([f449c6e](https://github.com/wessberg/di-compiler/commit/f449c6e))
+* Bumped version ([25e24f5](https://github.com/wessberg/di-compiler/commit/25e24f5))
+
+
+
 <a name="1.0.43"></a>
 ## 1.0.43 (2017-08-28)
 
