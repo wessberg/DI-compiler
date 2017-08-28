@@ -1,5 +1,6 @@
 import {IServiceExpressionFinder, IServiceExpressionFinderFindMethodOptions} from "./Interface/IServiceExpressionFinder";
 import {IFormattedCallExpression, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
+import {diConfig} from "../DIConfig/DIConfig";
 
 /**
  * Finds all expressions in the given statements related to the DIContainer.
@@ -16,7 +17,7 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 	 * @returns {IFormattedCallExpression[]}
 	 */
 	public find ({host, identifiers, filepath}: IServiceExpressionFinderFindMethodOptions): IFormattedCallExpression[] {
-		const expressions = host.getCallExpressionsForFile(filepath);
+		const expressions = host.findMatchingCallExpressionsForFile(filepath, diConfig.exportName);
 		return expressions.filter(exp => {
 			// We only support call expressions for now
 			if (!isFormattedPropertyAccessExpression(exp.expression)) return;
