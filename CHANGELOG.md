@@ -1,3 +1,11 @@
+<a name="1.0.42"></a>
+## 1.0.42 (2017-08-28)
+
+* 1.0.42 ([8e2b0ce](https://github.com/wessberg/di-compiler/commit/8e2b0ce))
+* Updated config ([1b48ae2](https://github.com/wessberg/di-compiler/commit/1b48ae2))
+
+
+
 <a name="1.0.41"></a>
 ## 1.0.41 (2017-08-28)
 
