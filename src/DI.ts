@@ -5,7 +5,6 @@ import {ClassConstructorArgumentsStringifier} from "./ClassConstructorArgumentsS
 import {ClassConstructorArgumentsValidator} from "./ClassConstructorArgumentsValidator/ClassConstructorArgumentsValidator";
 import {Compiler} from "./Compiler/Compiler";
 import {ICompilerResult, IHasAlteredable} from "./Compiler/Interface/ICompiler";
-import {ContainerReferenceFinder} from "./ContainerReferenceFinder/ContainerReferenceFinder";
 import {diConfig} from "./DIConfig/DIConfig";
 import {ServiceExpressionFinder} from "./ServiceExpressionFinder/ServiceExpressionFinder";
 import {ServiceExpressionUpdater} from "./ServiceExpressionUpdater/ServiceExpressionUpdater";
@@ -19,7 +18,6 @@ export interface ICompileFileResult extends IHasAlteredable {
 const typeDetector = new TypeDetector();
 const compiler = new Compiler(
 	new CodeAnalyzer(),
-	new ContainerReferenceFinder(diConfig),
 	new ServiceExpressionFinder(),
 	new ServiceExpressionUpdater(diConfig, typeDetector),
 	new ClassConstructorArgumentsValidator(),

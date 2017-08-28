@@ -1,12 +1,12 @@
 import {ICompiler, ICompilerResult} from "./Interface/ICompiler";
-import {IContainerReferenceFinder} from "../ContainerReferenceFinder/Interface/IContainerReferenceFinder";
 import {IServiceExpressionFinder} from "../ServiceExpressionFinder/Interface/IServiceExpressionFinder";
 import {IMappedInterfaceToImplementationMap, IServiceExpressionUpdater} from "../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
 import {IClassConstructorArgumentsStringifier} from "../ClassConstructorArgumentsStringifier/Interface/IClassConstructorArgumentsStringifier";
 import {IClassConstructorArgumentsValidator} from "../ClassConstructorArgumentsValidator/Interface/IClassConstructorArgumentsValidator";
-import {BindingIdentifier, IClassIndexer, ICodeAnalyzer} from "@wessberg/codeanalyzer";
+import {ICodeAnalyzer} from "@wessberg/codeanalyzer";
 import {IPathValidator, PathValidator} from "@wessberg/compiler-common";
 import {diConfig} from "../DIConfig/DIConfig";
+import {IFormattedClass} from "@wessberg/type";
 
 /**
  * The compiler will upgrade the source code. It looks for every time a service is registered and mimics reflection.
@@ -17,9 +17,9 @@ import {diConfig} from "../DIConfig/DIConfig";
 export class Compiler implements ICompiler {
 	/**
 	 * A collection of all classes discovered by parsing the input files
-	 * @type {IClassIndexer}
+	 * @type {IFormattedClass[]}
 	 */
-	private static classes: IClassIndexer = {};
+	private static classes: IFormattedClass[] = [];
 
 	/**
 	 * A Set of all the paths that has been resolved.
@@ -39,8 +39,13 @@ export class Compiler implements ICompiler {
 	 */
 	private pathValidator: IPathValidator = new PathValidator();
 
+	/**
+	 * The Set of all Regular Expressions for matching files to be excluded
+	 * @type {Set<RegExp>}
+	 */
+	private excludedFiles: Set<RegExp> = new Set();
+
 	constructor (private host: ICodeAnalyzer,
-							 private containerReferenceFinder: IContainerReferenceFinder,
 							 private serviceExpressionFinder: IServiceExpressionFinder,
 							 private serviceExpressionUpdater: IServiceExpressionUpdater,
 							 private classConstructorArgumentsValidator: IClassConstructorArgumentsValidator,
@@ -52,7 +57,8 @@ export class Compiler implements ICompiler {
 	 * @param {RegExp | RegExp[] | Set<RegExp>} match
 	 */
 	public excludeFiles (match: RegExp|RegExp[]|Set<RegExp>): void {
-		this.host.excludeFiles(match);
+		if (match instanceof Set || Array.isArray(match)) [...match].forEach(regExpItem => this.excludedFiles.add(regExpItem));
+		else this.excludedFiles.add(match);
 	}
 
 	/**
@@ -67,24 +73,31 @@ export class Compiler implements ICompiler {
 	}
 
 	/**
+	 * Returns true if the given filepath should be excluded
+	 * @param {string} filepath
+	 * @returns {boolean}
+	 */
+	private isExcluded (filepath: string): boolean {
+		return this.pathValidator.isBlacklisted(filepath) || [...this.excludedFiles].some(regex => regex.test(filepath));
+	}
+
+	/**
 	 * The consumable method that upgrades the code as per the class description.
 	 * @param {string} filepath
 	 * @param {ICompilerResult} codeContainer
 	 * @returns {ICompilerResult}
 	 */
 	public compile (filepath: string, codeContainer: ICompilerResult): ICompilerResult {
-		if (this.pathValidator.isBlacklisted(filepath)) return {hasAltered: false, code: codeContainer.code};
+		if (this.isExcluded(filepath)) return {hasAltered: false, code: codeContainer.code};
 
-		const code = codeContainer.code.toString();
 		const {host} = this;
-		const statements = host.addFile(filepath, code);
 		this.resolveDependencies(filepath);
 
 		// Finds all references to the DIContainer instance.
-		const identifiers = this.containerReferenceFinder.find({host, statements});
+		const identifiers = new Set([diConfig.exportName]);
 
 		// Finds (and validates) all expressions that has a relation to the DIContainer instance.
-		const expressions = this.serviceExpressionFinder.find({host, statements, identifiers, filepath});
+		const expressions = this.serviceExpressionFinder.find({host, identifiers, filepath});
 
 		// Updates all expressions.
 		this.serviceExpressionUpdater.update({codeContainer, expressions, mappedInterfaces: Compiler.mappedInterfaces});
@@ -98,30 +111,15 @@ export class Compiler implements ICompiler {
 	 */
 	private resolveDependencies (filepath: string): void {
 		Compiler.resolvedPaths.add(filepath);
-		const imports = this.host.getImportDeclarationsForFile(filepath, true);
-		const exports = this.host.getExportDeclarationsForFile(filepath, true);
-
-		// Take all relevant import paths.
-		const importPaths: string[] = imports.map(importDeclaration => {
-			if (importDeclaration.source instanceof BindingIdentifier) return "";
-			return importDeclaration.source.fullPath();
-		}).filter(part => part.length > 0);
-
-		// Take all relevant export paths.
-		const exportPaths: string[] = exports.map(exportDeclaration => {
-			if (exportDeclaration.source instanceof BindingIdentifier) return "";
-			const fullPath = exportDeclaration.source.fullPath();
-			if (fullPath === exportDeclaration.filePath) return "";
-			return fullPath;
-		}).filter(part => part.length > 0);
+		const imports = this.host.getImportedFilesForFile(filepath);
 
 		// Dedupe and add with existing filepath.
-		const paths = new Set([filepath, ...importPaths, ...exportPaths]);
+		const paths = new Set([filepath, ...imports].filter(path => !this.isExcluded(path)));
 
 		// Tracks class declarations so we can extract their constructor arguments and decide if we should dependency inject them.
 		paths.forEach(path => {
-			const classes = this.filterOutNoInjectClasses(this.host.getClassDeclarationsForFile(path, true));
-			Object.assign(Compiler.classes, classes);
+			const classes = this.filterOutNoInjectClasses(this.host.getClassesForFile(path));
+			Compiler.classes.push(...classes);
 
 			// Recurse all through the tree of dependencies.
 			if (!Compiler.resolvedPaths.has(path)) this.resolveDependencies(path);
@@ -131,16 +129,10 @@ export class Compiler implements ICompiler {
 	/**
 	 * Returns a new class indexer will all classes that doesn't have a @noInject decorator.
 	 * @param classes
-	 * @returns {IClassIndexer}
+	 * @returns {IFormattedClass[]}
 	 */
-	private filterOutNoInjectClasses (classes: IClassIndexer): IClassIndexer {
-		const newClassIndexer: IClassIndexer = {};
-		Object.keys(classes).forEach(key => {
-			const declaration = classes[key];
-			const hasNoInjectDecorator = declaration.decorators[diConfig.decorator.noInjectName] != null;
-			if (!hasNoInjectDecorator) newClassIndexer[key] = declaration;
-		});
-		return newClassIndexer;
+	private filterOutNoInjectClasses (classes: IFormattedClass[]): IFormattedClass[] {
+		return classes.filter(formattedClass => formattedClass.decorators.find(decorator => decorator.toString().startsWith(`@${diConfig.decorator.noInjectName}`)) == null);
 	}
 
 }

@@ -1,5 +1,5 @@
 import {IServiceExpressionFinder, IServiceExpressionFinderFindMethodOptions} from "./Interface/IServiceExpressionFinder";
-import {ICallExpression} from "@wessberg/codeanalyzer";
+import {IFormattedCallExpression, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
 
 /**
  * Finds all expressions in the given statements related to the DIContainer.
@@ -13,12 +13,18 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 	 * @param statements
 	 * @param {Set<string>} identifiers
 	 * @param {string} filepath
-	 * @returns {ICallExpression[]}
+	 * @returns {IFormattedCallExpression[]}
 	 */
-	public find ({host, statements, identifiers, filepath}: IServiceExpressionFinderFindMethodOptions): ICallExpression[] {
-		const expressions = host.getCallExpressions(statements, true);
+	public find ({host, identifiers, filepath}: IServiceExpressionFinderFindMethodOptions): IFormattedCallExpression[] {
+		const expressions = host.getCallExpressionsForFile(filepath);
+		console.log(expressions);
 		return expressions.filter(exp => {
-			if (exp.property == null || !identifiers.has(exp.property.toString())) return false;
+			// We only support call expressions for now
+			if (!isFormattedPropertyAccessExpression(exp.expression)) return;
+			// We only support property access expressions where the left-hand expression is an identifier for now
+
+			if (!isFormattedIdentifier(exp.expression.expression)) return;
+			if (exp.expression.expression.name == null || !identifiers.has(exp.expression.expression.name)) return false;
 			this.assertNoArguments(exp, filepath);
 			return true;
 		});
@@ -26,20 +32,19 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 
 	/**
 	 * Asserts that no arguments are given to the provided expression.
-	 * @param {ICallExpression} expression
+	 * @param {IFormattedCallExpression} expression
 	 * @param {string} filepath
 	 * @returns {void}
 	 */
-	private assertNoArguments (expression: ICallExpression, filepath: string): void {
-		if (expression.arguments.argumentsList.length === 0) return;
-		const formattedExpression = `${expression.property}.${expression.identifier}<${expression.type.flattened}>(${expression.arguments.argumentsList.map(arg => arg.value.hasDoneFirstResolve() ? arg.value.resolved : arg.value.resolve()).join(", ")})`;
+	private assertNoArguments (expression: IFormattedCallExpression, filepath: string): void {
+		if (expression.arguments.arguments.length === 0) return;
 
-		if (expression.type.bindings == null || expression.type.bindings.length < 2) {
-			throw new TypeError(`Found an issue in ${filepath}: You must pass an implementation as the second generic type parameter here: ${formattedExpression}`);
+		if (expression.typeArguments.length === 0 || expression.typeArguments.length < 2) {
+			throw new TypeError(`Found an issue in ${filepath}: You must pass an implementation as the second generic type parameter here: ${expression.toString()}`);
 		}
 
-		if (expression.arguments.argumentsList.length > 1) {
-			throw new TypeError(`Found an issue in ${filepath}: You shouldn't pass a second argument around here: ${formattedExpression}. Instead, let the compiler do it for you.`);
+		if (expression.arguments.arguments.length > 1) {
+			throw new TypeError(`Found an issue in ${filepath}: You shouldn't pass a second argument around here: ${expression.toString()}. Instead, let the compiler do it for you.`);
 		}
 	}
 

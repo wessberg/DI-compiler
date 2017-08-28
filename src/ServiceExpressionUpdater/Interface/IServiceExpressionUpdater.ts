@@ -1,15 +1,15 @@
 import {ICompilerResult} from "../../Compiler/Interface/ICompiler";
-import {ICallExpression} from "@wessberg/codeanalyzer";
+import {IFormattedCallExpression} from "@wessberg/type";
 
 export interface IServiceExpressionUpdaterUpdateMethodOptions {
 	codeContainer: ICompilerResult;
-	expressions: ICallExpression[];
+	expressions: IFormattedCallExpression[];
 	mappedInterfaces: IMappedInterfaceToImplementationMap;
 }
 
 export interface IServiceExpressionUpdaterRegisterExpressionHandlerOptions {
 	codeContainer: ICompilerResult;
-	expression: ICallExpression;
+	expression: IFormattedCallExpression;
 }
 
 export interface IMappedInterfaceToImplementationMap {

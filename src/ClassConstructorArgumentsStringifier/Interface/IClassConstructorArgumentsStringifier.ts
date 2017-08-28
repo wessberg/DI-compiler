@@ -1,6 +1,6 @@
 import {IMappedInterfaceToImplementationMap} from "../../ServiceExpressionUpdater/Interface/IServiceExpressionUpdater";
-import {IClassIndexer} from "@wessberg/codeanalyzer";
+import {IFormattedClass} from "@wessberg/type";
 
 export interface IClassConstructorArgumentsStringifier {
-	getClassConstructorArgumentsStringified (classes: IClassIndexer, mappedInterfaces: IMappedInterfaceToImplementationMap): string;
+	getClassConstructorArgumentsStringified (classes: IFormattedClass[], mappedInterfaces: IMappedInterfaceToImplementationMap): string;
 }
