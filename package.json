@@ -53,7 +53,7 @@
 		"typescript": "^2.5.1"
 	},
 	"dependencies": {
-		"@wessberg/codeanalyzer": "^1.0.56",
+		"@wessberg/codeanalyzer": "^1.0.57",
 		"@wessberg/compiler-common": "^1.0.0",
 		"@wessberg/globalobject": "^1.0.7",
 		"@wessberg/type": "^0.0.78",

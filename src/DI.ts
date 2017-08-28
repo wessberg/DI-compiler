@@ -29,10 +29,10 @@ const compiler = new Compiler(
  * It will upgrade the code (see the Compiler class description) and return the upgraded code and generate a sourcemap.
  * @param {string} id
  * @param {string} code
- * @param {RegExp|RegExp[]|Set<RegExp>} [excludePaths]
+ * @param {RegExp|RegExp[]|Iterable<RegExp>} [excludePaths]
  * @returns {ICompileFileResult}
  */
-export function compile (id: string, code: string, excludePaths?: RegExp|RegExp[]|Set<RegExp>): ICompileFileResult {
+export function compile (id: string, code: string, excludePaths?: RegExp|Iterable<RegExp>): ICompileFileResult {
 	const magicString = new (</*tslint:disable:no-any*/any/*tslint:enable:no-any*/>MagicString)(code);
 	if (excludePaths != null) compiler.excludeFiles(excludePaths);
 

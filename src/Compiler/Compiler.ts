@@ -56,9 +56,13 @@ export class Compiler implements ICompiler {
 	 * Excludes files from the compiler that matches the provided Regular Expression(s)
 	 * @param {RegExp | RegExp[] | Set<RegExp>} match
 	 */
-	public excludeFiles (match: RegExp|RegExp[]|Set<RegExp>): void {
-		if (match instanceof Set || Array.isArray(match)) [...match].forEach(regExpItem => this.excludedFiles.add(regExpItem));
-		else this.excludedFiles.add(match);
+	public excludeFiles (match: RegExp|Iterable<RegExp>): void {
+		// Exclude internally
+		if (match instanceof RegExp) this.excludedFiles.add(match);
+		else [...match].forEach(regExpItem => this.excludedFiles.add(regExpItem));
+
+		// Exclude externally
+		this.host.excludeFiles(match);
 	}
 
 	/**
