@@ -1,3 +1,12 @@
+<a name="1.0.47"></a>
+## 1.0.47 (2017-08-28)
+
+* 1.0.47 ([f270ef3](https://github.com/wessberg/di-compiler/commit/f270ef3))
+* Bumped deps. Performance improvements ([9ae775c](https://github.com/wessberg/di-compiler/commit/9ae775c))
+* Bumped version ([1871097](https://github.com/wessberg/di-compiler/commit/1871097))
+
+
+
 <a name="1.0.46"></a>
 ## 1.0.46 (2017-08-28)
 
