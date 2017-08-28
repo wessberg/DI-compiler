@@ -17,7 +17,6 @@ export class ServiceExpressionFinder implements IServiceExpressionFinder {
 	 */
 	public find ({host, identifiers, filepath}: IServiceExpressionFinderFindMethodOptions): IFormattedCallExpression[] {
 		const expressions = host.getCallExpressionsForFile(filepath);
-		console.log(expressions);
 		return expressions.filter(exp => {
 			// We only support call expressions for now
 			if (!isFormattedPropertyAccessExpression(exp.expression)) return;
