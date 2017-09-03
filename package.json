@@ -53,8 +53,8 @@
 	},
 	"dependencies": {
 		"@types/chalk": "^0.4.31",
-		"@wessberg/codeanalyzer": "^1.0.63",
-		"@wessberg/type": "0.0.87",
+		"@wessberg/codeanalyzer": "^1.0.65",
+		"@wessberg/type": "0.0.88",
 		"chalk": "^2.1.0",
 		"magic-string": "^0.22.4",
 		"tslib": "^1.7.1"
