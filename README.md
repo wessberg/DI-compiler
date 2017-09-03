@@ -15,20 +15,21 @@ Simply do: `npm install @wessberg/di-compiler`.
 
 ## Usage
 ```typescript
-import {compile, getIntro} from "@wessberg/di-compiler";
+import {DICompiler} from "@wessberg/di-compiler";
 
-// The 'compile' method will upgrade all service registrations and 'get' calls
-// throughout the code
-const compiled = compile(
-	"a_file.ts", `
-	class Foo implements IFoo {}
-	DIContainer.registerSingleton<IFoo, Foo>();
-	`);
+// Instantiate the compiler
+const compiler = new DICompiler();
 
-// The intro is a map between interface names and the constructor arguments
-// of their concrete implementations. Should only be injected once in your code
-// and at best in top of your bundle.
-const intro = getIntro();
+// The 'compile' method will upgrade all 'registerSingleton', 'registerTransient', 'get' and 'has' calls throughout the code
+// and resolve the constructor arguments of all classes that matches the provided services
+const compiled = compiler.compile({
+  file: "a_file.ts",
+  code: `class Foo implements IFoo {}
+         DIContainer.registerSingleton<IFoo, Foo>();`
+});
+compiled.code; // The updated code
+compiled.hasChanged; // is true if the source code was upgraded
+compiled.map // Holds a SourceMap reflecting the changes
 ```
 
 If you are using [Rollup](https://github.com/rollup/rollup), then use [rollup-plugin-di](https://github.com/wessberg/rollup-plugin-di) to compile your code automatically as part of your bundle, rather than using this compiler.

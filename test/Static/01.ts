@@ -1,37 +1,15 @@
-/*tslint:disable*/
-
-import {IDIContainer} from "@wessberg/di";
-
-interface IFoo {
+export interface IFoo {
 	a: string;
 }
 
-interface IBar {
+/**
+ * Foobar
+ */
+export class Foo implements IFoo {
+
+	/**
+	 * Foobar
+	 * @type {string}
+	 */
+	public a: string = "foo";
 }
-
-interface IBaz extends IBar {
-}
-
-declare const DIContainer: IDIContainer;
-
-class Foo implements IFoo {
-	a: string = "foo";
-}
-
-class Bar implements IBar {
-	works: boolean = false;
-
-	constructor (foo: IFoo, _test = 2, _foo2: IFoo) {
-		this.works = foo.a != null;
-	}
-}
-
-class Baz extends Bar implements IBaz {
-
-}
-
-DIContainer.registerSingleton<IFoo, Foo>(() => new Foo());
-DIContainer.registerSingleton<IBar, Bar>();
-DIContainer.registerSingleton<IBaz, Baz>();
-DIContainer.get<IBar>();
-/*tslint:enable*/
