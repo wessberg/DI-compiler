@@ -1,7 +1,7 @@
-import {SourceMap} from "magic-string";
+import {ICodeContainerSourceMap} from "../code-container/i-code-container-source-map";
 
 export interface IDICompilerCompileResult {
 	code: string;
-	map: SourceMap;
+	map: ICodeContainerSourceMap;
 	hasChanged: boolean;
 }
