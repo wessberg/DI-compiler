@@ -1,3 +1,35 @@
+<a name="1.0.51"></a>
+## 1.0.51 (2017-09-03)
+
+* 1.0.51 ([4b33650](https://github.com/wessberg/di-compiler/commit/4b33650))
+
+
+
+<a name="1.0.50"></a>
+## 1.0.50 (2017-09-03)
+
+* 1.0.50 ([5614c8c](https://github.com/wessberg/di-compiler/commit/5614c8c))
+* Added a custom SourceMap type ([2f640e0](https://github.com/wessberg/di-compiler/commit/2f640e0))
+
+
+
+<a name="1.0.49"></a>
+## 1.0.49 (2017-09-03)
+
+* 1.0.49 ([3749cde](https://github.com/wessberg/di-compiler/commit/3749cde))
+* Added a return type ([6932cb3](https://github.com/wessberg/di-compiler/commit/6932cb3))
+
+
+
+<a name="1.0.48"></a>
+## 1.0.48 (2017-09-03)
+
+* 1.0.48 ([c082fcc](https://github.com/wessberg/di-compiler/commit/c082fcc))
+* Bumped version ([19694d7](https://github.com/wessberg/di-compiler/commit/19694d7))
+* Rewrote entirely ([ea6665b](https://github.com/wessberg/di-compiler/commit/ea6665b))
+
+
+
 <a name="1.0.47"></a>
 ## 1.0.47 (2017-08-28)
 
