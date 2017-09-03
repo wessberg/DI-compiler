@@ -1,6 +1,6 @@
 import {ICodeContainer} from "./i-code-container";
 import {ICodeContainerOptions} from "./i-code-container-options";
-import MagicString from "magic-string";
+import MagicString, {SourceMap} from "magic-string";
 
 /**
  * A container that wraps some code that can be mutated and can generate a new SourceMap
@@ -57,7 +57,7 @@ export class CodeContainer implements ICodeContainer {
 	 * Gets the SourceMap reflecting any updates
 	 * @returns {SourceMap}
 	 */
-	public get map () {
+	public get map (): SourceMap {
 		return this.magicString.generateMap({hires: true});
 	}
 
