@@ -1,1 +1,0 @@
-export {IFoo, Foo} from "./Service";

@@ -1,1 +1,2 @@
-export {compile, getIntro, ICompileFileResult} from "./DI";
+export {DICompiler} from "./di-compiler/di-compiler";
+export {IDICompiler} from "./di-compiler/i-di-compiler";
