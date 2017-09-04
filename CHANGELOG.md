@@ -1,3 +1,12 @@
+<a name="1.0.54"></a>
+## 1.0.54 (2017-09-04)
+
+* 1.0.54 ([4c0f30b](https://github.com/wessberg/di-compiler/commit/4c0f30b))
+* Added logic for marking files that needs recompilation ([bcf34cc](https://github.com/wessberg/di-compiler/commit/bcf34cc))
+* Bumped version ([0426cbd](https://github.com/wessberg/di-compiler/commit/0426cbd))
+
+
+
 <a name="1.0.53"></a>
 ## 1.0.53 (2017-09-04)
 
