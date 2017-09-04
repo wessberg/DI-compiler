@@ -1,3 +1,12 @@
+<a name="1.0.53"></a>
+## 1.0.53 (2017-09-04)
+
+* 1.0.53 ([c8c83f8](https://github.com/wessberg/di-compiler/commit/c8c83f8))
+* Bumped deps ([b6c4f91](https://github.com/wessberg/di-compiler/commit/b6c4f91))
+* Bumped version ([fc0ea96](https://github.com/wessberg/di-compiler/commit/fc0ea96))
+
+
+
 <a name="1.0.52"></a>
 ## 1.0.52 (2017-09-03)
 
