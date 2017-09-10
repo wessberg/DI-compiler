@@ -16,6 +16,8 @@ export interface IDIHasExpression extends IDIExpression {
 
 export interface IDIRegisterExpression extends IDIExpression {
 	constructorArguments: Iterable<string|undefined>;
+	file: string;
+	serviceFile: string|null;
 }
 
 export interface IDIRegisterSingletonExpression extends IDIRegisterExpression {

@@ -1,6 +1,6 @@
 {
 	"name": "@wessberg/di-compiler",
-	"version": "1.0.53",
+	"version": "1.0.56",
 	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
 	"scripts": {
 		"test": "NODE_ENV=TEST time ava --fail-fast",
@@ -43,7 +43,7 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@types/node": "^8.0.26",
+		"@types/node": "^8.0.28",
 		"@wessberg/ts-config": "^0.0.23",
 		"ava": "^0.22.0",
 		"conventional-changelog-cli": "^1.3.3",
@@ -53,8 +53,8 @@
 	},
 	"dependencies": {
 		"@types/chalk": "^0.4.31",
-		"@wessberg/codeanalyzer": "^1.0.66",
-		"@wessberg/type": "0.0.88",
+		"@wessberg/codeanalyzer": "^1.0.70",
+		"@wessberg/type": "0.0.91",
 		"chalk": "^2.1.0",
 		"magic-string": "^0.22.4",
 		"tslib": "^1.7.1"

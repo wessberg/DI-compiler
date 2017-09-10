@@ -4,4 +4,5 @@ export interface IDICompilerCompileResult {
 	code: string;
 	map: ICodeContainerSourceMap;
 	hasChanged: boolean;
+	filesNeedingRecompilation: Iterable<string>;
 }

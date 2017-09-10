@@ -6,12 +6,14 @@ import {IDIExpressionFinderFindResult} from "./i-di-expression-finder-find-resul
 import {FormattedExpression, IFormattedCallExpression, IFormattedPropertyAccessExpression, isFormattedClass, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
 import {DIExpression} from "../di-expression/i-di-expression";
 import {DIExpressionKind} from "../di-expression/di-expression-kind";
+import {IDIExpressionFinderConstructorArgumentsResult} from "./i-di-expression-finder-constructor-arguments-result";
 
 /**
  * A class that can find all IDIExpressions in a file
  */
 export class DIExpressionFinder implements IDIExpressionFinder {
-	constructor (private host: ICodeAnalyzer, private diConfig: IDIConfig) {
+	constructor (private host: ICodeAnalyzer,
+							 private diConfig: IDIConfig) {
 	}
 
 	/**
@@ -56,17 +58,26 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 					kind: DIExpressionKind.HAS
 				};
 			case DIExpressionKind.REGISTER_TRANSIENT:
-				return {
-					expression,
-					kind: DIExpressionKind.REGISTER_TRANSIENT,
-					constructorArguments: this.getConstructorArgumentsForTypeArgument(expression.typeArguments[1])
-				};
 			case DIExpressionKind.REGISTER_SINGLETON:
-				return {
+				const {constructorArguments, serviceFile} = this.getConstructorArgumentsForTypeArgument(expression.typeArguments[1]);
+				const base = {
 					expression,
-					kind: DIExpressionKind.REGISTER_SINGLETON,
-					constructorArguments: this.getConstructorArgumentsForTypeArgument(expression.typeArguments[1])
+					file: expression.file,
+					kind: DIExpressionKind.REGISTER_TRANSIENT,
+					constructorArguments,
+					serviceFile
 				};
+				if (kind === DIExpressionKind.REGISTER_TRANSIENT) {
+					return {
+						...base,
+						kind: DIExpressionKind.REGISTER_TRANSIENT
+					};
+				} else {
+					return {
+						...base,
+						kind: DIExpressionKind.REGISTER_SINGLETON
+					};
+				}
 		}
 	}
 
@@ -91,10 +102,10 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 	/**
 	 * Gets all constructor arguments that matches the class that the TypeArgument refers to
 	 * @param {FormattedExpression} typeArgument
-	 * @returns {Iterable<string>}
+	 * @returns {IDIExpressionFinderConstructorArgumentsResult}
 	 */
-	private getConstructorArgumentsForTypeArgument (typeArgument: FormattedExpression): Iterable<string|undefined> {
-		const args: (string|undefined)[] = [];
+	private getConstructorArgumentsForTypeArgument (typeArgument: FormattedExpression): IDIExpressionFinderConstructorArgumentsResult {
+		const constructorArguments: (string|undefined)[] = [];
 
 		// Find the matching class declaration
 		const classDeclaration = this.host.getDefinitionMatchingExpression(typeArgument);
@@ -103,12 +114,16 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 		if (classDeclaration != null && isFormattedClass(classDeclaration) && classDeclaration.constructor != null) {
 			classDeclaration.constructor.parameters.forEach(parameter => {
 				// If the constructor argument has an initializer, respect it
-				if (parameter.initializer != null) args.push(undefined);
+				if (parameter.initializer != null) constructorArguments.push(undefined);
 				// Otherwise, add the name of the constructor type as a dependency injected service
-				else args.push(parameter.type.toString());
+				else constructorArguments.push(parameter.type.toString());
 			});
 		}
-		return args;
+
+		return {
+			constructorArguments,
+			serviceFile: classDeclaration == null ? null : classDeclaration.file
+		};
 	}
 
 }

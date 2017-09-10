@@ -1,3 +1,30 @@
+<a name="1.0.56"></a>
+## 1.0.56 (2017-09-10)
+
+* 1.0.56 ([f9cdac8](https://github.com/wessberg/di-compiler/commit/f9cdac8))
+* Bumped dependencies ([7cd515e](https://github.com/wessberg/di-compiler/commit/7cd515e))
+* Bumped version ([c6162ef](https://github.com/wessberg/di-compiler/commit/c6162ef))
+
+
+
+<a name="1.0.55"></a>
+## 1.0.55 (2017-09-04)
+
+* 1.0.55 ([1d40715](https://github.com/wessberg/di-compiler/commit/1d40715))
+* Bumped deps ([57462af](https://github.com/wessberg/di-compiler/commit/57462af))
+* Bumped version ([1140eb7](https://github.com/wessberg/di-compiler/commit/1140eb7))
+
+
+
+<a name="1.0.54"></a>
+## 1.0.54 (2017-09-04)
+
+* 1.0.54 ([4c0f30b](https://github.com/wessberg/di-compiler/commit/4c0f30b))
+* Added logic for marking files that needs recompilation ([bcf34cc](https://github.com/wessberg/di-compiler/commit/bcf34cc))
+* Bumped version ([0426cbd](https://github.com/wessberg/di-compiler/commit/0426cbd))
+
+
+
 <a name="1.0.53"></a>
 ## 1.0.53 (2017-09-04)
 
