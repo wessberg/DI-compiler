@@ -3,7 +3,7 @@ import {IDIConfig} from "../di-config/i-di-config";
 import {IDIExpressionFinder} from "./i-di-expression-finder";
 import {IDIExpressionFinderFindOptions} from "./i-di-expression-finder-find-options";
 import {IDIExpressionFinderFindResult} from "./i-di-expression-finder-find-result";
-import {FormattedExpression, IFormattedCallExpression, IFormattedPropertyAccessExpression, isFormattedClass, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
+import {FormattedExpression, IFormattedCallExpression, IFormattedClass, IFormattedClassConstructor, IFormattedPropertyAccessExpression, isFormattedClass, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
 import {DIExpression} from "../di-expression/i-di-expression";
 import {DIExpressionKind} from "../di-expression/di-expression-kind";
 import {IDIExpressionFinderConstructorArgumentsResult} from "./i-di-expression-finder-constructor-arguments-result";
@@ -110,20 +110,51 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 		// Find the matching class declaration
 		const classDeclaration = this.host.getDefinitionMatchingExpression(typeArgument);
 
-		// If the definition is indeed a class and it has a constructor
-		if (classDeclaration != null && isFormattedClass(classDeclaration) && classDeclaration.constructor != null) {
-			classDeclaration.constructor.parameters.forEach(parameter => {
-				// If the constructor argument has an initializer, respect it
-				if (parameter.initializer != null) constructorArguments.push(undefined);
-				// Otherwise, add the name of the constructor type as a dependency injected service
-				else constructorArguments.push(parameter.type.toString());
-			});
+		// If the definition is indeed a class
+		if (classDeclaration != null && isFormattedClass(classDeclaration)) {
+
+			// Check if it has or inherits a constructor
+			const constructor = this.getConstructor(classDeclaration);
+			if (constructor != null) {
+				constructor.parameters.forEach(parameter => {
+					// If the constructor argument has an initializer, respect it
+					if (parameter.initializer != null) constructorArguments.push(undefined);
+					// Otherwise, add the name of the constructor type as a dependency injected service
+					else constructorArguments.push(parameter.type.toString());
+				});
+			}
 		}
 
 		return {
 			constructorArguments,
 			serviceFile: classDeclaration == null ? null : classDeclaration.file
 		};
+	}
+
+	/**
+	 * Returns the constructor of a formatted class. May resolve it through the inheritance chain
+	 * @param {IFormattedExtendsHeritage} formatted
+	 * @returns {IFormattedClass|null}
+	 */
+	private getConstructor (formatted: IFormattedClass): IFormattedClassConstructor|null {
+
+		// If it has a constructor, return it immediately.
+		if (formatted.constructor != null) return formatted.constructor;
+
+		// Return an empty object if the formatted class doesn't extend anything that may have a constructor
+		if (formatted.extends == null) return null;
+
+		// Otherwise, get the parent identifier
+		const [parent] = formatted.extends.members;
+		const resolvedParent = <IFormattedClass|null> this.host.getDefinitionMatchingExpression(parent);
+
+		// If a parent could not be resolved, assume that the parent is a built-in (such as Error)
+		if (resolvedParent == null) {
+			return null;
+		}
+
+		// Otherwise, go up the inheritance chain recursively to find the constructor
+		return this.getConstructor(resolvedParent);
 	}
 
 }
