@@ -19,11 +19,12 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 	/**
 	 * Finds all DIContainer expressions and returns them
 	 * @param {string} file
+	 * @param {string} [code]
 	 * @returns {IDIExpressionFinderFindResult}
 	 */
-	public find ({file}: IDIExpressionFinderFindOptions): IDIExpressionFinderFindResult {
+	public find ({file, code}: IDIExpressionFinderFindOptions): IDIExpressionFinderFindResult {
 		const expressions: DIExpression[] = [];
-		this.host.findMatchingCallExpressionsForFile(file, this.diConfig.serviceContainerName)
+		this.host.findMatchingCallExpressionsForFile(file, this.diConfig.serviceContainerName, code)
 			.forEach(expression => {
 				// We only support call expressions for now
 				if (!isFormattedPropertyAccessExpression(expression.expression)) return;
