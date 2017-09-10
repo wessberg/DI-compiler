@@ -1,3 +1,12 @@
+<a name="1.0.59"></a>
+## 1.0.59 (2017-09-10)
+
+* 1.0.59 ([46307bf](https://github.com/wessberg/di-compiler/commit/46307bf))
+* Bumped version ([c95744d](https://github.com/wessberg/di-compiler/commit/c95744d))
+* The code that is optionally passed to the compiler will be provided to CodeAnalyzer ([f3ebac6](https://github.com/wessberg/di-compiler/commit/f3ebac6))
+
+
+
 <a name="1.0.58"></a>
 ## 1.0.58 (2017-09-10)
 
