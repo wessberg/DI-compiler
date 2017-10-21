@@ -43,21 +43,20 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@types/node": "^8.0.28",
+		"@types/node": "^8.0.46",
 		"@wessberg/ts-config": "^0.0.23",
 		"ava": "^0.22.0",
-		"conventional-changelog-cli": "^1.3.3",
+		"conventional-changelog-cli": "^1.3.4",
 		"husky": "latest",
-		"tslint": "^5.7.0",
-		"typescript": "^2.5.2"
+		"tslint": "^5.8.0"
 	},
 	"dependencies": {
 		"@types/chalk": "^0.4.31",
-		"@wessberg/codeanalyzer": "^1.0.76",
-		"@wessberg/type": "0.0.91",
-		"chalk": "^2.1.0",
+		"@wessberg/codeanalyzer": "^1.0.84",
+		"chalk": "^2.2.0",
 		"magic-string": "^0.22.4",
-		"tslib": "^1.7.1"
+		"tslib": "^1.8.0",
+		"typescript": "^2.5.3"
 	},
 	"repository": {
 		"type": "git",

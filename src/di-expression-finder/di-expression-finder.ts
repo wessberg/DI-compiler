@@ -1,12 +1,12 @@
-import {ICodeAnalyzer} from "@wessberg/codeanalyzer";
+import {ICodeAnalyzer, PropertyAccessCallExpression} from "@wessberg/codeanalyzer";
 import {IDIConfig} from "../di-config/i-di-config";
 import {IDIExpressionFinder} from "./i-di-expression-finder";
 import {IDIExpressionFinderFindOptions} from "./i-di-expression-finder-find-options";
 import {IDIExpressionFinderFindResult} from "./i-di-expression-finder-find-result";
-import {FormattedExpression, IFormattedCallExpression, IFormattedClass, IFormattedClassConstructor, IFormattedPropertyAccessExpression, isFormattedClass, isFormattedIdentifier, isFormattedPropertyAccessExpression} from "@wessberg/type";
 import {DIExpression} from "../di-expression/i-di-expression";
 import {DIExpressionKind} from "../di-expression/di-expression-kind";
 import {IDIExpressionFinderConstructorArgumentsResult} from "./i-di-expression-finder-constructor-arguments-result";
+import {ClassDeclaration, ClassExpression, ConstructorDeclaration, isClassDeclaration, SourceFile} from "typescript";
 
 /**
  * A class that can find all IDIExpressions in a file
@@ -18,54 +18,56 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 
 	/**
 	 * Finds all DIContainer expressions and returns them
-	 * @param {string} file
-	 * @param {string} [code]
+	 * @param {SourceFile} sourceFile
 	 * @returns {IDIExpressionFinderFindResult}
 	 */
-	public find ({file, code}: IDIExpressionFinderFindOptions): IDIExpressionFinderFindResult {
+	public find ({sourceFile}: IDIExpressionFinderFindOptions): IDIExpressionFinderFindResult {
 		const expressions: DIExpression[] = [];
-		this.host.findMatchingCallExpressionsForFile(file, this.diConfig.serviceContainerName, code)
-			.forEach(expression => {
-				// We only support call expressions for now
-				if (!isFormattedPropertyAccessExpression(expression.expression)) return;
-
-				// We only support property access expressions where the left-hand expression is an identifier for now
-				if (!isFormattedIdentifier(expression.expression.expression)) return;
-				// Make sure that the name of the expression is equals the name of the service container
-				if (expression.expression.expression.name !== this.diConfig.serviceContainerName) return;
-
-				expressions.push(this.getDIExpression(expression.expression, expression));
-			});
+		this.host.callExpressionService.getCallExpressionsOnPropertyAccessExpressionMatching(this.diConfig.serviceContainerName, undefined, sourceFile, true)
+			.forEach(expression => expressions.push(this.getDIExpression(expression, sourceFile)));
 		return {expressions};
 	}
 
 	/**
 	 * Gets a DIExpression, depending on the kind of call expression
-	 * @param {IFormattedPropertyAccessExpression} propertyAccess
-	 * @param {IFormattedCallExpression} expression
+	 * @param {PropertyAccessCallExpression} expression
+	 * @param {SourceFile} sourceFile
 	 * @returns {DIExpression}
 	 */
-	private getDIExpression (propertyAccess: IFormattedPropertyAccessExpression, expression: IFormattedCallExpression): DIExpression {
-		const kind = this.getDIExpressionKind(propertyAccess);
+	private getDIExpression (expression: PropertyAccessCallExpression, sourceFile: SourceFile): DIExpression {
+		const kind = this.getDIExpressionKind(expression);
+
+		// Take the type arguments of the CallExpression
+		const [typeName, implementationName] = this.host.callExpressionService.getTypeArgumentNames(expression);
+
+		// Take the fileName from the SourceFile
+		const file = sourceFile.fileName;
+
 		switch (kind) {
 			case DIExpressionKind.GET:
 				return {
 					expression,
+					typeName,
+					file,
 					kind: DIExpressionKind.GET
 				};
 			case DIExpressionKind.HAS:
 				return {
 					expression,
+					typeName,
+					file,
 					kind: DIExpressionKind.HAS
 				};
 			case DIExpressionKind.REGISTER_TRANSIENT:
 			case DIExpressionKind.REGISTER_SINGLETON:
-				const {constructorArguments, serviceFile} = this.getConstructorArgumentsForTypeArgument(expression.typeArguments[1]);
+				const {constructorArguments, serviceFile} = this.getConstructorArguments(implementationName, sourceFile);
 				const base = {
 					expression,
-					file: expression.file,
+					file,
 					kind: DIExpressionKind.REGISTER_TRANSIENT,
 					constructorArguments,
+					typeName,
+					implementationName,
 					serviceFile
 				};
 				if (kind === DIExpressionKind.REGISTER_TRANSIENT) {
@@ -83,12 +85,13 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 	}
 
 	/**
-	 * Gets the DIExpressionKind for the property of a PropertyAccessExpression
-	 * @param {} expression
+	 * Gets the DIExpressionKind for the property of a PropertyAccessCallExpression
+	 * @param {PropertyAccessCallExpression} expression
 	 * @returns {DIExpressionKind}
 	 */
-	private getDIExpressionKind (expression: IFormattedPropertyAccessExpression): DIExpressionKind {
-		switch (expression.property) {
+	private getDIExpressionKind ({expression}: PropertyAccessCallExpression): DIExpressionKind {
+		const propertyName = this.host.propertyAccessExpressionService.getPropertyName(expression);
+		switch (propertyName) {
 			case this.diConfig.registerSingletonName:
 				return DIExpressionKind.REGISTER_SINGLETON;
 			case this.diConfig.registerTransientName:
@@ -102,52 +105,57 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 
 	/**
 	 * Gets all constructor arguments that matches the class that the TypeArgument refers to
-	 * @param {FormattedExpression} typeArgument
+	 * @param {string} implementationName
+	 * @param {SourceFile} sourceFile
 	 * @returns {IDIExpressionFinderConstructorArgumentsResult}
 	 */
-	private getConstructorArgumentsForTypeArgument (typeArgument: FormattedExpression): IDIExpressionFinderConstructorArgumentsResult {
-		const constructorArguments: (string|undefined)[] = [];
+	private getConstructorArguments (implementationName: string, sourceFile: SourceFile): IDIExpressionFinderConstructorArgumentsResult {
 
 		// Find the matching class declaration
-		const classDeclaration = this.host.getDefinitionMatchingExpression(typeArgument);
+		const classDeclaration = this.host.resolver.resolve(implementationName, sourceFile);
 
-		// If the definition is indeed a class
-		if (classDeclaration != null && isFormattedClass(classDeclaration)) {
-
-			// Check if it has or inherits a constructor
-			const constructor = this.getConstructor(classDeclaration);
-			if (constructor != null) {
-				constructor.parameters.forEach(parameter => {
-					// If the constructor argument has an initializer, respect it
-					if (parameter.initializer != null) constructorArguments.push(undefined);
-					// Otherwise, add the name of the constructor type as a dependency injected service
-					else constructorArguments.push(parameter.type.toString());
-				});
-			}
+		// If no class were matched or if the matched node isn't a class, return an empty array of constructor arguments
+		if (classDeclaration == null || !isClassDeclaration(classDeclaration)) {
+			return {
+				constructorArguments: [],
+				serviceFile: null
+			};
 		}
 
+		// Check if it has or inherits a constructor
+		const constructor = this.getConstructor(classDeclaration);
+
+		// If it has none, return an empty array of arguments and no serviceFile
+		if (constructor == null) {
+			return {
+				constructorArguments: [],
+				serviceFile: null
+			};
+		}
+
+		// Otherwise, take all of the type names of the constructor (that isn't initialized to any value, otherwise we respect it)
 		return {
-			constructorArguments,
-			serviceFile: classDeclaration == null ? null : classDeclaration.file
+			constructorArguments: this.host.constructorService.getNonInitializedTypeNames(constructor),
+			serviceFile: constructor.getSourceFile().fileName
 		};
 	}
 
 	/**
-	 * Returns the constructor of a formatted class. May resolve it through the inheritance chain
-	 * @param {IFormattedExtendsHeritage} formatted
-	 * @returns {IFormattedClass|null}
+	 * Returns the constructor of a class. May resolve it through the inheritance chain
+	 * @param {ClassDeclaration|ClassExpression} classDeclaration
+	 * @returns {ConstructorDeclaration|null}
 	 */
-	private getConstructor (formatted: IFormattedClass): IFormattedClassConstructor|null {
+	private getConstructor (classDeclaration: ClassDeclaration|ClassExpression): ConstructorDeclaration|null {
+		const constructor = this.host.classService.getConstructor(classDeclaration);
 
 		// If it has a constructor, return it immediately.
-		if (formatted.constructor != null) return formatted.constructor;
+		if (constructor != null) return constructor;
 
 		// Return an empty object if the formatted class doesn't extend anything that may have a constructor
-		if (formatted.extends == null) return null;
+		if (this.host.classService.isBaseClass(classDeclaration)) return null;
 
-		// Otherwise, get the parent identifier
-		const [parent] = formatted.extends.members;
-		const resolvedParent = <IFormattedClass|null> this.host.getDefinitionMatchingExpression(parent);
+		// Otherwise, resolve the parent
+		const resolvedParent = this.host.classService.resolveExtendedClass(classDeclaration);
 
 		// If a parent could not be resolved, assume that the parent is a built-in (such as Error)
 		if (resolvedParent == null) {

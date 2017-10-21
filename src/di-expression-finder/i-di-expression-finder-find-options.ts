@@ -1,4 +1,5 @@
+import {SourceFile} from "typescript";
+
 export interface IDIExpressionFinderFindOptions {
-	file: string;
-	code?: string;
+	sourceFile: SourceFile;
 }
