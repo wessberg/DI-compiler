@@ -40,7 +40,7 @@ export class DICompiler implements IDICompiler {
 	 * A service that can validate found expressions
 	 * @type {DIExpressionValidator}
 	 */
-	private readonly diExpressionValidator: IDIExpressionValidator = new DIExpressionValidator(this.diConfig);
+	private readonly diExpressionValidator: IDIExpressionValidator = new DIExpressionValidator(this.diConfig, this.codeAnalyzer.printer);
 
 	/**
 	 * A service that can update found expressions
@@ -64,10 +64,11 @@ export class DICompiler implements IDICompiler {
 	 */
 	public compile ({code, file, verbose = false}: IDICompilerCompileOptions): IDICompilerCompileResult {
 		// Wrap the code inside a CodeContainer
+		const sourceFile = this.codeAnalyzer.languageService.addFile({path: file, content: code});
 		const codeContainer = new CodeContainer({code, file});
 
 		// Find all DIContainer expressions
-		const {expressions} = this.diExpressionFinder.find({file});
+		const {expressions} = this.diExpressionFinder.find({sourceFile});
 
 		// Map all service files to registration files
 		expressions.forEach(expression => this.mapServiceFileToRegistrationFile(expression));

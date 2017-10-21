@@ -6,13 +6,15 @@ import {DIExpressionDiagnostic, IDIExpressionDiagnostic, IDIExpressionTypeArgume
 import {DIExpressionKind} from "../di-expression/di-expression-kind";
 import {DIExpressionDiagnosticKind} from "../di-expression-diagnostic/di-expression-diagnostic-kind";
 import {IDIConfig} from "../di-config/i-di-config";
-import {white, green, red, yellow, gray} from "chalk";
+import Chalk from "chalk";
+import {IPrinter} from "@wessberg/codeanalyzer";
 
 /**
  * A class that can validate DIExpressions
  */
 export class DIExpressionValidator implements IDIExpressionValidator {
-	constructor (private diConfig: IDIConfig) {
+	constructor (private diConfig: IDIConfig,
+							 private printer: IPrinter) {
 	}
 
 	/**
@@ -31,22 +33,22 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 				case DIExpressionKind.GET:
 				case DIExpressionKind.HAS:
 					// No arguments should be given
-					if (expression.arguments.arguments.length > 0) {
+					if (expression.arguments.length > 0) {
 						diagnostics.push(this.getUserProvidedArgumentDiagnostic(diExpression));
 					}
 					// One and only one type argument should be given
-					if (expression.typeArguments.length !== 1) {
+					if (expression.typeArguments == null || expression.typeArguments.length !== 1) {
 						diagnostics.push(this.getTypeArgumentDiagnostic(diExpression));
 					}
 					break;
 				case DIExpressionKind.REGISTER_SINGLETON:
 				case DIExpressionKind.REGISTER_TRANSIENT:
 					// Maximum one argument may be given
-					if (expression.arguments.arguments.length > 1) {
+					if (expression.arguments.length > 1) {
 						diagnostics.push(this.getUserProvidedArgumentDiagnostic(diExpression));
 					}
 					// Two and only two type argument should be given
-					if (expression.typeArguments.length !== 2) {
+					if (expression.typeArguments == null || expression.typeArguments.length !== 2) {
 						diagnostics.push(this.getTypeArgumentDiagnostic(diExpression));
 					}
 					break;
@@ -60,21 +62,21 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 	 * @param {IDIExpressionDiagnostic[]} diagnostics
 	 */
 	private printDiagnostics (diagnostics: IDIExpressionDiagnostic[]): void {
-		if (diagnostics.length === 0) console.log(green(`DICompiler found no issues ✓`));
+		if (diagnostics.length === 0) console.log(Chalk.green(`DICompiler found no issues ✓`));
 		else {
 			let message = "";
 			const separatorCount = 30;
-			const separator = gray.bold(`\n${"_".repeat(separatorCount)}:`);
-			message += yellow(`DIContainer found the following issues:`);
+			const separator = Chalk.gray.bold(`\n${"_".repeat(separatorCount)}:`);
+			message += Chalk.yellow(`DIContainer found the following issues:`);
 			diagnostics.forEach(diagnostic => {
 				message += separator;
-				message += red.bold(`\n${diagnostic.reason}`);
-				message += red.bold(`\nfile: `);
-				message += white(diagnostic.file);
-				message += red.bold(`\nposition: `);
-				message += white(`${diagnostic.position}`);
-				message += red.bold(`\ncontent: `);
-				message += white(diagnostic.content);
+				message += Chalk.red.bold(`\n${diagnostic.reason}`);
+				message += Chalk.red.bold(`\nfile: `);
+				message += Chalk.white(diagnostic.file);
+				message += Chalk.red.bold(`\nposition: `);
+				message += Chalk.white(`${diagnostic.position}`);
+				message += Chalk.red.bold(`\ncontent: `);
+				message += Chalk.white(diagnostic.content);
 				message += separator;
 			});
 			throw new TypeError(message);
@@ -83,14 +85,15 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 
 	/**
 	 * Gets an IDIExpressionUserProvidedArgumentDiagnostic for the provided IDIExpression
-	 * @param {IFormattedCallExpression} expression
+	 * @param {PropertyAccessCallExpression} expression
+	 * @param {string} file
 	 * @returns {IDIExpressionUserProvidedArgumentDiagnostic}
 	 */
-	private getUserProvidedArgumentDiagnostic ({expression}: DIExpression): IDIExpressionUserProvidedArgumentDiagnostic {
+	private getUserProvidedArgumentDiagnostic ({expression, file}: DIExpression): IDIExpressionUserProvidedArgumentDiagnostic {
 		return {
-			file: expression.file,
-			content: expression.toString(),
-			position: expression.arguments.startsAt,
+			file,
+			content: this.printer.print(expression),
+			position: expression.arguments.pos,
 			kind: DIExpressionDiagnosticKind.USER_PROVIDED_ARGUMENT,
 			reason: `You shouldn't pass any arguments to ${this.diConfig.serviceContainerName} here`
 		};
@@ -98,30 +101,31 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 
 	/**
 	 * Gets an IDIExpressionTypeArgumentDiagnostic for the provided IDIExpression
-	 * @param {IFormattedCallExpression} expression
-	 * @param {DIExpressionKind} kind
+	 * @param {PropertyAccessCallExpression} expression
+	 * @param {DIExpressionKind.GET | DIExpressionKind.HAS | DIExpressionKind.REGISTER_SINGLETON | DIExpressionKind.REGISTER_TRANSIENT} kind
+	 * @param {string} file
 	 * @returns {IDIExpressionTypeArgumentDiagnostic}
 	 */
-	private getTypeArgumentDiagnostic ({expression, kind}: DIExpression): IDIExpressionTypeArgumentDiagnostic {
+	private getTypeArgumentDiagnostic ({expression, kind, file}: DIExpression): IDIExpressionTypeArgumentDiagnostic {
 		switch (kind) {
 
 			case DIExpressionKind.GET:
 			case DIExpressionKind.HAS:
 				return {
-					file: expression.file,
-					position: expression.startsAt,
+					file,
+					position: expression.pos,
 					kind: DIExpressionDiagnosticKind.TYPE_ARGUMENT,
-					content: expression.toString(),
+					content: this.printer.print(expression),
 					reason: `You must pass only 1 type-argument to ${this.diConfig.serviceContainerName}`
 				};
 
 			case DIExpressionKind.REGISTER_TRANSIENT:
 			case DIExpressionKind.REGISTER_SINGLETON:
 				return {
-					file: expression.file,
-					position: expression.startsAt,
+					file,
+					position: expression.pos,
 					kind: DIExpressionDiagnosticKind.TYPE_ARGUMENT,
-					content: expression.toString(),
+					content: this.printer.print(expression),
 					reason: `You must pass 2 type-arguments to ${this.diConfig.serviceContainerName}. The first argument is the interface for the service and the second argument is the implementation`
 				};
 		}

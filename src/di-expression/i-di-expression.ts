@@ -1,8 +1,10 @@
-import {IFormattedCallExpression} from "@wessberg/type";
 import {DIExpressionKind} from "./di-expression-kind";
+import {PropertyAccessCallExpression} from "@wessberg/codeanalyzer";
 
 export interface IDIExpression {
-	expression: IFormattedCallExpression;
+	expression: PropertyAccessCallExpression;
+	typeName: string;
+	file: string;
 	kind: DIExpressionKind;
 }
 
@@ -15,8 +17,8 @@ export interface IDIHasExpression extends IDIExpression {
 }
 
 export interface IDIRegisterExpression extends IDIExpression {
+	implementationName: string;
 	constructorArguments: Iterable<string|undefined>;
-	file: string;
 	serviceFile: string|null;
 }
 
