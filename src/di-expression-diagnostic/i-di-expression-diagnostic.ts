@@ -16,4 +16,8 @@ export interface IDIExpressionUserProvidedArgumentDiagnostic extends IDIExpressi
 	kind: DIExpressionDiagnosticKind.USER_PROVIDED_ARGUMENT;
 }
 
-export declare type DIExpressionDiagnostic = IDIExpressionTypeArgumentDiagnostic|IDIExpressionUserProvidedArgumentDiagnostic;
+export interface IDIExpressionProtectedConstructorDiagnostic extends IDIExpressionDiagnostic {
+	kind: DIExpressionDiagnosticKind.PROTECTED_CONSTRUCTOR;
+}
+
+export declare type DIExpressionDiagnostic = IDIExpressionTypeArgumentDiagnostic|IDIExpressionUserProvidedArgumentDiagnostic|IDIExpressionProtectedConstructorDiagnostic;

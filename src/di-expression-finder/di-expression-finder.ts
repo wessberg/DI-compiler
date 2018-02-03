@@ -12,8 +12,8 @@ import {ClassDeclaration, ClassExpression, ConstructorDeclaration, isClassDeclar
  * A class that can find all IDIExpressions in a file
  */
 export class DIExpressionFinder implements IDIExpressionFinder {
-	constructor (private host: ICodeAnalyzer,
-							 private diConfig: IDIConfig) {
+	constructor (private readonly host: ICodeAnalyzer,
+							 private readonly diConfig: IDIConfig) {
 	}
 
 	/**
@@ -60,13 +60,14 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 				};
 			case DIExpressionKind.REGISTER_TRANSIENT:
 			case DIExpressionKind.REGISTER_SINGLETON:
-				const {constructorArguments, serviceFile} = this.getConstructorArguments(implementationName, sourceFile);
+				const {constructorArguments, constructorIsProtected, serviceFile} = this.getConstructorArguments(implementationName, sourceFile);
 				const base = {
 					expression,
 					file,
 					kind: DIExpressionKind.REGISTER_TRANSIENT,
 					constructorArguments,
 					typeName,
+					constructorIsProtected,
 					implementationName,
 					serviceFile
 				};
@@ -118,6 +119,7 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 		if (classDeclaration == null || !isClassDeclaration(classDeclaration)) {
 			return {
 				constructorArguments: [],
+				constructorIsProtected: false,
 				serviceFile: null
 			};
 		}
@@ -129,6 +131,7 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 		if (constructor == null) {
 			return {
 				constructorArguments: [],
+				constructorIsProtected: false,
 				serviceFile: null
 			};
 		}
@@ -136,6 +139,7 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 		// Otherwise, take all of the type names of the constructor (that isn't initialized to any value, otherwise we respect it)
 		return {
 			constructorArguments: this.host.constructorService.getNonInitializedTypeNames(constructor),
+			constructorIsProtected: this.host.modifierService.hasModifierWithName("protected", constructor),
 			serviceFile: constructor.getSourceFile().fileName
 		};
 	}

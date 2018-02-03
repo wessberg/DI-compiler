@@ -1,20 +1,20 @@
 import {IDIExpressionValidator} from "./i-di-expression-validator";
 import {IDIExpressionValidatorValidateOptions} from "./i-di-expression-validator-validate-options";
 import {IDIExpressionValidatorValidateResult} from "./i-di-expression-validator-validate-result";
-import {DIExpression} from "../di-expression/i-di-expression";
-import {DIExpressionDiagnostic, IDIExpressionDiagnostic, IDIExpressionTypeArgumentDiagnostic, IDIExpressionUserProvidedArgumentDiagnostic} from "../di-expression-diagnostic/i-di-expression-diagnostic";
+import {DIExpression, IDIRegisterExpression} from "../di-expression/i-di-expression";
+import {DIExpressionDiagnostic, IDIExpressionDiagnostic, IDIExpressionProtectedConstructorDiagnostic, IDIExpressionTypeArgumentDiagnostic, IDIExpressionUserProvidedArgumentDiagnostic} from "../di-expression-diagnostic/i-di-expression-diagnostic";
 import {DIExpressionKind} from "../di-expression/di-expression-kind";
 import {DIExpressionDiagnosticKind} from "../di-expression-diagnostic/di-expression-diagnostic-kind";
 import {IDIConfig} from "../di-config/i-di-config";
-import Chalk from "chalk";
+import chalk from "chalk";
 import {IPrinter} from "@wessberg/codeanalyzer";
 
 /**
  * A class that can validate DIExpressions
  */
 export class DIExpressionValidator implements IDIExpressionValidator {
-	constructor (private diConfig: IDIConfig,
-							 private printer: IPrinter) {
+	constructor (private readonly diConfig: IDIConfig,
+							 private readonly printer: IPrinter) {
 	}
 
 	/**
@@ -32,6 +32,7 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 			switch (kind) {
 				case DIExpressionKind.GET:
 				case DIExpressionKind.HAS:
+
 					// No arguments should be given
 					if (expression.arguments.length > 0) {
 						diagnostics.push(this.getUserProvidedArgumentDiagnostic(diExpression));
@@ -43,6 +44,13 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 					break;
 				case DIExpressionKind.REGISTER_SINGLETON:
 				case DIExpressionKind.REGISTER_TRANSIENT:
+					const registerExpression = <IDIRegisterExpression> diExpression;
+
+					// If the constructor is protected, it cannot be invoked
+					if (registerExpression.constructorIsProtected) {
+						diagnostics.push(this.getProtectedConstructorDiagnostic(registerExpression));
+					}
+
 					// Maximum one argument may be given
 					if (expression.arguments.length > 1) {
 						diagnostics.push(this.getUserProvidedArgumentDiagnostic(diExpression));
@@ -51,6 +59,7 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 					if (expression.typeArguments == null || expression.typeArguments.length !== 2) {
 						diagnostics.push(this.getTypeArgumentDiagnostic(diExpression));
 					}
+
 					break;
 			}
 		});
@@ -62,21 +71,21 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 	 * @param {IDIExpressionDiagnostic[]} diagnostics
 	 */
 	private printDiagnostics (diagnostics: IDIExpressionDiagnostic[]): void {
-		if (diagnostics.length === 0) console.log(Chalk.green(`DICompiler found no issues ✓`));
+		if (diagnostics.length === 0) console.log(chalk.green(`DICompiler found no issues ✓`));
 		else {
 			let message = "";
 			const separatorCount = 30;
-			const separator = Chalk.gray.bold(`\n${"_".repeat(separatorCount)}:`);
-			message += Chalk.yellow(`DIContainer found the following issues:`);
+			const separator = chalk.gray.bold(`\n${"_".repeat(separatorCount)}:`);
+			message += chalk.yellow(`DIContainer found the following issues:`);
 			diagnostics.forEach(diagnostic => {
 				message += separator;
-				message += Chalk.red.bold(`\n${diagnostic.reason}`);
-				message += Chalk.red.bold(`\nfile: `);
-				message += Chalk.white(diagnostic.file);
-				message += Chalk.red.bold(`\nposition: `);
-				message += Chalk.white(`${diagnostic.position}`);
-				message += Chalk.red.bold(`\ncontent: `);
-				message += Chalk.white(diagnostic.content);
+				message += chalk.red.bold(`\n${diagnostic.reason}`);
+				message += chalk.red.bold(`\nfile: `);
+				message += chalk.white(diagnostic.file);
+				message += chalk.red.bold(`\nposition: `);
+				message += chalk.white(`${diagnostic.position}`);
+				message += chalk.red.bold(`\ncontent: `);
+				message += chalk.white(diagnostic.content);
 				message += separator;
 			});
 			throw new TypeError(message);
@@ -96,6 +105,24 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 			position: expression.arguments.pos,
 			kind: DIExpressionDiagnosticKind.USER_PROVIDED_ARGUMENT,
 			reason: `You shouldn't pass any arguments to ${this.diConfig.serviceContainerName} here`
+		};
+	}
+
+	/**
+	 * Gets an IDIExpressionProtectedConstructorDiagnostic for the provided IDIExpression
+	 * @param {PropertyAccessCallExpression} expression
+	 * @param {string} file
+	 * @param {string} implementationName
+	 * @param {string} typeName
+	 * @returns {IDIExpressionProtectedConstructorDiagnostic}
+	 */
+	private getProtectedConstructorDiagnostic ({expression, file, implementationName, typeName}: IDIRegisterExpression): IDIExpressionProtectedConstructorDiagnostic {
+		return {
+			file,
+			content: this.printer.print(expression),
+			position: expression.arguments.pos,
+			kind: DIExpressionDiagnosticKind.PROTECTED_CONSTRUCTOR,
+			reason: `The implementation: "${implementationName}" for the interface: "${typeName}" is incompatible: The constructor is protected! Consider making the constructor public.`
 		};
 	}
 
