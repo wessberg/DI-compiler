@@ -8,7 +8,8 @@ export interface ICodeContainer {
 	readonly map: SourceMap;
 	readonly hasChanged: boolean;
 
-	append (position: number, content: string): void;
+	append (content: string, position?: number): void;
+	prepend (content: string, position?: number): void;
 }
 
 export interface ICodeContainerConstructor {

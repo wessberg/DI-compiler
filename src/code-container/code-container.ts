@@ -63,11 +63,21 @@ export class CodeContainer implements ICodeContainer {
 
 	/**
 	 * Appends the given content on the given position
-	 * @param {number} position
 	 * @param {string} content
+	 * @param {number} [position]
 	 */
-	public append (position: number, content: string): void {
-		this.magicString.appendLeft(position, content);
+	public append (content: string, position?: number): void {
+		position == null ? this.magicString.append(content) : this.magicString.appendLeft(position, content);
+		this._hasChanged = true;
+	}
+
+	/**
+	 * Appends the given content on the given position
+	 * @param {string} content
+	 * @param {number} [position]
+	 */
+	public prepend (content: string, position?: number): void {
+		position == null ? this.magicString.prepend(content) : this.magicString.prependLeft(position, content);
 		this._hasChanged = true;
 	}
 

@@ -67,16 +67,16 @@ export class DIExpressionUpdater implements IDIExpressionUpdater {
 		// If no arguments has been given, pass in "undefined" as the first argument before providing the options object":
 		if (expression.arguments.length < 1) {
 			codeContainer.append(
-				expression.arguments.pos,
-				`undefined, ${stringifiedOptions}`
+				`undefined, ${stringifiedOptions}`,
+				expression.arguments.pos
 			);
 		}
 
 		else {
 			// If a custom function to return a new instance of the service has been provided, place the options object as the second argument.
 			codeContainer.append(
-				expression.arguments[0].end,
-				`, ${stringifiedOptions}`
+				`, ${stringifiedOptions}`,
+				expression.arguments[0].end
 			);
 		}
 	}
@@ -100,8 +100,8 @@ export class DIExpressionUpdater implements IDIExpressionUpdater {
 
 		// Append it as the first argument
 		codeContainer.append(
-			expression.arguments.pos,
-			`{identifier: "${typeName}"}`
+			`{identifier: "${typeName}"}`,
+			expression.arguments.pos
 		);
 	}
 
