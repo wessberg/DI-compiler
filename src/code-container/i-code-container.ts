@@ -1,11 +1,11 @@
 import {ICodeContainerOptions} from "./i-code-container-options";
-import {ICodeContainerSourceMap} from "./i-code-container-source-map";
+import {SourceMap} from "magic-string";
 
 export interface ICodeContainer {
 	readonly raw: string;
 	readonly file: string;
 	readonly code: string;
-	readonly map: ICodeContainerSourceMap;
+	readonly map: SourceMap;
 	readonly hasChanged: boolean;
 
 	append (position: number, content: string): void;
