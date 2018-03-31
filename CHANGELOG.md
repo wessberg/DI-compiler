@@ -1,3 +1,12 @@
+<a name="1.0.63"></a>
+## <small>1.0.63 (2018-03-31)</small>
+
+* 1.0.63 ([4aa6978](https://github.com/wessberg/di-compiler/commit/4aa6978))
+* Bumped deps ([40469e4](https://github.com/wessberg/di-compiler/commit/40469e4))
+* Bumped version ([14991d3](https://github.com/wessberg/di-compiler/commit/14991d3))
+
+
+
 <a name="1.0.62"></a>
 ## <small>1.0.62 (2018-02-03)</small>
 
