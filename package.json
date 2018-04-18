@@ -1,6 +1,6 @@
 {
 	"name": "@wessberg/di-compiler",
-	"version": "1.0.65",
+	"version": "1.0.66",
 	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
 	"scripts": {
 		"test": "NODE_ENV=TEST time ava --fail-fast",
