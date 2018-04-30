@@ -50,9 +50,9 @@
 		"tslint": "^5.9.1"
 	},
 	"dependencies": {
-		"@types/node": "^9.6.6",
-		"@wessberg/codeanalyzer": "^1.0.130",
-		"chalk": "^2.4.0",
+		"@types/node": "^9.6.7",
+		"@wessberg/codeanalyzer": "^1.0.132",
+		"chalk": "^2.4.1",
 		"magic-string": "^0.24.0",
 		"tslib": "^1.9.0",
 		"typescript": "^2.8.3"
