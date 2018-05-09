@@ -6,6 +6,7 @@ export interface IDIExpression {
 	typeName: string;
 	file: string;
 	kind: DIExpressionKind;
+	precompiled: boolean;
 }
 
 export interface IDIGetExpression extends IDIExpression {

@@ -12,6 +12,24 @@ import {ClassDeclaration, ClassExpression, ConstructorDeclaration, isClassDeclar
  * A class that can find all IDIExpressions in a file
  */
 export class DIExpressionFinder implements IDIExpressionFinder {
+	/**
+	 * A regular expression that matches compiled identifiers
+	 * @type {RegExp}
+	 */
+	private readonly COMPILED_IDENTIFIER_REGEX = /identifier:\s*"([^"]*)"/;
+
+	/**
+	 * A regular expression that matches compiled implementations
+	 * @type {RegExp}
+	 */
+	private readonly COMPILED_IMPLEMENTATION_REGEX = /implementation:\s*([^, ;}]*)/;
+
+	/**
+	 * A regular expression that matches compiled overridden implementations
+	 * @type {RegExp}
+	 */
+	private readonly COMPILED_IMPLEMENTATION_CONSTRUCTOR_ARGUMENTS_REGEX = /constructorArguments:\s*(null|\[.*])/;
+
 	constructor (private readonly host: ICodeAnalyzer,
 							 private readonly diConfig: IDIConfig) {
 	}
@@ -36,9 +54,41 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 	 */
 	private getDIExpression (expression: PropertyAccessCallExpression, sourceFile: SourceFile): DIExpression {
 		const kind = this.getDIExpressionKind(expression);
+		let precompiled: boolean = false;
+		let precompiledCtorArguments: (string|undefined)[] = [];
 
 		// Take the type arguments of the CallExpression
-		const [typeName, implementationName] = this.host.callExpressionService.getTypeArgumentNames(expression);
+		let [typeName, implementationName] = this.host.callExpressionService.getTypeArgumentNames(expression);
+
+		// If no typeName could be detected, the expression may already be compiled.
+		// If that is the case, take the names of the arguments
+		if (typeName == null) {
+			precompiled = true;
+			const args = [...this.host.callExpressionService.getArguments(expression)];
+			switch (kind) {
+				case DIExpressionKind.GET:
+				case DIExpressionKind.HAS:
+					// The identifier will be given as the first argument.
+					typeName = args[0].match(this.COMPILED_IDENTIFIER_REGEX)![1];
+					break;
+
+				case DIExpressionKind.REGISTER_SINGLETON:
+				case DIExpressionKind.REGISTER_TRANSIENT:
+					// The type name will be given in the second argument all times, potentially also the implementation
+					// The identifier will be given as the first argument.
+					typeName = typeName = args[1].match(this.COMPILED_IDENTIFIER_REGEX)![1];
+					implementationName = args[1].match(this.COMPILED_IMPLEMENTATION_REGEX)![1];
+					precompiledCtorArguments = JSON.parse(args[1].match(this.COMPILED_IMPLEMENTATION_CONSTRUCTOR_ARGUMENTS_REGEX)![1]);
+
+					// If the implementation is still null, the implementation is overridden or provided in a callback as the first argument
+					if (implementationName == null || implementationName === "null") {
+						// Assign to the implementation the name of the type
+						implementationName = typeName;
+					}
+					break;
+			}
+
+		}
 
 		// Take the fileName from the SourceFile
 		const file = sourceFile.fileName;
@@ -48,6 +98,7 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 				return {
 					expression,
 					typeName,
+					precompiled,
 					file,
 					kind: DIExpressionKind.GET
 				};
@@ -55,13 +106,17 @@ export class DIExpressionFinder implements IDIExpressionFinder {
 				return {
 					expression,
 					typeName,
+					precompiled,
 					file,
 					kind: DIExpressionKind.HAS
 				};
 			case DIExpressionKind.REGISTER_TRANSIENT:
 			case DIExpressionKind.REGISTER_SINGLETON:
-				const {constructorArguments, constructorIsProtected, serviceFile} = this.getConstructorArguments(implementationName, sourceFile);
+				const {constructorArguments, constructorIsProtected, serviceFile} = precompiled
+				? {constructorArguments: precompiledCtorArguments, constructorIsProtected: false, serviceFile: ""}
+				: this.getConstructorArguments(implementationName, sourceFile);
 				const base = {
+					precompiled,
 					expression,
 					file,
 					kind: DIExpressionKind.REGISTER_TRANSIENT,

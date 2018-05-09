@@ -23,6 +23,9 @@ export class DIExpressionUpdater implements IDIExpressionUpdater {
 	 * @param {DIExpression} diExpression
 	 */
 	private updateExpression (codeContainer: ICodeContainer, diExpression: DIExpression): void {
+		// Don't update already compiled expressions
+		if (diExpression.precompiled) return;
+
 		switch (diExpression.kind) {
 			case DIExpressionKind.HAS:
 				return this.updateHasExpression(codeContainer, diExpression);

@@ -27,9 +27,20 @@ class Baz extends Bar implements IBaz {
 
 }
 
+interface IWhatever {
+	foo: string;
+}
+
 DIContainer.registerSingleton<IFoo, Foo>(() => new Foo());
 DIContainer.registerSingleton<IBar, Bar>();
 DIContainer.registerSingleton<IBaz, Baz>();
 DIContainer.get<IBar>();
 DIContainer.has<IBar>();
+DIContainer.registerSingleton<IWhatever, IWhatever>(() => ({foo: "hi!"}));
+// @ts-ignore
+DIContainer.get({ identifier: "IBar" });
+// @ts-ignore
+DIContainer.registerSingleton(undefined, { identifier: "ILocativeAudioServiceImplementation", implementation: LocativeAudioServiceImplementation, constructorArguments: ["IGeolocationService", "IDeviceOrientationService", "IAudioService", "IMapsService", "IStaticConfig"] });
+// @ts-ignore
+DIContainer.registerSingleton(() => DecodeAudioJob, { identifier: "IDecodeAudioJobConstructor", implementation: null, constructorArguments: null });
 /*tslint:enable*/

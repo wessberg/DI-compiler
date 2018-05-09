@@ -27,7 +27,9 @@ export class DIExpressionValidator implements IDIExpressionValidator {
 		const diagnostics: DIExpressionDiagnostic[] = [];
 
 		// Loop through all expression and validate them
-		expressions.forEach(diExpression => {
+		expressions
+			.filter(expression => !expression.precompiled)
+			.forEach(diExpression => {
 			const {kind, expression} = diExpression;
 			switch (kind) {
 				case DIExpressionKind.GET:
