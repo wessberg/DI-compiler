@@ -1,3 +1,12 @@
+<a name="1.0.69"></a>
+## <small>1.0.69 (2018-05-10)</small>
+
+* 1.0.69 ([557c983](https://github.com/wessberg/di-compiler/commit/557c983))
+* Added handling for the scenario that input code could be precompiled with DI ([fd3cdaf](https://github.com/wessberg/di-compiler/commit/fd3cdaf))
+* Bumped version ([a4b8938](https://github.com/wessberg/di-compiler/commit/a4b8938))
+
+
+
 <a name="1.0.68"></a>
 ## <small>1.0.68 (2018-04-30)</small>
 
