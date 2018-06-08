@@ -1,3 +1,13 @@
 {
-	"extends": "./node_modules/@wessberg/ts-config/tsconfig/tsconfig.json"
+	"extends": "./node_modules/@wessberg/ts-config/tsconfig/tsconfig.json",
+	"include": [
+		"src/**/*.*"
+	],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"tslib": ["node_modules/tslib/tslib.d.ts"],
+			"svgo": ["node_modules/@types/svgo/index.d.ts"]
+		}
+	}
 }

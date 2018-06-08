@@ -1,3 +1,3 @@
-export {SourceMap} from "magic-string";
-export {DICompiler} from "./di-compiler/di-compiler";
-export {IDICompiler} from "./di-compiler/i-di-compiler";
+import "./services";
+export {DICompiler} from "./di-compiler/public/di-compiler";
+export {IDICompiler} from "./di-compiler/public/i-di-compiler";

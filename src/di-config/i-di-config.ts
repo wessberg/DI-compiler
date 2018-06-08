@@ -1,4 +1,5 @@
 export interface IDIConfig {
+	argumentsProperty: string;
 	noInjectName: string;
 	serviceContainerName: string;
 	registerSingletonName: string;

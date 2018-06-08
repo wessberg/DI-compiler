@@ -15,10 +15,10 @@ Simply do: `npm install @wessberg/di-compiler`.
 
 ## Usage
 ```typescript
-import {DICompiler} from "@wessberg/di-compiler";
+import {DiCompilerBase} from "@wessberg/di-compiler";
 
 // Instantiate the compiler
-const compiler = new DICompiler();
+const compiler = new DiCompilerBase();
 
 // The 'compile' method will upgrade all 'registerSingleton', 'registerTransient', 'get' and 'has' calls throughout the code
 // and resolve the constructor arguments of all classes that matches the provided services

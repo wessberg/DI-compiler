@@ -1,5 +1,5 @@
 import {SourceFile} from "typescript";
 
-export interface IDIExpressionFinderFindOptions {
+export interface IExpressionFinderServiceFindOptions {
 	sourceFile: SourceFile;
 }

@@ -1,9 +1,11 @@
+import "../../src";
 import {test} from "ava";
 import {readFileSync} from "fs";
 import {join} from "path";
-import {DICompiler} from "../src/di-compiler/di-compiler";
+import {DIContainer} from "@wessberg/di";
+import {IDICompiler} from "../../src/di-compiler/public/i-di-compiler";
 
-const compiler = new DICompiler();
+const compiler = DIContainer.get<IDICompiler>();
 
 test("foo", t => {
 	const path = join(process.cwd(), "./test/static/02.ts");
