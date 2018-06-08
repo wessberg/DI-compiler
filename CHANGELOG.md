@@ -1,4 +1,11 @@
-<a name="1.0.69"></a>
+## <small>1.0.70 (2018-06-08)</small>
+
+* 1.0.70 ([3ec7841](https://github.com/wessberg/di-compiler/commit/3ec7841))
+* Bumped deps ([43c2fdf](https://github.com/wessberg/di-compiler/commit/43c2fdf))
+* Bumped version ([d588eb4](https://github.com/wessberg/di-compiler/commit/d588eb4))
+
+
+
 ## <small>1.0.69 (2018-05-10)</small>
 
 * 1.0.69 ([557c983](https://github.com/wessberg/di-compiler/commit/557c983))
@@ -7,7 +14,6 @@
 
 
 
-<a name="1.0.68"></a>
 ## <small>1.0.68 (2018-04-30)</small>
 
 * 1.0.68 ([ff9fb94](https://github.com/wessberg/di-compiler/commit/ff9fb94))
@@ -16,7 +22,6 @@
 
 
 
-<a name="1.0.67"></a>
 ## <small>1.0.67 (2018-04-25)</small>
 
 * 1.0.67 ([d5ec351](https://github.com/wessberg/di-compiler/commit/d5ec351))
@@ -25,7 +30,6 @@
 
 
 
-<a name="1.0.66"></a>
 ## <small>1.0.66 (2018-04-18)</small>
 
 * 1.0.66 ([875d4c1](https://github.com/wessberg/di-compiler/commit/875d4c1))
@@ -34,7 +38,6 @@
 
 
 
-<a name="1.0.65"></a>
 ## <small>1.0.65 (2018-04-03)</small>
 
 * 1.0.65 ([64c6431](https://github.com/wessberg/di-compiler/commit/64c6431))
@@ -43,7 +46,6 @@
 
 
 
-<a name="1.0.64"></a>
 ## <small>1.0.64 (2018-03-31)</small>
 
 * 1.0.64 ([2a7d764](https://github.com/wessberg/di-compiler/commit/2a7d764))
@@ -52,7 +54,6 @@
 
 
 
-<a name="1.0.63"></a>
 ## <small>1.0.63 (2018-03-31)</small>
 
 * 1.0.63 ([4aa6978](https://github.com/wessberg/di-compiler/commit/4aa6978))
@@ -61,7 +62,6 @@
 
 
 
-<a name="1.0.62"></a>
 ## <small>1.0.62 (2018-02-03)</small>
 
 * 1.0.62 ([2eb5f90](https://github.com/wessberg/di-compiler/commit/2eb5f90))
@@ -70,7 +70,6 @@
 
 
 
-<a name="1.0.61"></a>
 ## <small>1.0.61 (2017-10-21)</small>
 
 * 1.0.61 ([6e25869](https://github.com/wessberg/di-compiler/commit/6e25869))
@@ -79,7 +78,6 @@
 
 
 
-<a name="1.0.60"></a>
 ## <small>1.0.60 (2017-09-18)</small>
 
 * 1.0.60 ([c769e05](https://github.com/wessberg/di-compiler/commit/c769e05))
@@ -88,7 +86,6 @@
 
 
 
-<a name="1.0.59"></a>
 ## <small>1.0.59 (2017-09-10)</small>
 
 * 1.0.59 ([46307bf](https://github.com/wessberg/di-compiler/commit/46307bf))
@@ -97,7 +94,6 @@
 
 
 
-<a name="1.0.58"></a>
 ## <small>1.0.58 (2017-09-10)</small>
 
 * 1.0.58 ([251dc24](https://github.com/wessberg/di-compiler/commit/251dc24))
@@ -106,7 +102,6 @@
 
 
 
-<a name="1.0.57"></a>
 ## <small>1.0.57 (2017-09-10)</small>
 
 * 1.0.57 ([00e5954](https://github.com/wessberg/di-compiler/commit/00e5954))
@@ -115,7 +110,6 @@
 
 
 
-<a name="1.0.56"></a>
 ## <small>1.0.56 (2017-09-10)</small>
 
 * 1.0.56 ([f9cdac8](https://github.com/wessberg/di-compiler/commit/f9cdac8))
@@ -124,7 +118,6 @@
 
 
 
-<a name="1.0.55"></a>
 ## <small>1.0.55 (2017-09-04)</small>
 
 * 1.0.55 ([1d40715](https://github.com/wessberg/di-compiler/commit/1d40715))
@@ -133,7 +126,6 @@
 
 
 
-<a name="1.0.54"></a>
 ## <small>1.0.54 (2017-09-04)</small>
 
 * 1.0.54 ([4c0f30b](https://github.com/wessberg/di-compiler/commit/4c0f30b))
@@ -142,7 +134,6 @@
 
 
 
-<a name="1.0.53"></a>
 ## <small>1.0.53 (2017-09-04)</small>
 
 * 1.0.53 ([c8c83f8](https://github.com/wessberg/di-compiler/commit/c8c83f8))
@@ -151,7 +142,6 @@
 
 
 
-<a name="1.0.52"></a>
 ## <small>1.0.52 (2017-09-03)</small>
 
 * 1.0.52 ([db76bcd](https://github.com/wessberg/di-compiler/commit/db76bcd))
@@ -160,14 +150,12 @@
 
 
 
-<a name="1.0.51"></a>
 ## <small>1.0.51 (2017-09-03)</small>
 
 * 1.0.51 ([4b33650](https://github.com/wessberg/di-compiler/commit/4b33650))
 
 
 
-<a name="1.0.50"></a>
 ## <small>1.0.50 (2017-09-03)</small>
 
 * 1.0.50 ([5614c8c](https://github.com/wessberg/di-compiler/commit/5614c8c))
@@ -175,7 +163,6 @@
 
 
 
-<a name="1.0.49"></a>
 ## <small>1.0.49 (2017-09-03)</small>
 
 * 1.0.49 ([3749cde](https://github.com/wessberg/di-compiler/commit/3749cde))
@@ -183,7 +170,6 @@
 
 
 
-<a name="1.0.48"></a>
 ## <small>1.0.48 (2017-09-03)</small>
 
 * 1.0.48 ([c082fcc](https://github.com/wessberg/di-compiler/commit/c082fcc))
@@ -192,7 +178,6 @@
 
 
 
-<a name="1.0.47"></a>
 ## <small>1.0.47 (2017-08-28)</small>
 
 * 1.0.47 ([f270ef3](https://github.com/wessberg/di-compiler/commit/f270ef3))
@@ -201,7 +186,6 @@
 
 
 
-<a name="1.0.46"></a>
 ## <small>1.0.46 (2017-08-28)</small>
 
 * 1.0.46 ([9f8ef12](https://github.com/wessberg/di-compiler/commit/9f8ef12))
@@ -210,7 +194,6 @@
 
 
 
-<a name="1.0.45"></a>
 ## <small>1.0.45 (2017-08-28)</small>
 
 * 1.0.45 ([d48376a](https://github.com/wessberg/di-compiler/commit/d48376a))
@@ -219,7 +202,6 @@
 
 
 
-<a name="1.0.44"></a>
 ## <small>1.0.44 (2017-08-28)</small>
 
 * 1.0.44 ([137d913](https://github.com/wessberg/di-compiler/commit/137d913))
@@ -228,7 +210,6 @@
 
 
 
-<a name="1.0.43"></a>
 ## <small>1.0.43 (2017-08-28)</small>
 
 * 1.0.43 ([571c884](https://github.com/wessberg/di-compiler/commit/571c884))
@@ -237,7 +218,6 @@
 
 
 
-<a name="1.0.42"></a>
 ## <small>1.0.42 (2017-08-28)</small>
 
 * 1.0.42 ([8e2b0ce](https://github.com/wessberg/di-compiler/commit/8e2b0ce))
@@ -245,7 +225,6 @@
 
 
 
-<a name="1.0.41"></a>
 ## <small>1.0.41 (2017-08-28)</small>
 
 * 1.0.41 ([17abb8a](https://github.com/wessberg/di-compiler/commit/17abb8a))
@@ -254,7 +233,6 @@
 
 
 
-<a name="1.0.40"></a>
 ## <small>1.0.40 (2017-08-17)</small>
 
 * 1.0.40 ([d79126d](https://github.com/wessberg/di-compiler/commit/d79126d))
@@ -263,7 +241,6 @@
 
 
 
-<a name="1.0.39"></a>
 ## <small>1.0.39 (2017-08-03)</small>
 
 * 1.0.39 ([7ccc691](https://github.com/wessberg/di-compiler/commit/7ccc691))
@@ -272,7 +249,6 @@
 
 
 
-<a name="1.0.38"></a>
 ## <small>1.0.38 (2017-07-28)</small>
 
 * 1.0.38 ([ca147d8](https://github.com/wessberg/di-compiler/commit/ca147d8))
@@ -280,7 +256,6 @@
 
 
 
-<a name="1.0.37"></a>
 ## <small>1.0.37 (2017-07-28)</small>
 
 * 1.0.37 ([8b2ab51](https://github.com/wessberg/di-compiler/commit/8b2ab51))
@@ -289,7 +264,6 @@
 
 
 
-<a name="1.0.36"></a>
 ## <small>1.0.36 (2017-07-28)</small>
 
 * 1.0.36 ([fbc00fd](https://github.com/wessberg/di-compiler/commit/fbc00fd))
@@ -300,7 +274,6 @@
 
 
 
-<a name="1.0.34"></a>
 ## <small>1.0.34 (2017-07-20)</small>
 
 * 1.0.34 ([ac11c5b](https://github.com/wessberg/di-compiler/commit/ac11c5b))
@@ -309,7 +282,6 @@
 
 
 
-<a name="1.0.33"></a>
 ## <small>1.0.33 (2017-07-19)</small>
 
 * 1.0.33 ([2a6b369](https://github.com/wessberg/di-compiler/commit/2a6b369))
@@ -318,7 +290,6 @@
 
 
 
-<a name="1.0.32"></a>
 ## <small>1.0.32 (2017-07-19)</small>
 
 * 1.0.32 ([3f05bca](https://github.com/wessberg/di-compiler/commit/3f05bca))
@@ -327,7 +298,6 @@
 
 
 
-<a name="1.0.31"></a>
 ## <small>1.0.31 (2017-07-19)</small>
 
 * 1.0.31 ([75af389](https://github.com/wessberg/di-compiler/commit/75af389))
@@ -336,7 +306,6 @@
 
 
 
-<a name="1.0.30"></a>
 ## <small>1.0.30 (2017-07-19)</small>
 
 * 1.0.30 ([17c4de9](https://github.com/wessberg/di-compiler/commit/17c4de9))
@@ -345,7 +314,6 @@
 
 
 
-<a name="1.0.29"></a>
 ## <small>1.0.29 (2017-07-19)</small>
 
 * 1.0.29 ([93adaf9](https://github.com/wessberg/di-compiler/commit/93adaf9))
@@ -354,7 +322,6 @@
 
 
 
-<a name="1.0.28"></a>
 ## <small>1.0.28 (2017-07-19)</small>
 
 * 1.0.28 ([b0b2f06](https://github.com/wessberg/di-compiler/commit/b0b2f06))
@@ -362,7 +329,6 @@
 
 
 
-<a name="1.0.27"></a>
 ## <small>1.0.27 (2017-07-18)</small>
 
 * 1.0.27 ([47eb559](https://github.com/wessberg/di-compiler/commit/47eb559))
@@ -370,7 +336,6 @@
 
 
 
-<a name="1.0.26"></a>
 ## <small>1.0.26 (2017-07-18)</small>
 
 * 1.0.26 ([a397e1c](https://github.com/wessberg/di-compiler/commit/a397e1c))
@@ -381,7 +346,6 @@
 
 
 
-<a name="1.0.25"></a>
 ## <small>1.0.25 (2017-07-06)</small>
 
 * 1.0.25 ([3e52902](https://github.com/wessberg/di-compiler/commit/3e52902))
@@ -389,7 +353,6 @@
 
 
 
-<a name="1.0.24"></a>
 ## <small>1.0.24 (2017-07-06)</small>
 
 * 1.0.24 ([399369a](https://github.com/wessberg/di-compiler/commit/399369a))
@@ -397,7 +360,6 @@
 
 
 
-<a name="1.0.23"></a>
 ## <small>1.0.23 (2017-07-05)</small>
 
 * 1.0.23 ([eef0051](https://github.com/wessberg/di-compiler/commit/eef0051))
@@ -405,7 +367,6 @@
 
 
 
-<a name="1.0.22"></a>
 ## <small>1.0.22 (2017-07-05)</small>
 
 * 1.0.22 ([353d52f](https://github.com/wessberg/di-compiler/commit/353d52f))
@@ -413,7 +374,6 @@
 
 
 
-<a name="1.0.21"></a>
 ## <small>1.0.21 (2017-07-05)</small>
 
 * 1.0.21 ([5a254ac](https://github.com/wessberg/di-compiler/commit/5a254ac))
@@ -421,7 +381,6 @@
 
 
 
-<a name="1.0.20"></a>
 ## <small>1.0.20 (2017-07-05)</small>
 
 * 1.0.20 ([c42fc59](https://github.com/wessberg/di-compiler/commit/c42fc59))
@@ -429,7 +388,6 @@
 
 
 
-<a name="1.0.19"></a>
 ## <small>1.0.19 (2017-07-05)</small>
 
 * 1.0.19 ([4db402f](https://github.com/wessberg/di-compiler/commit/4db402f))
@@ -437,7 +395,6 @@
 
 
 
-<a name="1.0.18"></a>
 ## <small>1.0.18 (2017-05-31)</small>
 
 * 1.0.18 ([e16343e](https://github.com/wessberg/di-compiler/commit/e16343e))
@@ -445,7 +402,6 @@
 
 
 
-<a name="1.0.17"></a>
 ## <small>1.0.17 (2017-05-31)</small>
 
 * 1.0.17 ([73145f8](https://github.com/wessberg/di-compiler/commit/73145f8))
@@ -453,7 +409,6 @@
 
 
 
-<a name="1.0.16"></a>
 ## <small>1.0.16 (2017-05-31)</small>
 
 * 1.0.16 ([450a117](https://github.com/wessberg/di-compiler/commit/450a117))
@@ -461,7 +416,6 @@
 
 
 
-<a name="1.0.15"></a>
 ## <small>1.0.15 (2017-05-31)</small>
 
 * 1.0.15 ([9d7ea5d](https://github.com/wessberg/di-compiler/commit/9d7ea5d))
@@ -469,7 +423,6 @@
 
 
 
-<a name="1.0.14"></a>
 ## <small>1.0.14 (2017-05-31)</small>
 
 * 1.0.14 ([52c0881](https://github.com/wessberg/di-compiler/commit/52c0881))
@@ -477,7 +430,6 @@
 
 
 
-<a name="1.0.13"></a>
 ## <small>1.0.13 (2017-05-31)</small>
 
 * 1.0.13 ([b181554](https://github.com/wessberg/di-compiler/commit/b181554))
@@ -485,7 +437,6 @@
 
 
 
-<a name="1.0.12"></a>
 ## <small>1.0.12 (2017-05-31)</small>
 
 * 1.0.12 ([8ec9e54](https://github.com/wessberg/di-compiler/commit/8ec9e54))
@@ -493,7 +444,6 @@
 
 
 
-<a name="1.0.11"></a>
 ## <small>1.0.11 (2017-05-31)</small>
 
 * 1.0.11 ([80d433d](https://github.com/wessberg/di-compiler/commit/80d433d))
@@ -501,7 +451,6 @@
 
 
 
-<a name="1.0.10"></a>
 ## <small>1.0.10 (2017-05-31)</small>
 
 * 1.0.10 ([dd507f7](https://github.com/wessberg/di-compiler/commit/dd507f7))
@@ -509,7 +458,6 @@
 
 
 
-<a name="1.0.9"></a>
 ## <small>1.0.9 (2017-05-31)</small>
 
 * - Bumped CodeAnalyzer dependency to ^v1.0.18 ([32e39cf](https://github.com/wessberg/di-compiler/commit/32e39cf))
@@ -517,7 +465,6 @@
 
 
 
-<a name="1.0.8"></a>
 ## <small>1.0.8 (2017-05-30)</small>
 
 * 1.0.8 ([d5d2677](https://github.com/wessberg/di-compiler/commit/d5d2677))
@@ -525,7 +472,6 @@
 
 
 
-<a name="1.0.7"></a>
 ## <small>1.0.7 (2017-05-30)</small>
 
 * - The Compiler will now recursively parse all imports, rather than just one step up. ([9ef95e9](https://github.com/wessberg/di-compiler/commit/9ef95e9))
@@ -533,7 +479,6 @@
 
 
 
-<a name="1.0.6"></a>
 ## <small>1.0.6 (2017-05-30)</small>
 
 * - The Compiler will now parse all imports for classes before proceeding. ([ab87556](https://github.com/wessberg/di-compiler/commit/ab87556))
@@ -541,7 +486,6 @@
 
 
 
-<a name="1.0.5"></a>
 ## <small>1.0.5 (2017-05-30)</small>
 
 * - Bumped CodeAnalyzer dependency to ^v1.0.17 ([fd046e7](https://github.com/wessberg/di-compiler/commit/fd046e7))
@@ -549,7 +493,6 @@
 
 
 
-<a name="1.0.4"></a>
 ## <small>1.0.4 (2017-05-25)</small>
 
 * 1.0.4 ([6ae12d8](https://github.com/wessberg/di-compiler/commit/6ae12d8))
@@ -557,7 +500,6 @@
 
 
 
-<a name="1.0.3"></a>
 ## <small>1.0.3 (2017-05-25)</small>
 
 * 1.0.3 ([bbd7e77](https://github.com/wessberg/di-compiler/commit/bbd7e77))
@@ -565,7 +507,6 @@
 
 
 
-<a name="1.0.2"></a>
 ## <small>1.0.2 (2017-05-24)</small>
 
 * 1.0.2 ([a4d4722](https://github.com/wessberg/di-compiler/commit/a4d4722))
@@ -573,7 +514,6 @@
 
 
 
-<a name="1.0.1"></a>
 ## <small>1.0.1 (2017-05-24)</small>
 
 * 1.0.1 ([716937e](https://github.com/wessberg/di-compiler/commit/716937e))
