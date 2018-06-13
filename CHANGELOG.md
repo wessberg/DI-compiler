@@ -1,3 +1,11 @@
+## <small>1.0.72 (2018-06-13)</small>
+
+* 1.0.72 ([01aa8e2](https://github.com/wessberg/di-compiler/commit/01aa8e2))
+* Bumped version ([83aaba4](https://github.com/wessberg/di-compiler/commit/83aaba4))
+* Moved rollup plugins to devDependencies ([1783c4e](https://github.com/wessberg/di-compiler/commit/1783c4e))
+
+
+
 ## <small>1.0.71 (2018-06-13)</small>
 
 * 1.0.71 ([e6124fa](https://github.com/wessberg/di-compiler/commit/e6124fa))
