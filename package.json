@@ -46,15 +46,15 @@
 		"ava": "^0.25.0",
 		"conventional-changelog-cli": "^2.0.1",
 		"husky": "latest",
-		"tslint": "^5.10.0"
+		"tslint": "^5.10.0",
+		"@wessberg/rollup-plugin-di": "^1.0.81",
+		"@wessberg/rollup-plugin-ts": "0.0.24"
 	},
 	"dependencies": {
 		"@types/node": "^10.3.3",
 		"@wessberg/codeanalyzer": "^1.0.132",
 		"@wessberg/di": "^1.0.27",
 		"@wessberg/marshaller": "^2.0.5",
-		"@wessberg/rollup-plugin-di": "^1.0.81",
-		"@wessberg/rollup-plugin-ts": "0.0.24",
 		"chalk": "^2.4.1",
 		"magic-string": "^0.25.0",
 		"rollup": "^0.60.4",
