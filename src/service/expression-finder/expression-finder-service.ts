@@ -2,15 +2,15 @@ import {ICodeAnalyzer, PropertyAccessCallExpression} from "@wessberg/codeanalyze
 import {IExpressionFinderService} from "./i-expression-finder-service";
 import {IExpressionFinderServiceFindOptions} from "./i-expression-finder-service-find-options";
 import {IExpressionFinderServiceFindResult} from "./i-expression-finder-service-find-result";
-import {SourceFile} from "typescript";
 import {IDIConfig} from "../../di-config/i-di-config";
 import {DIExpression} from "../../di-expression/i-di-expression";
 import {DIExpressionKind} from "../../di-expression/di-expression-kind";
+import {ClassDeclaration, ClassExpression, ConstructorDeclaration, isClassDeclaration, SourceFile} from "typescript";
 
 /**
  * A class that can find all DIExpressions in a file
  */
-export class ExpressionFinderSevice implements IExpressionFinderService {
+export class ExpressionFinderService implements IExpressionFinderService {
 	/**
 	 * A regular expression that matches compiled identifiers
 	 * @type {RegExp}
@@ -106,6 +106,7 @@ export class ExpressionFinderSevice implements IExpressionFinderService {
 				const base = {
 					precompiled,
 					expression,
+					constructorArguments: this.getConstructorArguments(implementationName, sourceFile),
 					file,
 					kind: DIExpressionKind.REGISTER_TRANSIENT,
 					typeName,
@@ -142,6 +143,60 @@ export class ExpressionFinderSevice implements IExpressionFinderService {
 			default:
 				return DIExpressionKind.GET;
 		}
+	}
+
+	/**
+	 * Gets all constructor arguments that matches the class that the TypeArgument refers to
+	 * @param {string} implementationName
+	 * @param {SourceFile} sourceFile
+	 * @returns {Iterable<string?>}
+	 */
+	private getConstructorArguments (implementationName: string, sourceFile: SourceFile): Iterable<string|undefined> {
+
+		// Find the matching class declaration
+		const classDeclaration = this.codeAnalyzer.resolver.resolve(implementationName, sourceFile);
+
+		// If no class were matched or if the matched node isn't a class, return an empty array of constructor arguments
+		if (classDeclaration == null || !isClassDeclaration(classDeclaration)) {
+			return [];
+		}
+
+		// Check if it has or inherits a constructor
+		const constructor = this.getConstructor(classDeclaration);
+
+		// If it has none, return an empty array of arguments and no serviceFile
+		if (constructor == null) {
+			return [];
+		}
+
+		// Otherwise, take all of the type names of the constructor (that isn't initialized to any value, otherwise we respect it)
+		return this.codeAnalyzer.constructorService.getNonInitializedTypeNames(constructor);
+	}
+
+	/**
+	 * Returns the constructor of a class. May resolve it through the inheritance chain
+	 * @param {ClassDeclaration|ClassExpression} classDeclaration
+	 * @returns {ConstructorDeclaration|null}
+	 */
+	private getConstructor (classDeclaration: ClassDeclaration|ClassExpression): ConstructorDeclaration|null {
+		const constructor = this.codeAnalyzer.classService.getConstructor(classDeclaration);
+
+		// If it has a constructor, return it immediately.
+		if (constructor != null) return constructor;
+
+		// Return an empty object if the formatted class doesn't extend anything that may have a constructor
+		if (this.codeAnalyzer.classService.isBaseClass(classDeclaration)) return null;
+
+		// Otherwise, resolve the parent
+		const resolvedParent = this.codeAnalyzer.classService.resolveExtendedClass(classDeclaration);
+
+		// If a parent could not be resolved, assume that the parent is a built-in (such as Error)
+		if (resolvedParent == null) {
+			return null;
+		}
+
+		// Otherwise, go up the inheritance chain recursively to find the constructor
+		return this.getConstructor(resolvedParent);
 	}
 
 }

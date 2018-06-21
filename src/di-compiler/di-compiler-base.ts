@@ -5,7 +5,6 @@ import {ICodeAnalyzer} from "@wessberg/codeanalyzer";
 import {IConstructorArgumentService} from "../service/constructor/i-constructor-argument-service";
 import {IContainerServiceConstructor} from "../service/container/i-container-service";
 import {IDIConfig} from "../di-config/i-di-config";
-import {IMarshaller} from "@wessberg/marshaller";
 import {IExpressionFinderService} from "../service/expression-finder/i-expression-finder-service";
 import {IExpressionValidatorService} from "../service/expression-validator/i-expression-validator-service";
 import {IExpressionUpdaterService} from "../service/expression-updater/i-expression-updater-service";
@@ -17,7 +16,6 @@ export class DICompilerBase implements IDICompilerBase {
 
 	constructor (private readonly diConfig: IDIConfig,
 							 private readonly codeAnalyzer: ICodeAnalyzer,
-							 private readonly marshaller: IMarshaller,
 							 private readonly containerServiceCtor: IContainerServiceConstructor,
 							 private readonly constructorArgumentService: IConstructorArgumentService,
 							 private readonly expressionFinderService: IExpressionFinderService,
@@ -44,7 +42,7 @@ export class DICompilerBase implements IDICompilerBase {
 		for (const classDeclaration of classes) {
 			const ctor = this.constructorArgumentService.getConstructorArguments(classDeclaration);
 
-			container.append(`\n${this.codeAnalyzer.classService.getNameOfClass(classDeclaration)}.${this.diConfig.argumentsProperty} = ${ctor == null ? "[]" : this.marshaller.marshal(ctor.args)};`);
+			container.append(`\n${this.codeAnalyzer.classService.getNameOfClass(classDeclaration)}.${this.diConfig.argumentsProperty} = ${ctor == null ? "[]" : `[${ctor.args.map(arg => typeof arg === "string" ? `"${arg}"` : undefined).join(",")}]`};`);
 		}
 
 		// Now, also find all relevant expressions

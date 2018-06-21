@@ -20,6 +20,7 @@ export interface IDIHasExpression extends IDIExpression {
 export interface IDIRegisterExpression extends IDIExpression {
 	kind: DIExpressionKind.REGISTER_SINGLETON|DIExpressionKind.REGISTER_TRANSIENT;
 	implementationName: string;
+	constructorArguments:Iterable<string|undefined>;
 }
 
 export interface IDIRegisterSingletonExpression extends IDIRegisterExpression {
