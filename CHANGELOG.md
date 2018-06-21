@@ -1,3 +1,11 @@
+## <small>1.0.73 (2018-06-21)</small>
+
+* 1.0.73 ([1720e3f](https://github.com/wessberg/di-compiler/commit/1720e3f))
+* Bumped version ([46e835e](https://github.com/wessberg/di-compiler/commit/46e835e))
+* Re-added parsing constructor arguments when registering services since they may never be parsed by w ([dcf640d](https://github.com/wessberg/di-compiler/commit/dcf640d))
+
+
+
 ## <small>1.0.72 (2018-06-13)</small>
 
 * 1.0.72 ([01aa8e2](https://github.com/wessberg/di-compiler/commit/01aa8e2))
