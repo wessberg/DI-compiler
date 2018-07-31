@@ -1,3 +1,11 @@
+## <small>1.0.75 (2018-07-31)</small>
+
+* 1.0.75 ([cda1053](https://github.com/wessberg/di-compiler/commit/cda1053))
+* Bumped deps ([1491d0c](https://github.com/wessberg/di-compiler/commit/1491d0c))
+* Bumped version ([f27d13b](https://github.com/wessberg/di-compiler/commit/f27d13b))
+
+
+
 ## <small>1.0.74 (2018-06-21)</small>
 
 * 1.0.74 ([bd4e264](https://github.com/wessberg/di-compiler/commit/bd4e264))
