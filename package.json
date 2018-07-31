@@ -46,19 +46,19 @@
 		"ava": "^0.25.0",
 		"conventional-changelog-cli": "^2.0.1",
 		"husky": "latest",
-		"tslint": "^5.10.0",
-		"@wessberg/rollup-plugin-di": "^1.0.83",
-		"@wessberg/rollup-plugin-ts": "0.0.25"
+		"tslint": "^5.11.0",
+		"@wessberg/rollup-plugin-di": "^1.0.85",
+		"@wessberg/rollup-plugin-ts": "0.0.32"
 	},
 	"dependencies": {
-		"@types/node": "^10.3.4",
-		"@wessberg/codeanalyzer": "^1.0.134",
-		"@wessberg/di": "^1.0.30",
+		"@types/node": "^10.5.4",
+		"@wessberg/codeanalyzer": "^1.0.138",
+		"@wessberg/di": "^1.1.0",
 		"chalk": "^2.4.1",
 		"magic-string": "^0.25.0",
-		"rollup": "^0.61.1",
-		"tslib": "^1.9.2",
-		"typescript": "^2.9.2"
+		"rollup": "^0.63.4",
+		"tslib": "^1.9.3",
+		"typescript": "^3.0.1"
 	},
 	"repository": {
 		"type": "git",
