@@ -1,6 +1,6 @@
 {
 	"name": "@wessberg/di-compiler",
-	"version": "1.0.75",
+	"version": "1.0.76",
 	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
 	"scripts": {
 		"clean:dist": "rm -r -f dist",
