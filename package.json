@@ -3,10 +3,6 @@
 	"version": "1.0.75",
 	"description": "The compiler for https://www.npmjs.com/package/@wessberg/di",
 	"scripts": {
-		"changelog:generate": "conventional-changelog --outfile CHANGELOG.md --release-count 0",
-		"readme:badges": "node node_modules/@wessberg/ts-config/readme/badge/helper/add-badges.js",
-		"readme:refresh": "npm run changelog:generate && npm run readme:badges",
-		"commit:readme": "npm run readme:refresh && git commit -am \"Bumped version\" --no-verify || true",
 		"clean:dist": "rm -r -f dist",
 		"clean:compiled": "rm -r -f compiled",
 		"clean": "npm run clean:dist && npm run clean:compiled",
@@ -24,9 +20,9 @@
 		"prepublishOnly": "NODE_ENV=production npm run validate && NODE_ENV=production npm run build",
 		"precommit": "npm run tslint && exit 0",
 		"prepush": "npm run validate && exit 0",
-		"publish:major": "npm version major && npm run commit:readme && git push && NODE_ENV=production npm publish",
-		"publish:minor": "npm version minor && npm run commit:readme && git push && NODE_ENV=production npm publish",
-		"publish:patch": "npm version patch && npm run commit:readme && git push && NODE_ENV=production npm publish"
+		"publish:major": "npm version major && git push && NODE_ENV=production npm publish",
+		"publish:minor": "npm version minor && git push && NODE_ENV=production npm publish",
+		"publish:patch": "npm version patch && git push && NODE_ENV=production npm publish"
 	},
 	"keywords": [
 		"DI",
@@ -44,7 +40,6 @@
 	"devDependencies": {
 		"@wessberg/ts-config": "^0.0.30",
 		"ava": "^0.25.0",
-		"conventional-changelog-cli": "^2.0.5",
 		"husky": "latest",
 		"tslint": "^5.11.0",
 		"@wessberg/rollup-plugin-di": "^1.0.86",
