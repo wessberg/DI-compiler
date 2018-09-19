@@ -42,23 +42,23 @@
 		"compiler"
 	],
 	"devDependencies": {
-		"@wessberg/ts-config": "^0.0.27",
+		"@wessberg/ts-config": "^0.0.30",
 		"ava": "^0.25.0",
-		"conventional-changelog-cli": "^2.0.1",
+		"conventional-changelog-cli": "^2.0.5",
 		"husky": "latest",
 		"tslint": "^5.11.0",
-		"@wessberg/rollup-plugin-di": "^1.0.85",
-		"@wessberg/rollup-plugin-ts": "0.0.32"
+		"@wessberg/rollup-plugin-di": "^1.0.86",
+		"@wessberg/rollup-plugin-ts": "0.0.40"
 	},
 	"dependencies": {
-		"@types/node": "^10.5.4",
-		"@wessberg/codeanalyzer": "^1.0.138",
+		"@types/node": "^10.10.1",
+		"@wessberg/codeanalyzer": "^1.0.139",
 		"@wessberg/di": "^1.1.0",
 		"chalk": "^2.4.1",
-		"magic-string": "^0.25.0",
-		"rollup": "^0.63.4",
+		"magic-string": "^0.25.1",
+		"rollup": "^0.66.0",
 		"tslib": "^1.9.3",
-		"typescript": "^3.0.1"
+		"typescript": "^3.0.3"
 	},
 	"repository": {
 		"type": "git",

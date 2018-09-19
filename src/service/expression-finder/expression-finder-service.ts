@@ -68,7 +68,7 @@ export class ExpressionFinderService implements IExpressionFinderService {
 				case DIExpressionKind.REGISTER_TRANSIENT:
 					// The type name will be given in the second argument all times, potentially also the implementation
 					// The identifier will be given as the first argument.
-					typeName = typeName = args[1].match(this.COMPILED_IDENTIFIER_REGEX)![1];
+					typeName = args[1].match(this.COMPILED_IDENTIFIER_REGEX)![1];
 					implementationName = args[1].match(this.COMPILED_IMPLEMENTATION_REGEX)![1];
 
 					// If the implementation is still null, the implementation is overridden or provided in a callback as the first argument
