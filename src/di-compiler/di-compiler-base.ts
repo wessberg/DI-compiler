@@ -42,7 +42,7 @@ export class DICompilerBase implements IDICompilerBase {
 		for (const classDeclaration of classes) {
 			const ctor = this.constructorArgumentService.getConstructorArguments(classDeclaration);
 
-			container.append(`\n${this.codeAnalyzer.classService.getNameOfClass(classDeclaration)}.${this.diConfig.argumentsProperty} = ${ctor == null ? "[]" : `[${ctor.args.map(arg => typeof arg === "string" ? `"${arg}"` : undefined).join(",")}]`};`);
+			container.append(`\n(<any>${this.codeAnalyzer.classService.getNameOfClass(classDeclaration)}).${this.diConfig.argumentsProperty} = ${ctor == null ? "[]" : `[${ctor.args.map(arg => typeof arg === "string" ? `"${arg}"` : undefined).join(",")}]`};`);
 		}
 
 		// Now, also find all relevant expressions
