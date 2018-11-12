@@ -68,6 +68,9 @@
 		"email": "frederikwessberg@hotmail.com",
 		"url": "https://github.com/wessberg"
 	},
+	"files": [
+		"dist/**/*.*"
+	],
 	"license": "MIT",
 	"scaffold": {
 		"patreonUserId": "11315442",
