@@ -42,19 +42,22 @@ import ts from "@wessberg/rollup-plugin-ts";
 import {di} from "@wessberg/di-compiler";
 
 export default {
-	input: "...",
-	output: [ /* ... */ ],
-	plugins: [
-		ts({
-			transformers: [di]
-		})
-	]
-}
+  input: "...",
+  output: [
+    /* ... */
+  ],
+  plugins: [
+    ts({
+      transformers: [di]
+    })
+  ]
+};
 ```
 
 ### Usage with the Typescript Compiler API
 
 There's several ways to do this, but here's a simple example:
+
 ```typescript
 import {createProgram, getDefaultCompilerOptions, createCompilerHost} from "typescript";
 import {di} from "@wessberg/di-compiler";
@@ -63,16 +66,14 @@ const compilerOptions = getDefaultCompilerOptions();
 const compilerHost = createCompilerHost(compilerOptions);
 
 // Create a Typescript program
-const program = createProgram([
-	"my-file-1.ts",
-	"my-file-2.ts"
-],
-	compilerOptions,
-	compilerHost
+const program = createProgram(
+  ["my-file-1.ts", "my-file-2.ts"],
+  compilerOptions,
+  compilerHost
 );
 
 // Transform the SourceFiles within the program, and pass them through the 'di' transformer
-program.emit(undefined, undefined, undefined, undefined, di({program}))
+program.emit(undefined, undefined, undefined, undefined, di({program}));
 ```
 
 ## Contributing
@@ -104,7 +105,10 @@ Will be compiled into:
 
 ```javascript
 // ...
-container.registerSingleton(undefined, {identifier: "MyInterface", implementation: MyImplementation});
+container.registerSingleton(undefined, {
+  identifier: "MyInterface",
+  implementation: MyImplementation
+});
 ```
 
 ## Backers 🏅
