@@ -1,3 +1,0 @@
-export enum DIExpressionKind {
-	REGISTER_SINGLETON, REGISTER_TRANSIENT, HAS, GET
-}
