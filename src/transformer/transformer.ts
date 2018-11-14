@@ -264,7 +264,7 @@ export const di = ({program}: IDIInputOptions): CustomTransformers => {
 												[
 													isTypeNode(implementationArg)
 														? createIdentifier("undefined")
-														: implementationArg,
+														: visitEachChild(implementationArg, visitNode, context),
 													createObjectLiteral(
 														[
 															createPropertyAssignment(
