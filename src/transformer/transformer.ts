@@ -1,4 +1,4 @@
-import {ArrayLiteralExpression, CallExpression, ClassDeclaration, ClassElement, ClassExpression, ConstructorDeclaration, createArrayLiteral, createBlock, createComputedPropertyName, createGetAccessor, createIdentifier, createImportClause, createImportDeclaration, createImportSpecifier, createModifier, createNamedImports, createNamespaceImport, createObjectLiteral, createProperty, createPropertyAssignment, createReturn, createStringLiteral, CustomTransformers, Expression, isCallExpression, isClassDeclaration, isClassExpression, isImportDeclaration, isNamedImports, isNamespaceImport, isPropertyAccessExpression, isTypeNode, Node, NodeArray, ParameterDeclaration, PropertyAccessExpression, SourceFile, SyntaxKind, TransformationContext, Transformer, TypeChecker, TypeNode, updateCall, updateClassDeclaration, updateClassExpression, updateSourceFileNode, visitEachChild, visitNode as _visitNode} from "typescript";
+import {ArrayLiteralExpression, CallExpression, ClassDeclaration, ClassElement, ClassExpression, ConstructorDeclaration, createArrayLiteral, createBlock, createComputedPropertyName, createGetAccessor, createIdentifier, createImportClause, createImportDeclaration, createImportSpecifier, createModifier, createNamedImports, createNamespaceImport, createObjectLiteral, createPropertyAssignment, createReturn, createStringLiteral, CustomTransformers, Expression, isCallExpression, isClassDeclaration, isClassExpression, isImportDeclaration, isNamedImports, isNamespaceImport, isPropertyAccessExpression, isTypeNode, Node, NodeArray, ParameterDeclaration, PropertyAccessExpression, SourceFile, SyntaxKind, TransformationContext, Transformer, TypeChecker, TypeNode, updateCall, updateClassDeclaration, updateClassExpression, updateSourceFileNode, visitEachChild, visitNode as _visitNode} from "typescript";
 import {CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER, DI_CONTAINER_NAME} from "./constant";
 import {DIMethodKind} from "./di-method-kind";
 import {IResolveTypeNodeInImportsAndGenerateImportDeclarationResult} from "./i-resolve-type-node-in-imports-and-generate-import-declaration-result";
@@ -299,17 +299,7 @@ export const di = ({program}: IDIInputOptions): CustomTransformers => {
 					if (constructorDeclaration == null) return visitEachChild(node, visitNode, context);
 
 					const updatedClassMembers: ReadonlyArray<ClassElement> = [
-						...node.members,
-						createProperty(
-							undefined,
-							[
-								createModifier(SyntaxKind.PublicKeyword)
-							],
-							"helloWorld",
-							undefined,
-							undefined,
-							createStringLiteral("lolol")
-						),
+						...node.members.map(member => visitEachChild(member, visitNode, context)),
 						createGetAccessor(
 							undefined,
 							[
