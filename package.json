@@ -1,6 +1,6 @@
 {
   "name": "@wessberg/di-compiler",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A Custom Transformer for Typescript that enables compile-time Dependency Injection",
   "scripts": {
     "generate:readme": "scaffold readme --yes",
