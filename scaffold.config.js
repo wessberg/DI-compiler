@@ -3,6 +3,6 @@ module.exports = {
   logo: {
     url:
       "https://raw.githubusercontent.com/wessberg/di-compiler/master/documentation/asset/di-logo.png",
-    height: 100
+    height: 150
   }
 };

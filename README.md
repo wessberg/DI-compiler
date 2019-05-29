@@ -1,6 +1,6 @@
 <!-- SHADOW_SECTION_LOGO_START -->
 
-<div><img alt="Logo" src="https://raw.githubusercontent.com/wessberg/di-compiler/master/documentation/asset/di-logo.png" height="100"   /></div>
+<div><img alt="Logo" src="https://raw.githubusercontent.com/wessberg/di-compiler/master/documentation/asset/di-logo.png" height="150"   /></div>
 
 <!-- SHADOW_SECTION_LOGO_END -->
 
