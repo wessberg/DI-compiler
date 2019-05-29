@@ -30,11 +30,18 @@
 
 This is a [`CustomTransformer`](https://github.com/Microsoft/TypeScript/pull/13940) for Typescript that enables you to use [the DI library](https://github.com/wessberg/di).
 
+This has been implemented as a TypeScript Custom Transformer in order to be so low-level that it can be used as the underlying implementation in anything you want, whether it be directly with Typescript's Compiler APIs, Webpack loaders, Rollup plugins, or something else.
+
 <!-- SHADOW_SECTION_FEATURES_START -->
 
 ### Features
 
 <!-- SHADOW_SECTION_FEATURES_END -->
+
+- Really lightweight
+- Really fast
+- Low-level implementation that can be used as the foundation for other tools such as Loaders, Plugins, and others.
+- It doesn't ask you to reflect metadata or to annotate your classes with decorators. "It just works".
 
 <!-- SHADOW_SECTION_FEATURE_IMAGE_START -->
 
