@@ -1,3 +1,5 @@
+## [2.0.4](https://github.com/wessberg/di-compiler/compare/v2.0.3...v2.0.4) (2019-05-29)
+
 ## [2.0.3](https://github.com/wessberg/di-compiler/compare/v2.0.2...v2.0.3) (2019-05-29)
 
 ## [2.0.2](https://github.com/wessberg/di-compiler/compare/v2.0.1...v2.0.2) (2018-11-28)
