@@ -1,6 +1,6 @@
-import {ImportDeclaration} from "typescript";
+import { ImportDeclaration } from "typescript";
 
 export interface IResolveTypeNodeInImportsAndGenerateImportDeclarationResult {
-	importDeclaration: ImportDeclaration;
-	identifierText: string;
+  importDeclaration: ImportDeclaration;
+  identifierText: string;
 }

@@ -1,5 +1,5 @@
-import {Program} from "typescript";
+import { Program } from "typescript";
 
 export interface IDIInputOptions {
-	program: Program;
+  program: Program;
 }

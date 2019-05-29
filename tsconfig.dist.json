@@ -1,9 +1,8 @@
 {
-	"extends": "./tsconfig.json",
-	"include": [
-		"src/**/*.*"
-	],
-	"compilerOptions": {
-		"declaration": true
-	}
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.*"],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true
+  }
 }
