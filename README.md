@@ -16,7 +16,6 @@
 <a href="https://www.npmjs.com/package/%40wessberg%2Fdi-compiler"><img alt="NPM version" src="https://badge.fury.io/js/%40wessberg%2Fdi-compiler.svg"    /></a>
 <a href="https://david-dm.org/wessberg/di-compiler"><img alt="Dependencies" src="https://img.shields.io/david/wessberg%2Fdi-compiler.svg"    /></a>
 <a href="https://github.com/wessberg/di-compiler/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/wessberg%2Fdi-compiler.svg"    /></a>
-<a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"    /></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"    /></a>
 <a href="https://www.patreon.com/bePatron?u=11315442"><img alt="Support on Patreon" src="https://img.shields.io/badge/patreon-donate-green.svg"    /></a>
 
@@ -55,22 +54,16 @@ This has been implemented as a TypeScript Custom Transformer in order to be so l
   - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
-  - [NPM](#npm)
+  - [npm](#npm)
   - [Yarn](#yarn)
+  - [pnpm](#pnpm)
+  - [Peer Dependencies](#peer-dependencies)
 - [Usage](#usage)
-  - [Usage with TypeScript's Compiler APIs](#usage-with-typescripts-compiler-apis)
-  - [Usage with Rollup](#usage-with-rollup)
-    - [Usage with rollup-plugin-ts](#usage-with-rollup-plugin-ts)
-    - [Usage with rollup-plugin-typescript2](#usage-with-rollup-plugin-typescript2)
-  - [Usage with Webpack](#usage-with-webpack)
-    - [Usage with awesome-typescript-loader](#usage-with-awesome-typescript-loader)
-    - [Usage with ts-loader](#usage-with-ts-loader)
 - [Contributing](#contributing)
 - [Maintainers](#maintainers)
 - [Backers](#backers)
   - [Patreon](#patreon)
 - [FAQ](#faq)
-  - [How does it work, exactly?](#how-does-it-work-exactly)
 - [License](#license)
 
 <!-- SHADOW_SECTION_TOC_END -->
@@ -79,7 +72,7 @@ This has been implemented as a TypeScript Custom Transformer in order to be so l
 
 ## Install
 
-### NPM
+### npm
 
 ```
 $ npm install @wessberg/di-compiler
@@ -90,6 +83,16 @@ $ npm install @wessberg/di-compiler
 ```
 $ yarn add @wessberg/di-compiler
 ```
+
+### pnpm
+
+```
+$ pnpm add @wessberg/di-compiler
+```
+
+### Peer Dependencies
+
+`@wessberg/di-compiler` depends on `typescript`, so you need to manually install these as well.
 
 <!-- SHADOW_SECTION_INSTALL_END -->
 
@@ -111,7 +114,48 @@ There's several ways to do this, but here's a simple example:
 import {
   createProgram,
   getDefaultCompilerOptions,
-  createCompilerHost
+  createCompilerHost,
+} from "typescript";
+import { di } from "@wessberg/di-compiler";
+
+const compilerOptions = getDefaultCompilerOptions();
+const compilerHost = createCompilerHost(compilerOptions);
+
+// Create a Typescript program
+const program = createProgram(
+  ["my-file-1.ts", "my-file-2.ts"],
+  compilerOptions,
+  compilerHost
+);
+
+// Transform the SourceFiles within the program, and pass them through the 'di' transformer
+program.emit(undefined, undefined, undefined, undefined, di({ program }));
+```
+
+### Usage with ts-node
+
+One of the simplest ways to use DI-compiler is with [`ts-node`](https://github.com/TypeStrong/ts-node):
+
+```
+node -r @wessberg/di-compiler/register <some-file.ts>
+```
+
+You can also do it programmatically. Here's an example using CommonJS:
+
+```typescript
+const { di } = require("@wessberg/rollup-plugin-ts");
+
+require("ts-node").register({
+  transpileOnly: false,
+  transformers: (program) => di({ program }),
+});
+```
+
+```typescript
+import {
+  createProgram,
+  getDefaultCompilerOptions,
+  createCompilerHost,
 } from "typescript";
 import { di } from "@wessberg/di-compiler";
 
@@ -149,9 +193,9 @@ export default {
   ],
   plugins: [
     ts({
-      transformers: [di]
-    })
-  ]
+      transformers: [di],
+    }),
+  ],
 };
 ```
 
@@ -168,9 +212,9 @@ export default {
   ],
   plugins: [
     ts({
-      transformers: [service => di({ program: service.getProgram() })]
-    })
-  ]
+      transformers: [(service) => di({ program: service.getProgram() })],
+    }),
+  ],
 };
 ```
 
@@ -195,11 +239,11 @@ const config = {
         loader: "awesome-typescript-loader",
         options: {
           // ...
-          getCustomTransformers: program => di({ program })
-        }
-      }
-    ]
-  }
+          getCustomTransformers: (program) => di({ program }),
+        },
+      },
+    ],
+  },
   // ...
 };
 ```
@@ -218,14 +262,36 @@ const config = {
         loader: "ts-loader",
         options: {
           // ...
-          getCustomTransformers: program => di({ program })
-        }
-      }
-    ]
-  }
+          getCustomTransformers: (program) => di({ program }),
+        },
+      },
+    ],
+  },
   // ...
 };
 ```
+
+### Usage with ava
+
+You can also use DI-compiler with the [`ava`](https://github.com/avajs/ava) test runner
+with the `require` property in the `ava` configuration:
+
+```json
+{
+  // Other options...
+  "extensions": ["ts"],
+  "require": ["@wessberg/di-compiler/register"]
+}
+```
+
+## Options
+
+You can provide options to the `di` Custom Transformer to configure its behavior:
+
+| Option                    | Description                                                            |
+| ------------------------- | ---------------------------------------------------------------------- |
+| `program`                 | A full TypeScript program (required).                                  |
+| `typescript` _(optional)_ | If given, the TypeScript version to use internally for all operations. |
 
 <!-- SHADOW_SECTION_CONTRIBUTING_START -->
 
@@ -239,7 +305,7 @@ Do you want to contribute? Awesome! Please follow [these recommendations](./CONT
 
 ## Maintainers
 
-| <img alt="Frederik Wessberg" src="https://avatars2.githubusercontent.com/u/20454213?s=460&v=4" height="70"   />                                                                                                                  |
+| <a href="mailto:frederikwessberg@hotmail.com"><img alt="Frederik Wessberg" src="https://avatars2.githubusercontent.com/u/20454213?s=460&v=4" height="70"   /></a>                                                                |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Frederik Wessberg](mailto:frederikwessberg@hotmail.com)<br><strong>Twitter</strong>: [@FredWessberg](https://twitter.com/FredWessberg)<br><strong>Github</strong>: [@wessberg](https://github.com/wessberg)<br>_Lead Developer_ |
 
@@ -249,11 +315,13 @@ Do you want to contribute? Awesome! Please follow [these recommendations](./CONT
 
 ## Backers
 
+| <a href="https://usebubbles.com"><img alt="Bubbles" src="https://uploads-ssl.webflow.com/5d682047c28b217055606673/5e5360be16879c1d0dca6514_icon-thin-128x128%402x.png" height="70"   /></a> |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Bubbles](https://usebubbles.com)<br><strong>Twitter</strong>: [@use_bubbles](https://twitter.com/use_bubbles)                                                                              |
+
 ### Patreon
 
-[Become a backer](https://www.patreon.com/bePatron?u=11315442) and get your name, avatar, and Twitter handle listed here.
-
-<a href="https://www.patreon.com/bePatron?u=11315442"><img alt="Backers on Patreon" src="https://patreon-badge.herokuapp.com/11315442.png"  width="500"  /></a>
+<a href="https://www.patreon.com/bePatron?u=11315442"><img alt="Patrons on Patreon" src="https://img.shields.io/endpoint.svg?url=https://shieldsio-patreon.herokuapp.com/wessberg"  width="200"  /></a>
 
 <!-- SHADOW_SECTION_BACKERS_END -->
 
@@ -284,7 +352,7 @@ Will be compiled into:
 // ...
 container.registerSingleton(undefined, {
   identifier: "MyInterface",
-  implementation: MyImplementation
+  implementation: MyImplementation,
 });
 ```
 

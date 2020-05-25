@@ -1,2 +1,2 @@
-export { di } from "./transformer/transformer";
-export { IDIInputOptions } from "./transformer/i-di-input-options";
+export * from "./transformer/di-options";
+export * from "./transformer/di";
