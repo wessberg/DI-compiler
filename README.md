@@ -137,7 +137,7 @@ program.emit(undefined, undefined, undefined, undefined, di({ program }));
 One of the simplest ways to use DI-compiler is with [`ts-node`](https://github.com/TypeStrong/ts-node):
 
 ```
-node -r @wessberg/di-compiler/register <some-file.ts>
+node -r @wessberg/di-compiler/register
 ```
 
 You can also do it programmatically. Here's an example using CommonJS:
@@ -146,7 +146,6 @@ You can also do it programmatically. Here's an example using CommonJS:
 const { di } = require("@wessberg/rollup-plugin-ts");
 
 require("ts-node").register({
-  transpileOnly: false,
   transformers: (program) => di({ program }),
 });
 ```
