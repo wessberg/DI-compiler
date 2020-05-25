@@ -276,11 +276,11 @@ const config = {
 You can also use DI-compiler with the [`ava`](https://github.com/avajs/ava) test runner
 with the `require` property in the `ava` configuration:
 
-```json
+```json5
 {
   // Other options...
-  "extensions": ["ts"],
-  "require": ["@wessberg/di-compiler/register"]
+  extensions: ["ts"],
+  require: ["@wessberg/di-compiler/register"],
 }
 ```
 
