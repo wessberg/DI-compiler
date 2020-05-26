@@ -2,6 +2,7 @@ import { VisitorContext } from "../visitor-context";
 import { TS } from "../../type/type";
 import { BeforeVisitorOptions } from "./before-visitor-options";
 import { visitNode } from "./visitor/visit-node";
+import { ImportedSymbol } from "../../type/imported-symbol";
 
 export function beforeTransformer(
   context: VisitorContext
@@ -15,16 +16,27 @@ function transformSourceFile(
   context: VisitorContext,
   transformationContext: TS.TransformationContext
 ): TS.SourceFile {
-  const trailingStatements: TS.Statement[] = [];
+  const requiredImportedSymbolSet = new Set<ImportedSymbol>();
+
+  context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, false);
+  context.sourceFileToRequiredImportedSymbolSet.set(
+    sourceFile.fileName,
+    requiredImportedSymbolSet
+  );
 
   const visitorOptions: Pick<
     BeforeVisitorOptions<TS.Node>,
     Exclude<keyof BeforeVisitorOptions<TS.Node>, "node" | "sourceFile">
   > = {
     context,
+    transformationContext,
 
-    addTrailingStatements: (...statements: TS.Statement[]): void => {
-      trailingStatements.push(...statements);
+    addTslibDefinition: (): void => {
+      context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, true);
+    },
+
+    requireImportedSymbol: (importedSymbol: ImportedSymbol): void => {
+      requiredImportedSymbolSet.add(importedSymbol);
     },
 
     continuation: (node) =>
@@ -46,18 +58,5 @@ function transformSourceFile(
       ),
   };
 
-  const updatedSourceFile = visitorOptions.continuation(
-    sourceFile
-  ) as TS.SourceFile;
-  if (trailingStatements.length < 1) return updatedSourceFile;
-
-  return context.typescript.updateSourceFileNode(
-    updatedSourceFile,
-    [...updatedSourceFile.statements, ...trailingStatements],
-    sourceFile.isDeclarationFile,
-    sourceFile.referencedFiles,
-    sourceFile.typeReferenceDirectives,
-    sourceFile.hasNoDefaultLib,
-    sourceFile.libReferenceDirectives
-  );
+  return visitorOptions.continuation(sourceFile) as TS.SourceFile;
 }

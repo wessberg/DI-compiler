@@ -1,6 +1,6 @@
 import { join, normalize } from "path";
 import { TS } from "../../src/type/type";
-import * as typescript from "typescript";
+import * as TSModule from "typescript";
 import { di } from "../../src/transformer/di";
 import {
   isAbsolute,
@@ -8,7 +8,7 @@ import {
   nativeJoin,
   nativeNormalize,
   parse,
-} from "../../src/path-util";
+} from "../../src/util/path-util";
 
 // tslint:disable:no-any
 export interface TestFileRecord {
@@ -25,6 +25,7 @@ interface FileResult {
 }
 
 interface TransformerOptions {
+  typescript: typeof TS;
   compilerOptions: Partial<TS.CompilerOptions>;
   cwd: string;
 }
@@ -35,6 +36,7 @@ interface TransformerOptions {
 export function generateTransformerResult(
   inputFiles: TestFile[] | TestFile,
   {
+    typescript = TSModule,
     compilerOptions = {},
     cwd = process.cwd(),
   }: Partial<TransformerOptions> = {}

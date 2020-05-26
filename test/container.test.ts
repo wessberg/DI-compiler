@@ -1,7 +1,6 @@
 import test from "ava";
 import { generateTransformerResult } from "./setup/setup-transformer";
 import { formatCode } from "./util/format-code";
-import { TYPE_NODE_CONSOLE_LOG_MARK } from "../src/transformer/constant";
 
 test("Only considers containers that are instances of DIContainer. #1", (t) => {
   const bundle = generateTransformerResult([
@@ -155,28 +154,6 @@ test("Supports custom implementation functions. #1", (t) => {
 			container.registerSingleton(() => ({foo: "hello"}), { identifier: "IFoo" });
 			`)
   );
-});
-
-test("Will remove Type node marks. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
-				import {DIContainer} from "@wessberg/di";
-				
-				interface IFoo {
-					foo: string;
-				}
-				
-				const container = new DIContainer();
-				container.registerSingleton<IFoo>();
-			`,
-    },
-  ]);
-  const [file] = bundle;
-
-  t.false(formatCode(file.code).includes(TYPE_NODE_CONSOLE_LOG_MARK));
 });
 
 test("When registering a service, the implementation type argument is treated as an optional argument. #1", (t) => {

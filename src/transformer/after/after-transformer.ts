@@ -2,6 +2,10 @@ import { VisitorContext } from "../visitor-context";
 import { TS } from "../../type/type";
 import { AfterVisitorOptions } from "./after-visitor-options";
 import { visitNode } from "./visitor/visit-node";
+import {
+  getDefineArrayLiteralExpression,
+  getRootBlock,
+} from "../../util/ts-util";
 
 export function afterTransformer(
   context: VisitorContext
@@ -20,6 +24,12 @@ function transformSourceFile(
     Exclude<keyof AfterVisitorOptions<TS.Node>, "node" | "sourceFile">
   > = {
     context,
+    transformationContext,
+    defineArrayLiteralExpression: getDefineArrayLiteralExpression(
+      sourceFile,
+      context
+    ),
+    rootBlock: getRootBlock(sourceFile, context),
 
     continuation: (node) =>
       visitNode({

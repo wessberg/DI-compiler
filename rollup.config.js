@@ -24,9 +24,7 @@ export default [
     ],
     external: [
       ...builtinModules,
-      ...Object.keys(
-        packageJson.dependencies == null ? {} : packageJson.dependencies
-      ),
+      ...Object.keys(packageJson.dependencies),
       ...Object.keys(packageJson.devDependencies),
       ...Object.keys(packageJson.peerDependencies),
     ],
