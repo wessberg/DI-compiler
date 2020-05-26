@@ -19,8 +19,9 @@ export function visitDefineArrayLiteralExpression(
           typescript.isStringLiteralLike(element) &&
           element.text === importedSymbol.moduleSpecifier
       )
-    )
+    ) {
       continue;
+    }
 
     trailingExtraExpressions.push(
       typescript.createStringLiteral(importedSymbol.moduleSpecifier)
