@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/wessberg/di-compiler/compare/v2.0.5...v2.1.0) (2020-05-27)
+
+### Features
+
+- major refactoring with support for CommonJS, AMD, and SystemJS as targets ([bfeedef](https://github.com/wessberg/di-compiler/commit/bfeedef6db6c6624f1ed861db815b53f471cef30))
+
 ## [2.0.5](https://github.com/wessberg/di-compiler/compare/v2.0.4...v2.0.5) (2019-06-21)
 
 ## [2.0.4](https://github.com/wessberg/di-compiler/compare/v2.0.3...v2.0.4) (2019-05-29)
