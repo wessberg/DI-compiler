@@ -1,3 +1,9 @@
+## [2.1.1](https://github.com/wessberg/di-compiler/compare/v2.1.0...v2.1.1) (2020-06-01)
+
+### Bug Fixes
+
+- remove throw statement for SystemJS as compiletarget ([c8d370e](https://github.com/wessberg/di-compiler/commit/c8d370e4116d19cdd8a50276a86619ac91beb6d6))
+
 # [2.1.0](https://github.com/wessberg/di-compiler/compare/v2.0.5...v2.1.0) (2020-05-27)
 
 ### Features
