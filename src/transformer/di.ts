@@ -14,13 +14,6 @@ export function di({
   ...rest
 }: DiOptions): TS.CustomTransformers {
   const typeChecker = rest.program.getTypeChecker();
-  const compilerOptions = rest.program.getCompilerOptions();
-
-  if (compilerOptions.module === typescript.ModuleKind.System) {
-    throw new TypeError(
-      `DI-compiler does not currently support SystemJS as a module target.`
-    );
-  }
 
   // Prepare a VisitorContext
   const visitorContext: VisitorContext = {
