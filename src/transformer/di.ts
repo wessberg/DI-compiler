@@ -1,7 +1,7 @@
 import { TS } from "../type/type";
 import { DiOptions } from "./di-options";
-import { VisitorContext } from "./visitor-context";
-import { evaluate } from "@wessberg/ts-evaluator";
+import { BaseVisitorContext } from "./visitor-context";
+import { evaluate } from "ts-evaluator";
 import * as TSModule from "typescript";
 import { beforeTransformer } from "./before/before-transformer";
 import { afterTransformer } from "./after/after-transformer";
@@ -16,7 +16,7 @@ export function di({
   const typeChecker = rest.program.getTypeChecker();
 
   // Prepare a VisitorContext
-  const visitorContext: VisitorContext = {
+  const visitorContext: BaseVisitorContext = {
     ...rest,
     typescript,
     typeChecker,

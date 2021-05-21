@@ -1,34 +1,64 @@
-import { join, normalize } from "path";
-import { TS } from "../../src/type/type";
 import * as TSModule from "typescript";
-import { di } from "../../src/transformer/di";
 import {
-  isAbsolute,
+  join,
   nativeDirname,
   nativeJoin,
   nativeNormalize,
-  parse,
+  normalize,
 } from "../../src/util/path-util";
+import { TS } from "../../src/type/type";
+import { di } from "../../src/transformer/di";
+import { ensureArray } from "../../src/util/util";
 
-// tslint:disable:no-any
-export interface TestFileRecord {
+export interface ITestFile {
   fileName: string;
   text: string;
   entry: boolean;
 }
 
-export type TestFile = TestFileRecord | string;
+export type TestFile = ITestFile | string;
 
-interface FileResult {
-  fileName: string;
-  code: string;
-}
-
-interface TransformerOptions {
+export interface GenerateTransformerResultOptions {
   typescript: typeof TS;
-  compilerOptions: Partial<TS.CompilerOptions>;
   cwd: string;
+  compilerOptions: Partial<TS.CompilerOptions>;
+  stackTraceLength: number;
 }
+
+const VIRTUAL_ROOT = "#root";
+const VIRTUAL_SRC = "src";
+const VIRTUAL_DIST = "dist";
+
+const BASE_FILES = [
+  {
+    entry: false,
+    fileName: "../node_modules/@wessberg/di/package.json",
+    text: `
+				{
+					"name": "@wessberg/di",
+					"main": "index.js"
+					"types": "index.d.ts",
+					"typings": "index.d.ts"
+				}
+			`,
+  },
+  {
+    entry: false,
+    fileName: "../node_modules/@wessberg/di/index.d.ts",
+    text: `
+				export declare class DIContainer {
+				  registerSingleton<T, U extends T = T>(newExpression: unknown, options: unknown): void;
+				  registerSingleton<T, U extends T = T>(newExpression: undefined, options: unknown): void;
+          registerSingleton<T, U extends T = T>(newExpression?: unknown | undefined, options?: unknown): void;
+          registerTransient<T, U extends T = T>(newExpression: unknown, options: unknown): void;
+				  registerTransient<T, U extends T = T>(newExpression: undefined, options: unknown): void;
+          registerTransient<T, U extends T = T>(newExpression?: unknown | undefined, options?: unknown): void;
+          get<T>(options?: unknown): T;
+          has<T>(options?: unknown): boolean;
+				}
+			`,
+  },
+];
 
 /**
  * Prepares a test
@@ -37,14 +67,17 @@ export function generateTransformerResult(
   inputFiles: TestFile[] | TestFile,
   {
     typescript = TSModule,
-    compilerOptions = {},
-    cwd = process.cwd(),
-  }: Partial<TransformerOptions> = {}
-): readonly FileResult[] {
-  const files: TestFileRecord[] = (Array.isArray(inputFiles)
-    ? inputFiles
-    : [inputFiles]
-  )
+    cwd = join(process.cwd(), VIRTUAL_ROOT),
+    compilerOptions: inputCompilerOptions,
+    stackTraceLength,
+  }: Partial<GenerateTransformerResultOptions> = {}
+): { fileName: string; text: string }[] {
+  // Optionally set the stack trace length limit
+  if (stackTraceLength != null) {
+    Error.stackTraceLimit = stackTraceLength;
+  }
+
+  const files: ITestFile[] = [...BASE_FILES, ...ensureArray(inputFiles)]
     .map((file) =>
       typeof file === "string"
         ? {
@@ -54,70 +87,92 @@ export function generateTransformerResult(
           }
         : file
     )
-    .map((file) => ({ ...file, fileName: join(cwd, file.fileName) }));
+    .map((file) => ({
+      ...file,
+      fileName: nativeJoin(cwd, VIRTUAL_SRC, file.fileName),
+    }));
 
-  const directories = new Set(
-    files.map((file) => nativeNormalize(nativeDirname(file.fileName)))
-  );
-
-  const entryFiles = files.filter((file) => file.entry);
-  if (entryFiles.length === 0) {
+  const entryFile = files.find((file) => file.entry);
+  if (entryFile == null) {
     throw new ReferenceError(`No entry could be found`);
   }
 
-  const results: FileResult[] = [];
+  const outputFiles: { fileName: string; text: string }[] = [];
 
-  let input: Record<string, string> | string;
-  if (entryFiles.length === 1) {
-    input = entryFiles[0].fileName;
-  } else {
-    input = {};
+  const fileSystem = {
+    readFile: (fileName: string): string | undefined => {
+      const normalized = nativeNormalize(fileName);
+      const matchedFile = files.find(
+        (currentFile) => nativeNormalize(currentFile.fileName) === normalized
+      );
 
-    // Ensure no conflicting chunk names
-    const seenNames = new Set<string>();
-    for (const entryFile of entryFiles) {
-      let candidateName = parse(entryFile.fileName).name;
-      let offset = 0;
-      if (!seenNames.has(candidateName)) {
-        seenNames.add(candidateName);
-      } else {
-        candidateName = `${candidateName}-${++offset}`;
-        while (true) {
-          if (seenNames.has(candidateName)) {
-            candidateName = `${candidateName.slice(
-              0,
-              candidateName.length - 2
-            )}-${++offset}`;
-          } else {
-            seenNames.add(candidateName);
-            break;
-          }
-        }
-      }
+      return matchedFile == null ? undefined : matchedFile.text;
+    },
+    fileExists: (fileName: string): boolean => {
+      const normalized = nativeNormalize(fileName);
+      return files.some((currentFile) => currentFile.fileName === normalized);
+    },
 
-      input[candidateName] = entryFile.fileName;
+    directoryExists: (dirName: string): boolean => {
+      const normalized = nativeNormalize(dirName);
+      return (
+        files.some(
+          (file) =>
+            nativeDirname(file.fileName) === normalized ||
+            nativeDirname(file.fileName).startsWith(
+              nativeNormalize(`${normalized}/`)
+            )
+        ) || typescript.sys.directoryExists(dirName)
+      );
+    },
+  };
+
+  /**
+   * Gets a ScriptKind from the given path
+   */
+  const getScriptKindFromPath = (path: string): TS.ScriptKind => {
+    if (path.endsWith(".js")) {
+      return typescript.ScriptKind.JS;
+    } else if (path.endsWith(".ts")) {
+      return typescript.ScriptKind.TS;
+    } else if (path.endsWith(".tsx")) {
+      return typescript.ScriptKind.TSX;
+    } else if (path.endsWith(".jsx")) {
+      return typescript.ScriptKind.JSX;
+    } else if (path.endsWith(".json")) {
+      return typescript.ScriptKind.JSON;
+    } else {
+      return typescript.ScriptKind.Unknown;
     }
-  }
+  };
+
+  const compilerOptions: TS.CompilerOptions = {
+    module: typescript.ModuleKind.ESNext,
+    target: typescript.ScriptTarget.ESNext,
+    allowJs: true,
+    sourceMap: false,
+    outDir: join(cwd, VIRTUAL_DIST),
+    rootDir: normalize(cwd),
+    moduleResolution: typescript.ModuleResolutionKind.NodeJs,
+    ...inputCompilerOptions,
+  };
 
   const program = typescript.createProgram({
-    rootNames: files.map((file) => file.fileName),
-    options: {
-      module: typescript.ModuleKind.ESNext,
-      target: typescript.ScriptTarget.ESNext,
-      moduleResolution: typescript.ModuleResolutionKind.NodeJs,
-      allowJs: true,
-      sourceMap: false,
-      ...compilerOptions,
-    },
+    rootNames: files.map((file) => normalize(file.fileName)),
+    options: compilerOptions,
     host: {
-      ...typescript.sys,
+      ...fileSystem,
+      writeFile: () => {
+        // This is a noop
+      },
 
       getSourceFile(
         fileName: string,
         languageVersion: TS.ScriptTarget
       ): TS.SourceFile | undefined {
         const normalized = normalize(fileName);
-        const sourceText = this.readFile(normalized);
+        const sourceText = this.readFile(fileName);
+
         if (sourceText == null) return undefined;
 
         return typescript.createSourceFile(
@@ -125,12 +180,18 @@ export function generateTransformerResult(
           sourceText,
           languageVersion,
           true,
-          typescript.ScriptKind.TS
+          getScriptKindFromPath(normalized)
         );
       },
 
       getCurrentDirectory() {
-        return ".";
+        return nativeNormalize(cwd);
+      },
+
+      getDirectories(directoryName: string) {
+        return typescript.sys
+          .getDirectories(directoryName)
+          .map(nativeNormalize);
       },
 
       getDefaultLibFileName(options: TS.CompilerOptions): string {
@@ -151,79 +212,23 @@ export function generateTransformerResult(
         return typescript.sys.useCaseSensitiveFileNames;
       },
 
-      readFile: (fileName) => {
-        const normalized = nativeNormalize(fileName);
-        const absoluteFileName = isAbsolute(normalized)
-          ? normalized
-          : nativeJoin(cwd, normalized);
-        const file = files.find(
-          (currentFile) => currentFile.fileName === absoluteFileName
-        );
-        if (file != null) return file.text;
-        return typescript.sys.readFile(absoluteFileName);
-      },
-      writeFile() {
-        // Noop
-      },
-      fileExists: (fileName) => {
-        const normalized = nativeNormalize(fileName);
-        const absoluteFileName = isAbsolute(normalized)
-          ? normalized
-          : nativeJoin(cwd, normalized);
-        if (files.some((file) => file.fileName === absoluteFileName)) {
-          return true;
-        }
-
-        return typescript.sys.fileExists(absoluteFileName);
-      },
-      directoryExists: (dirName) => {
-        const normalized = nativeNormalize(dirName);
-        if (directories.has(normalized)) return true;
-        return typescript.sys.directoryExists(normalized);
-      },
       realpath(path: string): string {
         return nativeNormalize(path);
-      },
-      readDirectory(
-        rootDir: string,
-        extensions: readonly string[],
-        excludes: readonly string[] | undefined,
-        includes: readonly string[],
-        depth?: number
-      ): string[] {
-        const nativeNormalizedRootDir = nativeNormalize(rootDir);
-        const realResult = typescript.sys.readDirectory(
-          rootDir,
-          extensions,
-          excludes,
-          includes,
-          depth
-        );
-        const virtualFiles = files
-          .filter((file) => file.fileName.includes(nativeNormalizedRootDir))
-          .map((file) => file.fileName);
-        return [...new Set([...realResult, ...virtualFiles])].map(
-          nativeNormalize
-        );
-      },
-
-      getDirectories(path: string): string[] {
-        return typescript.sys.getDirectories(path).map(nativeNormalize);
       },
     },
   });
 
-  const transformers = di({ program });
+  const transformers = di({ typescript, program });
 
   program.emit(
     undefined,
-    (fileName, code) => {
-      results.push({ fileName, code });
+    (fileName, text) => {
+      outputFiles.push({ fileName, text });
     },
     undefined,
     undefined,
     transformers
   );
 
-  return results;
+  return outputFiles;
 }

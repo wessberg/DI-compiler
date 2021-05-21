@@ -1,13 +1,18 @@
 import test from "ava";
 import { generateTransformerResult } from "./setup/setup-transformer";
 import { formatCode } from "./util/format-code";
+import { withTypeScript } from "./util/ts-macro";
 
-test("Only considers containers that are instances of DIContainer. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "Only considers containers that are instances of DIContainer. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				class Foo {}
 				class MyContainer {
 					registerSingleton<T> (): T|undefined {
@@ -18,13 +23,15 @@ test("Only considers containers that are instances of DIContainer. #1", (t) => {
 				const container = new MyContainer();
 				container.registerSingleton<Foo>();
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			class Foo {}
 			class MyContainer {
 				registerSingleton () {
@@ -35,43 +42,55 @@ test("Only considers containers that are instances of DIContainer. #1", (t) => {
 			const container = new MyContainer();
 			container.registerSingleton();
 			`)
-  );
-});
+    );
+  }
+);
 
-test("Supports ElementAccessExpressions. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "Supports ElementAccessExpressions. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				import {DIContainer} from "@wessberg/di";
 				class Foo {}
 				const container = new DIContainer();
 
 				container["registerSingleton"]<Foo>();
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
 			}
 			const container = new DIContainer();
 			container["registerSingleton"](undefined, { identifier: "Foo", implementation: Foo });
 			`)
-  );
-});
+    );
+  }
+);
 
-test("Supports ElementAccessExpressions. #2", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "Supports ElementAccessExpressions. #2",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				import {DIContainer} from "@wessberg/di";
 				class Foo {}
 				const container = new DIContainer();
@@ -79,13 +98,15 @@ test("Supports ElementAccessExpressions. #2", (t) => {
 
 				container[argumentExpression]<Foo>();
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
 			}
@@ -93,15 +114,20 @@ test("Supports ElementAccessExpressions. #2", (t) => {
 			const argumentExpression = "registerSingleton";
 			container[argumentExpression](undefined, { identifier: "Foo", implementation: Foo });
 			`)
-  );
-});
+    );
+  }
+);
 
-test("Supports PropertyAccessExpressions. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "Supports PropertyAccessExpressions. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				import {DIContainer} from "@wessberg/di";
 				
 				interface IFoo {}
@@ -111,28 +137,35 @@ test("Supports PropertyAccessExpressions. #1", (t) => {
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
 			}
 			const container = new DIContainer();
 			container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
 			`)
-  );
-});
+    );
+  }
+);
 
-test("Supports custom implementation functions. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "Supports custom implementation functions. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				import {DIContainer} from "@wessberg/di";
 				
 				interface IFoo {
@@ -142,26 +175,33 @@ test("Supports custom implementation functions. #1", (t) => {
 				const container = new DIContainer();
 				container.registerSingleton<IFoo>(() => ({foo: "hello"}));
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			const container = new DIContainer();
 			container.registerSingleton(() => ({foo: "hello"}), { identifier: "IFoo" });
 			`)
-  );
-});
+    );
+  }
+);
 
-test("When registering a service, the implementation type argument is treated as an optional argument. #1", (t) => {
-  const bundle = generateTransformerResult([
-    {
-      entry: true,
-      fileName: "index.ts",
-      text: `
+test(
+  "When registering a service, the implementation type argument is treated as an optional argument. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
 				import {DIContainer} from "@wessberg/di";
 				
 				class Foo {}
@@ -169,18 +209,21 @@ test("When registering a service, the implementation type argument is treated as
 				const container = new DIContainer();
 				container.registerSingleton<Foo>();
 			`,
-    },
-  ]);
-  const [file] = bundle;
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
 
-  t.deepEqual(
-    formatCode(file.code),
-    formatCode(`\
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
 			}
 			const container = new DIContainer();
 			container.registerSingleton(undefined, { identifier: "Foo", implementation: Foo });
 			`)
-  );
-});
+    );
+  }
+);

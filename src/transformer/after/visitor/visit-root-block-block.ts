@@ -6,7 +6,7 @@ export function visitRootBlockBlock(
   options: AfterVisitorOptions<TS.Block>
 ): TS.VisitResult<TS.Node> {
   const { node, context } = options;
-  const { typescript } = context;
+  const { compatFactory } = context;
 
-  return typescript.updateBlock(node, visitRootBlock(options));
+  return compatFactory.updateBlock(node, visitRootBlock(options));
 }

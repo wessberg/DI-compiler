@@ -1,13 +1,12 @@
 import path, { ParsedPath } from "path";
-import { platform } from "os";
 import slash from "slash";
-
-export const ROOT_DIRECTORY = path.parse(process.cwd()).root;
-export const PLATFORM = platform();
-export const DRIVE_LETTER_REGEXP = /^\w:/;
 
 export function normalize(p: string): string {
   return ensurePosix(p);
+}
+
+export function join(...paths: string[]): string {
+  return ensurePosix(path.join(...paths));
 }
 
 export function parse(p: string): ParsedPath {
@@ -19,17 +18,6 @@ export function parse(p: string): ParsedPath {
     dir: normalize(parsedPath.dir),
     root: normalize(parsedPath.root),
   };
-}
-
-/**
- * On Windows, it is important that all absolute paths are absolute, including the drive letter, because TypeScript assumes this
- */
-export function ensureHasDriveLetter(p: string): string {
-  if (PLATFORM !== "win32") return p;
-  if (DRIVE_LETTER_REGEXP.test(p)) return p;
-  if (p.startsWith(ROOT_DIRECTORY)) return p;
-  if (!isAbsolute(p)) return p;
-  return nativeJoin(ROOT_DIRECTORY, p);
 }
 
 /**

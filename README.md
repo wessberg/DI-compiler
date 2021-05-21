@@ -350,7 +350,7 @@ For example, an expression such as:
 ```typescript
 import { DIContainer } from "@wessberg/di";
 import { MyInterface } from "./my-interface";
-import { Myimplementation } from "./my-implementation";
+import { MyImplementation } from "./my-implementation";
 
 const container = new DIContainer();
 container.registerSingleton<MyInterface, MyImplementation>();

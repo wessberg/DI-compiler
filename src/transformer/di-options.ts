@@ -1,7 +1,6 @@
-import { Program } from "typescript";
 import { TS } from "../type/type";
 
 export interface DiOptions {
-  program: Program;
+  program: TS.Program;
   typescript?: typeof TS;
 }

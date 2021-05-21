@@ -7,25 +7,26 @@ import { visitDefineArrayLiteralExpression } from "./visit-define-array-literal-
 export function visitNode<T extends TS.Node>(
   options: AfterVisitorOptions<T>
 ): TS.VisitResult<TS.Node> {
-  if (
-    options.context.typescript.isSourceFile(options.node) &&
-    options.rootBlock === options.node
-  ) {
-    return visitRootBlockSourceFile({ ...options, node: options.node });
+  const {
+    node,
+    childContinuation,
+    defineArrayLiteralExpression,
+    rootBlock,
+    context: { typescript },
+  } = options;
+  if (typescript.isSourceFile(node) && rootBlock === node) {
+    return visitRootBlockSourceFile({ ...options, node });
+  } else if (typescript.isBlock(node) && rootBlock === node) {
+    return visitRootBlockBlock({ ...options, node });
   } else if (
-    options.context.typescript.isBlock(options.node) &&
-    options.rootBlock === options.node
-  ) {
-    return visitRootBlockBlock({ ...options, node: options.node });
-  } else if (
-    options.context.typescript.isArrayLiteralExpression(options.node) &&
-    options.defineArrayLiteralExpression === options.node
+    typescript.isArrayLiteralExpression(node) &&
+    defineArrayLiteralExpression === node
   ) {
     return visitDefineArrayLiteralExpression({
       ...options,
-      node: options.node,
+      node,
     });
   }
 
-  return options.childContinuation(options.node);
+  return childContinuation(options.node);
 }

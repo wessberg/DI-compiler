@@ -1,10 +1,12 @@
 import { DiOptions } from "./di-options";
 import { TS } from "../type/type";
-import { EvaluateResult } from "@wessberg/ts-evaluator";
+import { EvaluateResult } from "ts-evaluator";
 import { SourceFileToImportedSymbolSet } from "../type/imported-symbol";
+import { CompatFactory } from "./compat-factory";
 
-export interface VisitorContext extends Required<DiOptions> {
+export interface BaseVisitorContext extends Required<DiOptions> {
   typeChecker: TS.TypeChecker;
+
   evaluate(node: TS.Declaration | TS.Expression | TS.Statement): EvaluateResult;
 
   // Some files need to add 'tslib' to their 'define' arrays
@@ -15,4 +17,9 @@ export interface VisitorContext extends Required<DiOptions> {
   // those in an after-transformer, since we will need to check if another import
   // already exists for that binding after transpilation
   sourceFileToRequiredImportedSymbolSet: SourceFileToImportedSymbolSet;
+}
+
+export interface VisitorContext extends BaseVisitorContext {
+  compatFactory: CompatFactory;
+  transformationContext: TS.TransformationContext;
 }

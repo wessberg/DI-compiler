@@ -1,11 +1,12 @@
 import { TS } from "../../../type/type";
 import { AfterVisitorOptions } from "../after-visitor-options";
+import { updateArrayLiteralExpression } from "../../../util/ts-util";
 
 export function visitDefineArrayLiteralExpression(
   options: AfterVisitorOptions<TS.ArrayLiteralExpression>
 ): TS.ArrayLiteralExpression {
   const { node, sourceFile, context } = options;
-  const { typescript } = context;
+  const { typescript, compatFactory } = context;
 
   const trailingExtraExpressions: TS.Expression[] = [];
 
@@ -24,21 +25,21 @@ export function visitDefineArrayLiteralExpression(
     }
 
     trailingExtraExpressions.push(
-      typescript.createStringLiteral(importedSymbol.moduleSpecifier)
+      compatFactory.createStringLiteral(importedSymbol.moduleSpecifier)
     );
   }
 
   if (
     context.sourceFileToAddTslibDefinition.get(sourceFile.fileName) === true
   ) {
-    trailingExtraExpressions.push(typescript.createStringLiteral("tslib"));
+    trailingExtraExpressions.push(compatFactory.createStringLiteral("tslib"));
   }
 
   if (trailingExtraExpressions.length < 1) {
     return node;
   }
 
-  return typescript.updateArrayLiteral(node, [
+  return updateArrayLiteralExpression(context, node, [
     ...node.elements,
     ...trailingExtraExpressions,
   ]);

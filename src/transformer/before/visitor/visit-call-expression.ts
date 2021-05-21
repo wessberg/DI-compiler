@@ -3,12 +3,13 @@ import { TS } from "../../../type/type";
 import { BeforeVisitorOptions } from "../before-visitor-options";
 import { DiMethodKind } from "../../di-method-kind";
 import { VisitorContext } from "../../visitor-context";
-import { ModuleKind } from "typescript";
 import {
+  createObjectLiteralExpression,
   getImportDefaultHelper,
   getImportStarHelper,
   moduleKindDefinesDependencies,
   moduleKindSupportsImportHelpers,
+  updateCallExpression,
 } from "../../../util/ts-util";
 
 export function visitCallExpression(
@@ -21,9 +22,8 @@ export function visitCallExpression(
     context,
     addTslibDefinition,
     requireImportedSymbol,
-    transformationContext,
   } = options;
-  const { typescript } = context;
+  const { typescript, compatFactory, transformationContext } = context;
 
   const diMethod = getDiMethodKind(node.expression, context);
 
@@ -36,15 +36,16 @@ export function visitCallExpression(
           return childContinuation(node);
         }
 
-        return typescript.updateCall(
+        return updateCallExpression(
+          context,
           node,
           node.expression,
           node.typeArguments,
           [
-            typescript.createObjectLiteral([
-              typescript.createPropertyAssignment(
+            createObjectLiteralExpression(context, [
+              compatFactory.createPropertyAssignment(
                 "identifier",
-                typescript.createStringLiteral(
+                compatFactory.createStringLiteral(
                   node.typeArguments[0].getFullText().trim()
                 )
               ),
@@ -55,8 +56,8 @@ export function visitCallExpression(
 
       case DiMethodKind.REGISTER_SINGLETON:
       case DiMethodKind.REGISTER_TRANSIENT: {
-        let [typeArg, implementationArg] = ((node.typeArguments ??
-          []) as unknown) as [
+        let [typeArg, implementationArg] = (node.typeArguments ??
+          []) as unknown as [
           TS.TypeNode | TS.Expression | undefined,
           TS.TypeNode | TS.Expression | undefined
         ];
@@ -177,25 +178,26 @@ export function visitCallExpression(
           }
         }
 
-        return typescript.updateCall(
+        return updateCallExpression(
+          context,
           node,
           node.expression,
           node.typeArguments,
           [
             typescript.isTypeNode(implementationArg)
-              ? typescript.createIdentifier("undefined")
+              ? compatFactory.createIdentifier("undefined")
               : (continuation(implementationArg) as TS.Expression),
-            typescript.createObjectLiteral([
-              typescript.createPropertyAssignment(
+            createObjectLiteralExpression(context, [
+              compatFactory.createPropertyAssignment(
                 "identifier",
-                typescript.createStringLiteral(typeArgText)
+                compatFactory.createStringLiteral(typeArgText)
               ),
               ...(!typescript.isTypeNode(implementationArg)
                 ? []
                 : [
-                    typescript.createPropertyAssignment(
+                    compatFactory.createPropertyAssignment(
                       "implementation",
-                      typescript.createIdentifier(
+                      compatFactory.createIdentifier(
                         rewriteImplementationName(
                           implementationArgText,
                           options
@@ -314,9 +316,9 @@ function rewriteImplementationName(
     case typescript.ModuleKind.ESNext:
       return name;
 
-    case ModuleKind.CommonJS:
-    case ModuleKind.AMD:
-    case ModuleKind.UMD: {
+    case typescript.ModuleKind.CommonJS:
+    case typescript.ModuleKind.AMD:
+    case typescript.ModuleKind.UMD: {
       // Find the matching import
       const match = findMatchingImportDeclarationForIdentifier(name, options);
       if (match == null) {

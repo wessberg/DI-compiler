@@ -1,17 +1,37 @@
 import { TS } from "../type/type";
 import { ImportedSymbol } from "../type/imported-symbol";
 import { VisitorContext } from "../transformer/visitor-context";
-import { ModuleKind } from "typescript";
 import { RootBlock } from "../type/root-block";
+import { CompatFactory } from "../transformer/compat-factory";
 
-export function getImportDefaultHelper(typescript: typeof TS): TS.EmitHelper {
-  return (typescript as typeof TS & { importDefaultHelper: TS.EmitHelper })
-    .importDefaultHelper;
+type TSWithHelpers = typeof TS & {
+  importDefaultHelper?: TS.EmitHelper;
+  importStarHelper?: TS.EmitHelper;
+};
+
+// For some TypeScript versions, such as 3.1, these helpers are not exposed by TypeScript,
+// so they will have to be duplicated and reused from here in these rare cases
+const HELPERS = {
+  importDefaultHelper: {
+    name: "typescript:commonjsimportdefault",
+    scoped: false,
+    text: '\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { "default": mod };\n};',
+  },
+  importStarHelper: {
+    name: "typescript:commonjsimportstar",
+    scoped: false,
+    text: '\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];\n    result["default"] = mod;\n    return result;\n};',
+  },
+} as const;
+
+export function getImportDefaultHelper(
+  typescript: TSWithHelpers
+): TS.EmitHelper {
+  return typescript.importDefaultHelper ?? HELPERS.importDefaultHelper;
 }
 
-export function getImportStarHelper(typescript: typeof TS): TS.EmitHelper {
-  return (typescript as typeof TS & { importStarHelper: TS.EmitHelper })
-    .importStarHelper;
+export function getImportStarHelper(typescript: TSWithHelpers): TS.EmitHelper {
+  return typescript.importStarHelper ?? HELPERS.importStarHelper;
 }
 
 export function moduleKindSupportsImportHelpers(
@@ -41,13 +61,37 @@ export function moduleKindDefinesDependencies(
   }
 }
 
+interface EmitHelperFactory {
+  getUnscopedHelperName(helperName: string): TS.Identifier;
+}
+
+type TSWithEmitHelpers = typeof TS &
+  (
+    | EmitHelperFactory
+    | {
+        createEmitHelperFactory(
+          factory: TS.TransformationContext
+        ): EmitHelperFactory;
+      }
+    | {
+        getHelperName(helperName: string): TS.Identifier;
+      }
+  );
+
 export function getUnscopedHelperName(
-  typescript: typeof TS,
+  context: VisitorContext,
   helperName: string
 ): TS.Identifier {
-  return (typescript as typeof TS & {
-    getUnscopedHelperName(helperName: string): TS.Identifier;
-  }).getUnscopedHelperName(helperName);
+  const typescript = context.typescript as TSWithEmitHelpers;
+  if ("getUnscopedHelperName" in typescript) {
+    return typescript.getUnscopedHelperName(helperName);
+  } else if ("createEmitHelperFactory" in typescript) {
+    return typescript
+      .createEmitHelperFactory(context.transformationContext)
+      .getUnscopedHelperName(helperName);
+  } else {
+    return typescript.getHelperName(helperName);
+  }
 }
 
 export function getRootBlockInsertionPosition(
@@ -74,10 +118,9 @@ export function getRootBlockInsertionPosition(
       statement.expression.expression.name.text === "defineProperty" &&
       statement.expression.arguments.length >= 2 &&
       typescript.isIdentifier(statement.expression.arguments[0]) &&
-      (statement.expression.arguments[0] as TS.Identifier).text === "exports" &&
+      statement.expression.arguments[0].text === "exports" &&
       typescript.isStringLiteralLike(statement.expression.arguments[1]) &&
-      (statement.expression.arguments[1] as TS.StringLiteralLike).text ===
-        "__esModule";
+      statement.expression.arguments[1].text === "__esModule";
 
     if (isUseStrict || isEsModuleSymbol) {
       insertPosition = Math.max(insertPosition, i + 1);
@@ -114,9 +157,8 @@ export function getDefineArrayLiteralExpression(
           ) &&
           statement.expression.expression.expression.parameters.length === 1
         ) {
-          const [
-            firstParameter,
-          ] = statement.expression.expression.expression.parameters;
+          const [firstParameter] =
+            statement.expression.expression.expression.parameters;
           if (typescript.isIdentifier(firstParameter.name)) {
             if (firstParameter.name.text === "factory") {
               for (const subStatement of statement.expression.expression
@@ -138,9 +180,8 @@ export function getDefineArrayLiteralExpression(
                       ) &&
                       subSubStatement.expression.expression.text === "define"
                     ) {
-                      const [
-                        firstSubSubStatementExpressionArgument,
-                      ] = subSubStatement.expression.arguments;
+                      const [firstSubSubStatementExpressionArgument] =
+                        subSubStatement.expression.arguments;
                       if (
                         typescript.isArrayLiteralExpression(
                           firstSubSubStatementExpressionArgument
@@ -168,19 +209,15 @@ export function getDefineArrayLiteralExpression(
           statement.expression.expression.text === "define" &&
           statement.expression.arguments.length === 2
         ) {
-          const [
-            firstArgument,
-            secondArgument,
-          ] = statement.expression.arguments;
+          const [firstArgument, secondArgument] =
+            statement.expression.arguments;
           if (typescript.isArrayLiteralExpression(firstArgument)) {
             if (
               typescript.isFunctionExpression(secondArgument) &&
               secondArgument.parameters.length >= 2
             ) {
-              const [
-                firstParameter,
-                secondParameter,
-              ] = secondArgument.parameters;
+              const [firstParameter, secondParameter] =
+                secondArgument.parameters;
               if (
                 typescript.isIdentifier(firstParameter.name) &&
                 typescript.isIdentifier(secondParameter.name) &&
@@ -355,56 +392,275 @@ export function isImportedSymbolImported(
   return false;
 }
 
+export function isNodeFactory(
+  compatFactory: CompatFactory
+): compatFactory is TS.NodeFactory {
+  return !("updateSourceFileNode" in compatFactory);
+}
+
+export function createImportClause(
+  context: VisitorContext,
+  name: TS.Identifier | undefined,
+  namedBindings: TS.NamedImportBindings | undefined
+): TS.ImportClause {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createImportClause(false, name, namedBindings)
+    : compatFactory.createImportClause(name, namedBindings, false);
+}
+
+export function createCallExpression(
+  context: VisitorContext,
+  expression: TS.Expression,
+  typeArguments: readonly TS.TypeNode[] | undefined,
+  argumentsArray: readonly TS.Expression[] | undefined
+): TS.CallExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createCallExpression(
+        expression,
+        typeArguments,
+        argumentsArray
+      )
+    : compatFactory.createCall(expression, typeArguments, argumentsArray);
+}
+
+export function createArrayLiteralExpression(
+  context: VisitorContext,
+  elements?: readonly TS.Expression[],
+  multiLine?: boolean
+): TS.ArrayLiteralExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createArrayLiteralExpression(elements, multiLine)
+    : compatFactory.createArrayLiteral(elements, multiLine);
+}
+
+export function updateArrayLiteralExpression(
+  context: VisitorContext,
+  node: TS.ArrayLiteralExpression,
+  elements: readonly TS.Expression[]
+): TS.ArrayLiteralExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.updateArrayLiteralExpression(node, elements)
+    : compatFactory.updateArrayLiteral(node, elements);
+}
+
+export function updateSourceFile(
+  context: VisitorContext,
+  node: TS.SourceFile,
+  statements: readonly TS.Statement[],
+  isDeclarationFile?: boolean,
+  referencedFiles?: readonly TS.FileReference[],
+  typeReferences?: readonly TS.FileReference[],
+  hasNoDefaultLib?: boolean,
+  libReferences?: readonly TS.FileReference[]
+): TS.SourceFile {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.updateSourceFile(
+        node,
+        statements,
+        isDeclarationFile,
+        referencedFiles,
+        typeReferences,
+        hasNoDefaultLib,
+        libReferences
+      )
+    : compatFactory.updateSourceFileNode(
+        node,
+        statements,
+        isDeclarationFile,
+        referencedFiles,
+        typeReferences,
+        hasNoDefaultLib,
+        libReferences
+      );
+}
+
+export function updateCallExpression(
+  context: VisitorContext,
+  node: TS.CallExpression,
+  expression: TS.Expression,
+  typeArguments: readonly TS.TypeNode[] | undefined,
+  argumentsArray: readonly TS.Expression[]
+): TS.CallExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.updateCallExpression(
+        node,
+        expression,
+        typeArguments,
+        argumentsArray
+      )
+    : compatFactory.updateCall(node, expression, typeArguments, argumentsArray);
+}
+
+export function updateClassExpression(
+  context: VisitorContext,
+  node: TS.ClassExpression,
+  decorators: readonly TS.Decorator[] | undefined,
+  modifiers: readonly TS.Modifier[] | undefined,
+  name: TS.Identifier | undefined,
+  typeParameters: readonly TS.TypeParameterDeclaration[] | undefined,
+  heritageClauses: readonly TS.HeritageClause[] | undefined,
+  members: readonly TS.ClassElement[]
+): TS.ClassExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.updateClassExpression(
+        node,
+        decorators,
+        modifiers,
+        name,
+        typeParameters,
+        heritageClauses,
+        members
+      )
+    : compatFactory.updateClassExpression(
+        node,
+        modifiers,
+        name,
+        typeParameters,
+        heritageClauses,
+        members
+      );
+}
+
+export function createPropertyAccessExpression(
+  context: VisitorContext,
+  expression: TS.Expression,
+  name: string | TS.MemberName
+): TS.PropertyAccessExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createPropertyAccessExpression(expression, name)
+    : compatFactory.createPropertyAccess(expression, name);
+}
+
+export function createGetAccessorDeclaration(
+  context: VisitorContext,
+  decorators: readonly TS.Decorator[] | undefined,
+  modifiers: readonly TS.Modifier[] | undefined,
+  name: string | TS.PropertyName,
+  parameters: readonly TS.ParameterDeclaration[],
+  type: TS.TypeNode | undefined,
+  body: TS.Block | undefined
+): TS.GetAccessorDeclaration {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createGetAccessorDeclaration(
+        decorators,
+        modifiers,
+        name,
+        parameters,
+        type,
+        body
+      )
+    : compatFactory.createGetAccessor(
+        decorators,
+        modifiers,
+        name,
+        parameters,
+        type,
+        body
+      );
+}
+
+export function createReturnStatement(
+  context: VisitorContext,
+  expression?: TS.Expression
+): TS.ReturnStatement {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createReturnStatement(expression)
+    : compatFactory.createReturn(expression);
+}
+
+export function createObjectLiteralExpression(
+  context: VisitorContext,
+  properties?: readonly TS.ObjectLiteralElementLike[],
+  multiLine?: boolean
+): TS.ObjectLiteralExpression {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createObjectLiteralExpression(properties, multiLine)
+    : compatFactory.createObjectLiteral(properties, multiLine);
+}
+
+export function createVariableDeclaration(
+  context: VisitorContext,
+  name: string | TS.BindingName,
+  exclamationToken?: TS.ExclamationToken,
+  type?: TS.TypeNode,
+  initializer?: TS.Expression
+): TS.VariableDeclaration {
+  const { compatFactory } = context;
+  return isNodeFactory(compatFactory)
+    ? compatFactory.createVariableDeclaration(
+        name,
+        exclamationToken,
+        type,
+        initializer
+      )
+    : compatFactory.createVariableDeclaration(name, type, initializer);
+}
+
 export function generateImportStatementForImportedSymbolInContext(
   importedSymbol: ImportedSymbol,
   context: VisitorContext
 ): TS.Statement | undefined {
   const compilerOptions = context.program.getCompilerOptions();
-  const typescript = context.typescript;
+  const { compatFactory, typescript } = context;
 
   switch (compilerOptions.module) {
     case typescript.ModuleKind.ES2020:
     case typescript.ModuleKind.ES2015:
-    case typescript.ModuleKind.ESNext:
-      return typescript.createImportDeclaration(
+    case typescript.ModuleKind.ESNext: {
+      return compatFactory.createImportDeclaration(
         undefined,
         undefined,
         "isDefaultImport" in importedSymbol
-          ? typescript.createImportClause(
+          ? createImportClause(
+              context,
               !importedSymbol.isDefaultImport
                 ? undefined
-                : typescript.createIdentifier(importedSymbol.name),
+                : compatFactory.createIdentifier(importedSymbol.name),
               importedSymbol.isDefaultImport
                 ? undefined
-                : typescript.createNamedImports([
-                    typescript.createImportSpecifier(
+                : compatFactory.createNamedImports([
+                    compatFactory.createImportSpecifier(
                       importedSymbol.propertyName === importedSymbol.name
                         ? undefined
-                        : typescript.createIdentifier(
+                        : compatFactory.createIdentifier(
                             importedSymbol.propertyName
                           ),
-                      typescript.createIdentifier(importedSymbol.name)
+                      compatFactory.createIdentifier(importedSymbol.name)
                     ),
                   ])
             )
           : "isNamespaceImport" in importedSymbol
-          ? typescript.createImportClause(
+          ? createImportClause(
+              context,
               undefined,
-              typescript.createNamespaceImport(
-                typescript.createIdentifier(importedSymbol.name)
+              compatFactory.createNamespaceImport(
+                compatFactory.createIdentifier(importedSymbol.name)
               )
             )
           : undefined,
-        typescript.createStringLiteral(importedSymbol.moduleSpecifier)
+        compatFactory.createStringLiteral(importedSymbol.moduleSpecifier)
       );
+    }
 
-    case ModuleKind.CommonJS:
-    case ModuleKind.AMD:
-    case ModuleKind.UMD: {
-      const requireCall = typescript.createCall(
-        typescript.createIdentifier("require"),
+    case typescript.ModuleKind.CommonJS:
+    case typescript.ModuleKind.AMD:
+    case typescript.ModuleKind.UMD: {
+      const requireCall = createCallExpression(
+        context,
+        compatFactory.createIdentifier("require"),
         undefined,
-        [typescript.createStringLiteral(importedSymbol.moduleSpecifier)]
+        [compatFactory.createStringLiteral(importedSymbol.moduleSpecifier)]
       );
 
       let wrappedRequireCall = requireCall;
@@ -419,15 +675,18 @@ export function generateImportStatementForImportedSymbolInContext(
       ) {
         // If tslib is being used, we can do something like 'require("tslib").__import{Default|Star}(<requireCall>)'
         if (compilerOptions.importHelpers === true) {
-          wrappedRequireCall = typescript.createCall(
-            typescript.createPropertyAccess(
-              typescript.createCall(
-                typescript.createIdentifier("require"),
+          wrappedRequireCall = createCallExpression(
+            context,
+            createPropertyAccessExpression(
+              context,
+              createCallExpression(
+                context,
+                compatFactory.createIdentifier("require"),
                 undefined,
-                [typescript.createStringLiteral("tslib")]
+                [compatFactory.createStringLiteral("tslib")]
               ),
               getUnscopedHelperName(
-                typescript,
+                context,
                 "isDefaultImport" in importedSymbol
                   ? "__importDefault"
                   : "__importStar"
@@ -442,9 +701,10 @@ export function generateImportStatementForImportedSymbolInContext(
         else {
           // We've already requested the __importDefault helper in the before transformer under these
           // circumstances
-          wrappedRequireCall = typescript.createCall(
+          wrappedRequireCall = createCallExpression(
+            context,
             getUnscopedHelperName(
-              typescript,
+              context,
               "isDefaultImport" in importedSymbol
                 ? "__importDefault"
                 : "__importStar"
@@ -455,12 +715,14 @@ export function generateImportStatementForImportedSymbolInContext(
         }
       }
 
-      return typescript.createVariableStatement(
+      return compatFactory.createVariableStatement(
         undefined,
-        typescript.createVariableDeclarationList(
+        compatFactory.createVariableDeclarationList(
           [
-            typescript.createVariableDeclaration(
-              typescript.createIdentifier(importedSymbol.name),
+            createVariableDeclaration(
+              context,
+              compatFactory.createIdentifier(importedSymbol.name),
+              undefined,
               undefined,
               wrappedRequireCall
             ),

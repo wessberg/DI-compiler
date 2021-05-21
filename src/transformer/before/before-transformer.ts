@@ -1,20 +1,23 @@
-import { VisitorContext } from "../visitor-context";
+import { BaseVisitorContext, VisitorContext } from "../visitor-context";
 import { TS } from "../../type/type";
 import { BeforeVisitorOptions } from "./before-visitor-options";
 import { visitNode } from "./visitor/visit-node";
 import { ImportedSymbol } from "../../type/imported-symbol";
 
 export function beforeTransformer(
-  context: VisitorContext
+  context: BaseVisitorContext
 ): TS.TransformerFactory<TS.SourceFile> {
   return (transformationContext) => (sourceFile) =>
-    transformSourceFile(sourceFile, context, transformationContext);
+    transformSourceFile(sourceFile, {
+      ...context,
+      compatFactory: transformationContext.factory ?? context.typescript,
+      transformationContext,
+    });
 }
 
 function transformSourceFile(
   sourceFile: TS.SourceFile,
-  context: VisitorContext,
-  transformationContext: TS.TransformationContext
+  context: VisitorContext
 ): TS.SourceFile {
   const requiredImportedSymbolSet = new Set<ImportedSymbol>();
 
@@ -24,12 +27,11 @@ function transformSourceFile(
     requiredImportedSymbolSet
   );
 
-  const visitorOptions: Pick<
+  const visitorOptions: Omit<
     BeforeVisitorOptions<TS.Node>,
-    Exclude<keyof BeforeVisitorOptions<TS.Node>, "node" | "sourceFile">
+    "node" | "sourceFile"
   > = {
     context,
-    transformationContext,
 
     addTslibDefinition: (): void => {
       context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, true);
@@ -54,7 +56,7 @@ function transformSourceFile(
             sourceFile,
             node: cbNode,
           }),
-        transformationContext
+        context.transformationContext
       ),
   };
 
