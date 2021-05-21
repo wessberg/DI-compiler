@@ -31,7 +31,7 @@ test(
 				constructor(foo) {
 					this.foo = foo;
 				}
-				static get [Symbol.for("___CTOR_ARGS___")]() { return ["IFoo"]; }
+				static get [Symbol.for("___CTOR_ARGS___")]() { return [\`IFoo\`]; }
 			}
 			`)
     );
@@ -66,8 +66,43 @@ test(
 					this.foo = foo;
 					this.bar = bar;
 				}
-				static get [Symbol.for("___CTOR_ARGS___")]() { return ["IFoo", undefined]; }
+				static get [Symbol.for("___CTOR_ARGS___")]() { return [\`IFoo\`, undefined]; }
 			}
+			`)
+    );
+  }
+);
+
+test(
+  "When declaring service dependencies via constructor arguments, their type arguments should be irrelevant. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
+          interface IFoo<T> {}
+          class Foo {
+            constructor (private foo: IFoo<string>) {}
+          }
+			`,
+        },
+      ],
+      { typescript }
+    );
+    const [file] = bundle;
+
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
+      class Foo {${gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
+          constructor(foo) {
+              this.foo = foo;
+          }
+          static get [Symbol.for("___CTOR_ARGS___")]() { return [\`IFoo\`]; }
+      }
 			`)
     );
   }

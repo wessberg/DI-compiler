@@ -8,6 +8,7 @@ import {
   updateClassExpression,
 } from "../../../util/ts-util";
 import { VisitorContext } from "../../visitor-context";
+import { pickServiceOrImplementationName } from "../util";
 
 export function visitClassLikeDeclaration(
   options: BeforeVisitorOptions<TS.ClassLikeDeclaration>
@@ -91,8 +92,8 @@ function getParameterTypeNamesAsArrayLiteral(
     if (parameter.type == null) {
       constructorParams[i] = compatFactory.createIdentifier("undefined");
     } else {
-      constructorParams[i] = compatFactory.createStringLiteral(
-        parameter.type.getFullText().trim()
+      constructorParams[i] = compatFactory.createNoSubstitutionTemplateLiteral(
+        pickServiceOrImplementationName(parameter.type, context)
       );
     }
   }
