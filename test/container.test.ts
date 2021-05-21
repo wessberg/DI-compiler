@@ -157,6 +157,50 @@ test(
 );
 
 test(
+  "Won't include imports multiple times when the same implementation is registered multiple times. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
+				import {DIContainer} from "@wessberg/di";
+				import {IFoo, Foo} from "./foo";
+				
+				const container = new DIContainer();
+				container.registerSingleton<IFoo, Foo>();
+				container.registerSingleton<IFoo, Foo>();
+			`,
+        },
+        {
+          entry: false,
+          fileName: "foo.ts",
+          text: `
+				export interface IFoo {}
+				export class Foo implements IFoo {}
+			`,
+        },
+      ],
+      { typescript }
+    );
+    const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
+			import { Foo } from "./foo";
+      import { DIContainer } from "@wessberg/di";
+      const container = new DIContainer();
+      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+			`)
+    );
+  }
+);
+
+test(
   "Supports custom implementation functions. #1",
   withTypeScript,
   (t, { typescript }) => {
