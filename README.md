@@ -66,6 +66,8 @@ This has been implemented as a TypeScript Custom Transformer in order to be so l
 
 - [Description](#description)
   - [Features](#features)
+- [Backers](#backers)
+  - [Patreon](#patreon)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
   - [npm](#npm)
@@ -84,12 +86,10 @@ This has been implemented as a TypeScript Custom Transformer in order to be so l
   - [Usage with ava](#usage-with-ava)
 - [Options](#options)
 - [Contributing](#contributing)
+- [Maintainers](#maintainers)
 - [FAQ](#faq)
   - [How does it work, exactly?](#how-does-it-work-exactly)
 - [License](#license)
-- [Backers](#backers)
-  - [Patreon](#patreon)
-- [Maintainers](#maintainers)
 
 <!-- SHADOW_SECTION_TOC_END -->
 

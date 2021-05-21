@@ -1,3 +1,11 @@
+# [2.2.0](https://github.com/wessberg/di-compiler/compare/v2.1.1...v2.2.0) (2021-05-21)
+
+### Bug Fixes
+
+- type arguments passed to registerSingleton and registerTransient should themselves be allowed to receive type arguments, and these should not count towards the service/implementation name ([76773ab](https://github.com/wessberg/di-compiler/commit/76773ab5a0846c3858c86e111fac35656583070e))
+- **imports:** fix a bug where registering the same implementation multiple times will generate multiple imports ([f8c388b](https://github.com/wessberg/di-compiler/commit/f8c388b07351e737b51ff021a013c867f6a3c008))
+- make all tests pass on every TypeScript version in the range [3.0, 4.3-rc1] ([265ac93](https://github.com/wessberg/di-compiler/commit/265ac93282d58fab4d6ccc6ddd17e52592e27eff))
+
 ## [2.1.1](https://github.com/wessberg/di-compiler/compare/v2.1.0...v2.1.1) (2020-06-01)
 
 ### Bug Fixes
