@@ -1,3 +1,9 @@
+## [2.2.1](https://github.com/wessberg/di-compiler/compare/v2.2.0...v2.2.1) (2021-05-21)
+
+### Bug Fixes
+
+- don't include type arguments as part of the service identifier inside parsed constructor arguments ([3a2f3ff](https://github.com/wessberg/di-compiler/commit/3a2f3ff2f825b0f85b073310da5d16bf3f0eaf98))
+
 # [2.2.0](https://github.com/wessberg/di-compiler/compare/v2.1.1...v2.2.0) (2021-05-21)
 
 ### Bug Fixes
