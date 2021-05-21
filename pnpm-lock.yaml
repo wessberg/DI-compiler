@@ -15,7 +15,6 @@ specifiers:
   eslint-plugin-import: ^2.23.2
   eslint-plugin-jsdoc: ^34.8.2
   husky: ^6.0.0
-  longjohn: ^0.2.12
   np: ^6.5.0
   pnpm: ^6.4.0
   prettier: ^2.3.0
@@ -63,7 +62,6 @@ devDependencies:
   eslint-plugin-import: 2.23.2_eslint@7.26.0
   eslint-plugin-jsdoc: 34.8.2_eslint@7.26.0
   husky: 6.0.0
-  longjohn: 0.2.12
   np: 6.5.0
   pnpm: 6.4.0
   prettier: 2.3.0
@@ -5863,13 +5861,6 @@ packages:
       ansi-escapes: 3.2.0
       cli-cursor: 2.1.0
       wrap-ansi: 3.0.1
-    dev: true
-
-  /longjohn/0.2.12:
-    resolution: { integrity: sha1-fKdEawg2VcN351EiE9x1TVKmSn4= }
-    engines: { node: ">= 0.9.3" }
-    dependencies:
-      source-map-support: 0.5.19
     dev: true
 
   /loud-rejection/1.6.0:

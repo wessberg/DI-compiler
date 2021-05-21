@@ -37,7 +37,7 @@ test("Preserves type-only imports. #1", withTypeScript, (t, { typescript }) => {
       import Foo from "./foo";
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -76,7 +76,7 @@ test("Preserves type-only imports. #2", withTypeScript, (t, { typescript }) => {
       import {Foo} from "./foo";
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -116,7 +116,7 @@ test("Preserves type-only imports. #3", withTypeScript, (t, { typescript }) => {
       import * as Foo from "./foo";
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -155,7 +155,7 @@ test("Preserves type-only imports. #4", withTypeScript, (t, { typescript }) => {
       import {Bar as Foo} from "./foo";
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -194,7 +194,7 @@ test("Preserves type-only imports. #5", withTypeScript, (t, { typescript }) => {
       import {default as Foo} from "./foo";
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -237,7 +237,7 @@ test("Preserves type-only imports. #6", withTypeScript, (t, { typescript }) => {
 			import {Bar} from "./foo";
 			console.log(Bar);
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
   );
 });
@@ -281,7 +281,7 @@ test(
       import Foo from "./foo";
       console.log(Foo);
       const container = new DIContainer();
-      container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+      container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
 			`)
     );
   }

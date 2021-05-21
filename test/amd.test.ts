@@ -47,7 +47,7 @@ test("Preserves Type-only imports. #1", withTypeScript, (t, { typescript }) => {
           const Foo = require("./foo");
           console.log(foo_1.default);
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
   );
@@ -94,7 +94,7 @@ test("Preserves type-only imports. #2", withTypeScript, (t, { typescript }) => {
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("./foo");
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
   );
@@ -141,7 +141,7 @@ test("Preserves type-only imports. #3", withTypeScript, (t, { typescript }) => {
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("./foo");
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.Foo });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Foo });
       });
 			`)
   );
@@ -189,7 +189,7 @@ test("Preserves type-only imports. #4", withTypeScript, (t, { typescript }) => {
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("./foo");
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
       });
 			`)
   );
@@ -236,7 +236,7 @@ test("Preserves type-only imports. #5", withTypeScript, (t, { typescript }) => {
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("./foo");
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.Bar });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Bar });
       });
 			`)
   );
@@ -283,7 +283,7 @@ test("Preserves type-only imports. #6", withTypeScript, (t, { typescript }) => {
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("./foo");
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
   );
@@ -333,7 +333,7 @@ test("Preserves type-only imports. #7", withTypeScript, (t, { typescript }) => {
           const Foo = require("./foo");
           console.log(foo_1.Bar);
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.Foo });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Foo });
       });
 			`)
   );
@@ -385,7 +385,7 @@ test(
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = require("tslib").__importDefault(require("./foo"));
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
     );
@@ -438,7 +438,7 @@ test(
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = __importDefault(require("./foo"));
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
     );
@@ -494,7 +494,7 @@ test(
           foo_1 = __importDefault(foo_1);
           console.log(foo_1.default);
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo.default });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
     );
@@ -548,7 +548,7 @@ test(
           Object.defineProperty(exports, "__esModule", { value: true });
           const Foo = __importStar(require("./foo"));
           const container = new di_1.DIContainer();
-          container.registerSingleton(undefined, { identifier: "IFoo", implementation: Foo });
+          container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
       });
 			`)
     );

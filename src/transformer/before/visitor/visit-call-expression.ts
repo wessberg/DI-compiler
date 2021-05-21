@@ -11,6 +11,7 @@ import {
   moduleKindSupportsImportHelpers,
   updateCallExpression,
 } from "../../../util/ts-util";
+import { pickServiceOrImplementationName } from "../util";
 
 export function visitCallExpression(
   options: BeforeVisitorOptions<TS.CallExpression>
@@ -58,7 +59,7 @@ export function visitCallExpression(
       case DiMethodKind.REGISTER_TRANSIENT: {
         let [typeArg, implementationArg] = (node.typeArguments ??
           []) as unknown as [
-          TS.TypeNode | TS.Expression | undefined,
+          TS.TypeNode | undefined,
           TS.TypeNode | TS.Expression | undefined
         ];
 
@@ -76,8 +77,11 @@ export function visitCallExpression(
           return childContinuation(node);
         }
 
-        const typeArgText = typeArg.getFullText().trim();
-        const implementationArgText = implementationArg.getFullText().trim();
+        const typeArgText = pickServiceOrImplementationName(typeArg, context);
+        const implementationArgText = pickServiceOrImplementationName(
+          implementationArg,
+          context
+        );
 
         // If the Implementation is a TypeNode, and if it originates from an ImportDeclaration, it may be stripped from the file since Typescript won't Type-check the updates from
         // a CustomTransformer and such a node would normally be removed from the imports.
@@ -190,7 +194,7 @@ export function visitCallExpression(
             createObjectLiteralExpression(context, [
               compatFactory.createPropertyAssignment(
                 "identifier",
-                compatFactory.createStringLiteral(typeArgText)
+                compatFactory.createNoSubstitutionTemplateLiteral(typeArgText)
               ),
               ...(!typescript.isTypeNode(implementationArg)
                 ? []
@@ -342,7 +346,7 @@ function rewriteImplementationName(
     }
 
     default:
-      // TODO: Add support for SystemJS and UMD here
+      // TODO: Add support for SystemJS here
       return name;
   }
 }
