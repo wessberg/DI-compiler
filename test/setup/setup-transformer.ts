@@ -1,14 +1,8 @@
 import * as TSModule from "typescript";
-import {
-  join,
-  nativeDirname,
-  nativeJoin,
-  nativeNormalize,
-  normalize,
-} from "../../src/util/path-util";
 import { TS } from "../../src/type/type";
 import { di } from "../../src/transformer/di";
 import { ensureArray } from "../../src/util/util";
+import path from "crosspath";
 
 export interface ITestFile {
   fileName: string;
@@ -67,7 +61,7 @@ export function generateTransformerResult(
   inputFiles: TestFile[] | TestFile,
   {
     typescript = TSModule,
-    cwd = join(process.cwd(), VIRTUAL_ROOT),
+    cwd = path.join(process.cwd(), VIRTUAL_ROOT),
     compilerOptions: inputCompilerOptions,
     stackTraceLength,
   }: Partial<GenerateTransformerResultOptions> = {}
@@ -89,7 +83,7 @@ export function generateTransformerResult(
     )
     .map((file) => ({
       ...file,
-      fileName: nativeJoin(cwd, VIRTUAL_SRC, file.fileName),
+      fileName: path.native.join(cwd, VIRTUAL_SRC, file.fileName),
     }));
 
   const entryFile = files.find((file) => file.entry);
@@ -101,27 +95,28 @@ export function generateTransformerResult(
 
   const fileSystem = {
     readFile: (fileName: string): string | undefined => {
-      const normalized = nativeNormalize(fileName);
+      const normalized = path.native.join(fileName);
       const matchedFile = files.find(
-        (currentFile) => nativeNormalize(currentFile.fileName) === normalized
+        (currentFile) =>
+          path.native.normalize(currentFile.fileName) === normalized
       );
 
       return matchedFile == null ? undefined : matchedFile.text;
     },
     fileExists: (fileName: string): boolean => {
-      const normalized = nativeNormalize(fileName);
+      const normalized = path.native.normalize(fileName);
       return files.some((currentFile) => currentFile.fileName === normalized);
     },
 
     directoryExists: (dirName: string): boolean => {
-      const normalized = nativeNormalize(dirName);
+      const normalized = path.native.normalize(dirName);
       return (
         files.some(
           (file) =>
-            nativeDirname(file.fileName) === normalized ||
-            nativeDirname(file.fileName).startsWith(
-              nativeNormalize(`${normalized}/`)
-            )
+            path.native.dirname(file.fileName) === normalized ||
+            path.native
+              .dirname(file.fileName)
+              .startsWith(path.native.normalize(`${normalized}/`))
         ) || typescript.sys.directoryExists(dirName)
       );
     },
@@ -151,14 +146,14 @@ export function generateTransformerResult(
     target: typescript.ScriptTarget.ESNext,
     allowJs: true,
     sourceMap: false,
-    outDir: join(cwd, VIRTUAL_DIST),
-    rootDir: normalize(cwd),
+    outDir: path.join(cwd, VIRTUAL_DIST),
+    rootDir: path.normalize(cwd),
     moduleResolution: typescript.ModuleResolutionKind.NodeJs,
     ...inputCompilerOptions,
   };
 
   const program = typescript.createProgram({
-    rootNames: files.map((file) => normalize(file.fileName)),
+    rootNames: files.map((file) => path.normalize(file.fileName)),
     options: compilerOptions,
     host: {
       ...fileSystem,
@@ -170,7 +165,7 @@ export function generateTransformerResult(
         fileName: string,
         languageVersion: TS.ScriptTarget
       ): TS.SourceFile | undefined {
-        const normalized = normalize(fileName);
+        const normalized = path.normalize(fileName);
         const sourceText = this.readFile(fileName);
 
         if (sourceText == null) return undefined;
@@ -185,13 +180,13 @@ export function generateTransformerResult(
       },
 
       getCurrentDirectory() {
-        return nativeNormalize(cwd);
+        return path.native.normalize(cwd);
       },
 
       getDirectories(directoryName: string) {
         return typescript.sys
           .getDirectories(directoryName)
-          .map(nativeNormalize);
+          .map(path.native.normalize);
       },
 
       getDefaultLibFileName(options: TS.CompilerOptions): string {
@@ -212,8 +207,8 @@ export function generateTransformerResult(
         return typescript.sys.useCaseSensitiveFileNames;
       },
 
-      realpath(path: string): string {
-        return nativeNormalize(path);
+      realpath(p: string): string {
+        return path.native.normalize(p);
       },
     },
   });
