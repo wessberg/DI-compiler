@@ -92,7 +92,7 @@
   "dependencies": {
     "ts-evaluator": "^0.1.0",
     "tslib": "^2.2.0",
-    "crosspath": "^0.0.7"
+    "crosspath": "^0.0.8"
   },
   "peerDependencies": {
     "typescript": ">=3.x || >= 4.x"
