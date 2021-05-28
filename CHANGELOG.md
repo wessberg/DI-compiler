@@ -1,3 +1,5 @@
+## [2.2.2](https://github.com/wessberg/di-compiler/compare/v2.2.1...v2.2.2) (2021-05-28)
+
 ## [2.2.1](https://github.com/wessberg/di-compiler/compare/v2.2.0...v2.2.1) (2021-05-21)
 
 ### Bug Fixes

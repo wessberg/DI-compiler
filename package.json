@@ -1,6 +1,6 @@
 {
   "name": "@wessberg/di-compiler",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A Custom Transformer for Typescript that enables compile-time Dependency Injection",
   "scripts": {
     "generate:sandhog": "sandhog all --yes",
