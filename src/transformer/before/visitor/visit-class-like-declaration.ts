@@ -1,12 +1,6 @@
 import { CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER } from "../../constant";
 import { TS } from "../../../type/type";
 import { BeforeVisitorOptions } from "../before-visitor-options";
-import {
-  createArrayLiteralExpression,
-  createGetAccessorDeclaration,
-  createReturnStatement,
-  updateClassExpression,
-} from "../../../util/ts-util";
 import { VisitorContext } from "../../visitor-context";
 import { pickServiceOrImplementationName } from "../util";
 
@@ -14,7 +8,7 @@ export function visitClassLikeDeclaration(
   options: BeforeVisitorOptions<TS.ClassLikeDeclaration>
 ): TS.VisitResult<TS.Node> {
   const { node, childContinuation, continuation, context } = options;
-  const { typescript, compatFactory } = context;
+  const { typescript, factory } = context;
   const constructorDeclaration = node.members.find(
     typescript.isConstructorDeclaration
   );
@@ -26,23 +20,21 @@ export function visitClassLikeDeclaration(
 
   const updatedClassMembers: readonly TS.ClassElement[] = [
     ...(node.members.map(continuation) as TS.ClassElement[]),
-    createGetAccessorDeclaration(
-      context,
+    factory.createGetAccessorDeclaration(
       undefined,
       [
-        compatFactory.createModifier(typescript.SyntaxKind.PublicKeyword),
-        compatFactory.createModifier(typescript.SyntaxKind.StaticKeyword),
+        factory.createModifier(typescript.SyntaxKind.PublicKeyword),
+        factory.createModifier(typescript.SyntaxKind.StaticKeyword),
       ],
-      compatFactory.createComputedPropertyName(
-        compatFactory.createIdentifier(
+      factory.createComputedPropertyName(
+        factory.createIdentifier(
           `Symbol.for("${CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER}")`
         )
       ),
       [],
       undefined,
-      compatFactory.createBlock([
-        createReturnStatement(
-          context,
+      factory.createBlock([
+        factory.createReturnStatement(
           getParameterTypeNamesAsArrayLiteral(
             constructorDeclaration.parameters,
             context
@@ -53,7 +45,7 @@ export function visitClassLikeDeclaration(
   ];
 
   if (typescript.isClassDeclaration(node)) {
-    return compatFactory.updateClassDeclaration(
+    return factory.updateClassDeclaration(
       node,
       node.decorators,
       node.modifiers,
@@ -63,8 +55,7 @@ export function visitClassLikeDeclaration(
       updatedClassMembers
     );
   } else {
-    return updateClassExpression(
-      context,
+    return factory.updateClassExpression(
       node,
       node.decorators,
       node.modifiers,
@@ -83,20 +74,20 @@ function getParameterTypeNamesAsArrayLiteral(
   parameters: TS.NodeArray<TS.ParameterDeclaration>,
   context: VisitorContext
 ): TS.ArrayLiteralExpression {
-  const { compatFactory } = context;
+  const { factory } = context;
   const constructorParams: TS.Expression[] = [];
 
   for (let i = 0; i < parameters.length; i++) {
     const parameter = parameters[i];
     // If the parameter has no type, there's nothing to extract
     if (parameter.type == null) {
-      constructorParams[i] = compatFactory.createIdentifier("undefined");
+      constructorParams[i] = factory.createIdentifier("undefined");
     } else {
-      constructorParams[i] = compatFactory.createNoSubstitutionTemplateLiteral(
+      constructorParams[i] = factory.createNoSubstitutionTemplateLiteral(
         pickServiceOrImplementationName(parameter.type, context)
       );
     }
   }
 
-  return createArrayLiteralExpression(context, constructorParams);
+  return factory.createArrayLiteralExpression(constructorParams);
 }

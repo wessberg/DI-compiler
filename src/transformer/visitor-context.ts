@@ -2,7 +2,6 @@ import { DiOptions } from "./di-options";
 import { TS } from "../type/type";
 import { EvaluateResult } from "ts-evaluator";
 import { SourceFileToImportedSymbolSet } from "../type/imported-symbol";
-import { CompatFactory } from "./compat-factory";
 
 export interface BaseVisitorContext extends Required<DiOptions> {
   typeChecker: TS.TypeChecker;
@@ -20,6 +19,6 @@ export interface BaseVisitorContext extends Required<DiOptions> {
 }
 
 export interface VisitorContext extends BaseVisitorContext {
-  compatFactory: CompatFactory;
+  factory: TS.NodeFactory;
   transformationContext: TS.TransformationContext;
 }

@@ -4,12 +4,10 @@ import { BeforeVisitorOptions } from "../before-visitor-options";
 import { DiMethodKind } from "../../di-method-kind";
 import { VisitorContext } from "../../visitor-context";
 import {
-  createObjectLiteralExpression,
   getImportDefaultHelper,
   getImportStarHelper,
   moduleKindDefinesDependencies,
   moduleKindSupportsImportHelpers,
-  updateCallExpression,
 } from "../../../util/ts-util";
 import { pickServiceOrImplementationName } from "../util";
 
@@ -24,7 +22,7 @@ export function visitCallExpression(
     addTslibDefinition,
     requireImportedSymbol,
   } = options;
-  const { typescript, compatFactory, transformationContext } = context;
+  const { typescript, factory, transformationContext } = context;
 
   const diMethod = getDiMethodKind(node.expression, context);
 
@@ -37,16 +35,15 @@ export function visitCallExpression(
           return childContinuation(node);
         }
 
-        return updateCallExpression(
-          context,
+        return factory.updateCallExpression(
           node,
           node.expression,
           node.typeArguments,
           [
-            createObjectLiteralExpression(context, [
-              compatFactory.createPropertyAssignment(
+            factory.createObjectLiteralExpression([
+              factory.createPropertyAssignment(
                 "identifier",
-                compatFactory.createStringLiteral(
+                factory.createStringLiteral(
                   node.typeArguments[0].getFullText().trim()
                 )
               ),
@@ -182,26 +179,25 @@ export function visitCallExpression(
           }
         }
 
-        return updateCallExpression(
-          context,
+        return factory.updateCallExpression(
           node,
           node.expression,
           node.typeArguments,
           [
             typescript.isTypeNode(implementationArg)
-              ? compatFactory.createIdentifier("undefined")
+              ? factory.createIdentifier("undefined")
               : (continuation(implementationArg) as TS.Expression),
-            createObjectLiteralExpression(context, [
-              compatFactory.createPropertyAssignment(
+            factory.createObjectLiteralExpression([
+              factory.createPropertyAssignment(
                 "identifier",
-                compatFactory.createNoSubstitutionTemplateLiteral(typeArgText)
+                factory.createNoSubstitutionTemplateLiteral(typeArgText)
               ),
               ...(!typescript.isTypeNode(implementationArg)
                 ? []
                 : [
-                    compatFactory.createPropertyAssignment(
+                    factory.createPropertyAssignment(
                       "implementation",
-                      compatFactory.createIdentifier(
+                      factory.createIdentifier(
                         rewriteImplementationName(
                           implementationArgText,
                           options

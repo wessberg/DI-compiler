@@ -2,7 +2,6 @@ import { TS } from "../type/type";
 import { ImportedSymbol } from "../type/imported-symbol";
 import { VisitorContext } from "../transformer/visitor-context";
 import { RootBlock } from "../type/root-block";
-import { CompatFactory } from "../transformer/compat-factory";
 
 type TSWithHelpers = typeof TS & {
   importDefaultHelper?: TS.EmitHelper;
@@ -392,275 +391,57 @@ export function isImportedSymbolImported(
   return false;
 }
 
-export function isNodeFactory(
-  compatFactory: CompatFactory
-): compatFactory is TS.NodeFactory {
-  return !("updateSourceFileNode" in compatFactory);
-}
-
-export function createImportClause(
-  context: VisitorContext,
-  name: TS.Identifier | undefined,
-  namedBindings: TS.NamedImportBindings | undefined
-): TS.ImportClause {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createImportClause(false, name, namedBindings)
-    : compatFactory.createImportClause(name, namedBindings, false);
-}
-
-export function createCallExpression(
-  context: VisitorContext,
-  expression: TS.Expression,
-  typeArguments: readonly TS.TypeNode[] | undefined,
-  argumentsArray: readonly TS.Expression[] | undefined
-): TS.CallExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createCallExpression(
-        expression,
-        typeArguments,
-        argumentsArray
-      )
-    : compatFactory.createCall(expression, typeArguments, argumentsArray);
-}
-
-export function createArrayLiteralExpression(
-  context: VisitorContext,
-  elements?: readonly TS.Expression[],
-  multiLine?: boolean
-): TS.ArrayLiteralExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createArrayLiteralExpression(elements, multiLine)
-    : compatFactory.createArrayLiteral(elements, multiLine);
-}
-
-export function updateArrayLiteralExpression(
-  context: VisitorContext,
-  node: TS.ArrayLiteralExpression,
-  elements: readonly TS.Expression[]
-): TS.ArrayLiteralExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.updateArrayLiteralExpression(node, elements)
-    : compatFactory.updateArrayLiteral(node, elements);
-}
-
-export function updateSourceFile(
-  context: VisitorContext,
-  node: TS.SourceFile,
-  statements: readonly TS.Statement[],
-  isDeclarationFile?: boolean,
-  referencedFiles?: readonly TS.FileReference[],
-  typeReferences?: readonly TS.FileReference[],
-  hasNoDefaultLib?: boolean,
-  libReferences?: readonly TS.FileReference[]
-): TS.SourceFile {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.updateSourceFile(
-        node,
-        statements,
-        isDeclarationFile,
-        referencedFiles,
-        typeReferences,
-        hasNoDefaultLib,
-        libReferences
-      )
-    : compatFactory.updateSourceFileNode(
-        node,
-        statements,
-        isDeclarationFile,
-        referencedFiles,
-        typeReferences,
-        hasNoDefaultLib,
-        libReferences
-      );
-}
-
-export function updateCallExpression(
-  context: VisitorContext,
-  node: TS.CallExpression,
-  expression: TS.Expression,
-  typeArguments: readonly TS.TypeNode[] | undefined,
-  argumentsArray: readonly TS.Expression[]
-): TS.CallExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.updateCallExpression(
-        node,
-        expression,
-        typeArguments,
-        argumentsArray
-      )
-    : compatFactory.updateCall(node, expression, typeArguments, argumentsArray);
-}
-
-export function updateClassExpression(
-  context: VisitorContext,
-  node: TS.ClassExpression,
-  decorators: readonly TS.Decorator[] | undefined,
-  modifiers: readonly TS.Modifier[] | undefined,
-  name: TS.Identifier | undefined,
-  typeParameters: readonly TS.TypeParameterDeclaration[] | undefined,
-  heritageClauses: readonly TS.HeritageClause[] | undefined,
-  members: readonly TS.ClassElement[]
-): TS.ClassExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.updateClassExpression(
-        node,
-        decorators,
-        modifiers,
-        name,
-        typeParameters,
-        heritageClauses,
-        members
-      )
-    : compatFactory.updateClassExpression(
-        node,
-        modifiers,
-        name,
-        typeParameters,
-        heritageClauses,
-        members
-      );
-}
-
-export function createPropertyAccessExpression(
-  context: VisitorContext,
-  expression: TS.Expression,
-  name: string | TS.MemberName
-): TS.PropertyAccessExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createPropertyAccessExpression(expression, name)
-    : compatFactory.createPropertyAccess(expression, name);
-}
-
-export function createGetAccessorDeclaration(
-  context: VisitorContext,
-  decorators: readonly TS.Decorator[] | undefined,
-  modifiers: readonly TS.Modifier[] | undefined,
-  name: string | TS.PropertyName,
-  parameters: readonly TS.ParameterDeclaration[],
-  type: TS.TypeNode | undefined,
-  body: TS.Block | undefined
-): TS.GetAccessorDeclaration {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createGetAccessorDeclaration(
-        decorators,
-        modifiers,
-        name,
-        parameters,
-        type,
-        body
-      )
-    : compatFactory.createGetAccessor(
-        decorators,
-        modifiers,
-        name,
-        parameters,
-        type,
-        body
-      );
-}
-
-export function createReturnStatement(
-  context: VisitorContext,
-  expression?: TS.Expression
-): TS.ReturnStatement {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createReturnStatement(expression)
-    : compatFactory.createReturn(expression);
-}
-
-export function createObjectLiteralExpression(
-  context: VisitorContext,
-  properties?: readonly TS.ObjectLiteralElementLike[],
-  multiLine?: boolean
-): TS.ObjectLiteralExpression {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createObjectLiteralExpression(properties, multiLine)
-    : compatFactory.createObjectLiteral(properties, multiLine);
-}
-
-export function createVariableDeclaration(
-  context: VisitorContext,
-  name: string | TS.BindingName,
-  exclamationToken?: TS.ExclamationToken,
-  type?: TS.TypeNode,
-  initializer?: TS.Expression
-): TS.VariableDeclaration {
-  const { compatFactory } = context;
-  return isNodeFactory(compatFactory)
-    ? compatFactory.createVariableDeclaration(
-        name,
-        exclamationToken,
-        type,
-        initializer
-      )
-    : compatFactory.createVariableDeclaration(name, type, initializer);
-}
-
 export function generateImportStatementForImportedSymbolInContext(
   importedSymbol: ImportedSymbol,
   context: VisitorContext
 ): TS.Statement | undefined {
   const compilerOptions = context.program.getCompilerOptions();
-  const { compatFactory, typescript } = context;
+  const { factory, typescript } = context;
 
   switch (compilerOptions.module) {
     case typescript.ModuleKind.ES2020:
     case typescript.ModuleKind.ES2015:
     case typescript.ModuleKind.ESNext: {
-      return compatFactory.createImportDeclaration(
+      return factory.createImportDeclaration(
         undefined,
         undefined,
         "isDefaultImport" in importedSymbol
-          ? createImportClause(
-              context,
+          ? factory.createImportClause(
+              false,
               !importedSymbol.isDefaultImport
                 ? undefined
-                : compatFactory.createIdentifier(importedSymbol.name),
+                : factory.createIdentifier(importedSymbol.name),
               importedSymbol.isDefaultImport
                 ? undefined
-                : compatFactory.createNamedImports([
-                    compatFactory.createImportSpecifier(
+                : factory.createNamedImports([
+                    factory.createImportSpecifier(
                       importedSymbol.propertyName === importedSymbol.name
                         ? undefined
-                        : compatFactory.createIdentifier(
-                            importedSymbol.propertyName
-                          ),
-                      compatFactory.createIdentifier(importedSymbol.name)
+                        : factory.createIdentifier(importedSymbol.propertyName),
+                      factory.createIdentifier(importedSymbol.name)
                     ),
                   ])
             )
           : "isNamespaceImport" in importedSymbol
-          ? createImportClause(
-              context,
+          ? factory.createImportClause(
+              false,
               undefined,
-              compatFactory.createNamespaceImport(
-                compatFactory.createIdentifier(importedSymbol.name)
+              factory.createNamespaceImport(
+                factory.createIdentifier(importedSymbol.name)
               )
             )
           : undefined,
-        compatFactory.createStringLiteral(importedSymbol.moduleSpecifier)
+        factory.createStringLiteral(importedSymbol.moduleSpecifier)
       );
     }
 
     case typescript.ModuleKind.CommonJS:
     case typescript.ModuleKind.AMD:
     case typescript.ModuleKind.UMD: {
-      const requireCall = createCallExpression(
-        context,
-        compatFactory.createIdentifier("require"),
+      const requireCall = factory.createCallExpression(
+        factory.createIdentifier("require"),
         undefined,
-        [compatFactory.createStringLiteral(importedSymbol.moduleSpecifier)]
+        [factory.createStringLiteral(importedSymbol.moduleSpecifier)]
       );
 
       let wrappedRequireCall = requireCall;
@@ -675,15 +456,12 @@ export function generateImportStatementForImportedSymbolInContext(
       ) {
         // If tslib is being used, we can do something like 'require("tslib").__import{Default|Star}(<requireCall>)'
         if (compilerOptions.importHelpers === true) {
-          wrappedRequireCall = createCallExpression(
-            context,
-            createPropertyAccessExpression(
-              context,
-              createCallExpression(
-                context,
-                compatFactory.createIdentifier("require"),
+          wrappedRequireCall = factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createCallExpression(
+                factory.createIdentifier("require"),
                 undefined,
-                [compatFactory.createStringLiteral("tslib")]
+                [factory.createStringLiteral("tslib")]
               ),
               getUnscopedHelperName(
                 context,
@@ -701,8 +479,7 @@ export function generateImportStatementForImportedSymbolInContext(
         else {
           // We've already requested the __importDefault helper in the before transformer under these
           // circumstances
-          wrappedRequireCall = createCallExpression(
-            context,
+          wrappedRequireCall = factory.createCallExpression(
             getUnscopedHelperName(
               context,
               "isDefaultImport" in importedSymbol
@@ -715,13 +492,12 @@ export function generateImportStatementForImportedSymbolInContext(
         }
       }
 
-      return compatFactory.createVariableStatement(
+      return factory.createVariableStatement(
         undefined,
-        compatFactory.createVariableDeclarationList(
+        factory.createVariableDeclarationList(
           [
-            createVariableDeclaration(
-              context,
-              compatFactory.createIdentifier(importedSymbol.name),
+            factory.createVariableDeclaration(
+              factory.createIdentifier(importedSymbol.name),
               undefined,
               undefined,
               wrappedRequireCall

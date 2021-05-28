@@ -6,6 +6,7 @@ import {
   getDefineArrayLiteralExpression,
   getRootBlock,
 } from "../../util/ts-util";
+import { ensureNodeFactory } from "compatfactory";
 
 type SourceFileWithEmitNodes = TS.SourceFile & {
   emitNode?: {
@@ -16,12 +17,18 @@ type SourceFileWithEmitNodes = TS.SourceFile & {
 export function afterTransformer(
   context: BaseVisitorContext
 ): TS.TransformerFactory<TS.SourceFile> {
-  return (transformationContext) => (sourceFile) =>
-    transformSourceFile(sourceFile, {
-      ...context,
-      compatFactory: transformationContext.factory ?? context.typescript,
-      transformationContext,
-    });
+  return (transformationContext) => {
+    const factory = ensureNodeFactory(
+      transformationContext.factory ?? context.typescript
+    );
+
+    return (sourceFile) =>
+      transformSourceFile(sourceFile, {
+        ...context,
+        transformationContext,
+        factory,
+      });
+  };
 }
 
 function transformSourceFile(

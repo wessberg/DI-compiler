@@ -3,16 +3,23 @@ import { TS } from "../../type/type";
 import { BeforeVisitorOptions } from "./before-visitor-options";
 import { visitNode } from "./visitor/visit-node";
 import { ImportedSymbol } from "../../type/imported-symbol";
+import { ensureNodeFactory } from "compatfactory";
 
 export function beforeTransformer(
   context: BaseVisitorContext
 ): TS.TransformerFactory<TS.SourceFile> {
-  return (transformationContext) => (sourceFile) =>
-    transformSourceFile(sourceFile, {
-      ...context,
-      compatFactory: transformationContext.factory ?? context.typescript,
-      transformationContext,
-    });
+  return (transformationContext) => {
+    const factory = ensureNodeFactory(
+      transformationContext.factory ?? context.typescript
+    );
+
+    return (sourceFile) =>
+      transformSourceFile(sourceFile, {
+        ...context,
+        transformationContext,
+        factory,
+      });
+  };
 }
 
 function transformSourceFile(
