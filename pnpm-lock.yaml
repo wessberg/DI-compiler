@@ -9885,7 +9885,7 @@ packages:
         integrity: sha512-QGkOQc8XL6Bt5PwnsExKBPuMKBxnGxWWW3fU55Xt4feHozMUhdUMaBCk290qpm/wG5u/RSKzwdAC4i51YigihA==,
       }
     dependencies:
-      string-width: 2.1.1
+      string-width: 1.0.2
     dev: true
 
   /widest-line/3.1.0:
