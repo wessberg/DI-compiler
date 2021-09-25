@@ -197,6 +197,29 @@ const program = createProgram(
 program.emit(undefined, undefined, undefined, undefined, di({ program }));
 ```
 
+### Usage with ttypescript
+
+To use DI-compiler With [`ttypescript`](https://github.com/cevek/ttypescript), you need to write a transformer and set the path to `tsconfig.json`.
+
+```typescript:transformer.ts
+import type { Program } from 'typescript'
+import { di } from "@wessberg/di-compiler";
+
+const transformer = (program: Program) => di({ program })
+
+export default transformer
+```
+
+```tsconfig.json
+{
+    "compilerOptions": {
+        "plugins": [
+            { "transform": "path/to/transformer.ts" },
+        ]
+    }
+}
+```
+
 ### Usage with Rollup
 
 There are two popular TypeScript plugins for Rollup that support Custom Transformers:
