@@ -199,7 +199,7 @@ program.emit(undefined, undefined, undefined, undefined, di({ program }));
 
 ### Usage with ttypescript
 
-To use DI-compiler With [`ttypescript`](https://github.com/cevek/ttypescript), you need to write a transformer and set the path to `tsconfig.json`.
+To use DI-compiler with [`ttypescript`](https://github.com/cevek/ttypescript), create a file that wraps the invocation of `di`:
 
 ```typescript:transformer.ts
 import type { Program } from 'typescript'
@@ -209,7 +209,7 @@ const transformer = (program: Program) => di({ program })
 
 export default transformer
 ```
-
+Then add a record to the `plugins` array of your `tsconfig.json` that maps a key named `transform` to the relative path to the file you just created:
 ```tsconfig.json
 {
     "compilerOptions": {
