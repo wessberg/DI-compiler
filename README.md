@@ -50,9 +50,9 @@ This has been implemented as a TypeScript Custom Transformer in order to be so l
 
 ## Backers
 
-| <a href="https://usebubbles.com"><img alt="Bubbles" src="https://uploads-ssl.webflow.com/5d682047c28b217055606673/5e5360be16879c1d0dca6514_icon-thin-128x128%402x.png" height="70"   /></a> | <a href="https://github.com/cblanc"><img alt="Christopher Blanchard" src="https://avatars0.githubusercontent.com/u/2160685?s=400&v=4" height="70"   /></a> | <a href="https://github.com/ideal-postcodes"><img alt="Ideal Postcodes" src="https://avatars.githubusercontent.com/u/4996310?s=200&v=4" height="70"   /></a> | <a href="https://www.xerox.com"><img alt="Xerox" src="https://avatars.githubusercontent.com/u/9158512?s=200&v=4" height="70"   /></a> |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [Bubbles](https://usebubbles.com)<br><strong>Twitter</strong>: [@usebubbles](https://twitter.com/usebubbles)                                                                                | [Christopher Blanchard](https://github.com/cblanc)                                                                                                         | [Ideal Postcodes](https://github.com/ideal-postcodes)                                                                                                        | [Xerox](https://www.xerox.com)                                                                                                        |
+| <a href="https://usebubbles.com"><img alt="Bubbles" src="https://uploads-ssl.webflow.com/5d682047c28b217055606673/5e5360be16879c1d0dca6514_icon-thin-128x128%402x.png" height="70"   /></a> | <a href="https://github.com/cblanc"><img alt="Christopher Blanchard" src="https://avatars0.githubusercontent.com/u/2160685?s=400&v=4" height="70"   /></a> | <a href="https://github.com/ideal-postcodes"><img alt="Ideal Postcodes" src="https://avatars.githubusercontent.com/u/4996310?s=200&v=4" height="70"   /></a> | <a href="https://www.xerox.com"><img alt="Xerox" src="https://avatars.githubusercontent.com/u/9158512?s=200&v=4" height="70"   /></a> | <a href="https://changelog.me"><img alt="Trent Raymond" src="https://avatars.githubusercontent.com/u/1509616?v=4" height="70"   /></a> |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [Bubbles](https://usebubbles.com)<br><strong>Twitter</strong>: [@usebubbles](https://twitter.com/usebubbles)                                                                                | [Christopher Blanchard](https://github.com/cblanc)                                                                                                         | [Ideal Postcodes](https://github.com/ideal-postcodes)                                                                                                        | [Xerox](https://www.xerox.com)                                                                                                        | [Trent Raymond](https://changelog.me)                                                                                                  |
 
 ### Patreon
 
@@ -136,12 +136,8 @@ The most obvious place would be to use it directly with Typescript's compiler AP
 There's several ways to do this, but here's a simple example:
 
 ```typescript
-import {
-  createProgram,
-  getDefaultCompilerOptions,
-  createCompilerHost,
-} from "typescript";
-import { di } from "@wessberg/di-compiler";
+import {createProgram, getDefaultCompilerOptions, createCompilerHost} from "typescript";
+import {di} from "@wessberg/di-compiler";
 
 const compilerOptions = getDefaultCompilerOptions();
 const compilerHost = createCompilerHost(compilerOptions);
@@ -154,7 +150,7 @@ const program = createProgram(
 );
 
 // Transform the SourceFiles within the program, and pass them through the 'di' transformer
-program.emit(undefined, undefined, undefined, undefined, di({ program }));
+program.emit(undefined, undefined, undefined, undefined, di({program}));
 ```
 
 ### Usage with ts-node
@@ -168,20 +164,16 @@ node -r @wessberg/di-compiler/register
 You can also do it programmatically. Here's an example using CommonJS:
 
 ```typescript
-const { di } = require("@wessberg/rollup-plugin-ts");
+const {di} = require("@wessberg/rollup-plugin-ts");
 
 require("ts-node").register({
-  transformers: (program) => di({ program }),
+  transformers: program => di({program})
 });
 ```
 
 ```typescript
-import {
-  createProgram,
-  getDefaultCompilerOptions,
-  createCompilerHost,
-} from "typescript";
-import { di } from "@wessberg/di-compiler";
+import {createProgram, getDefaultCompilerOptions, createCompilerHost} from "typescript";
+import {di} from "@wessberg/di-compiler";
 
 const compilerOptions = getDefaultCompilerOptions();
 const compilerHost = createCompilerHost(compilerOptions);
@@ -194,7 +186,7 @@ const program = createProgram(
 );
 
 // Transform the SourceFiles within the program, and pass them through the 'di' transformer
-program.emit(undefined, undefined, undefined, undefined, di({ program }));
+program.emit(undefined, undefined, undefined, undefined, di({program}));
 ```
 
 ### Usage with Rollup
@@ -208,7 +200,7 @@ There are two popular TypeScript plugins for Rollup that support Custom Transfor
 
 ```typescript
 import ts from "@wessberg/rollup-plugin-ts";
-import { di } from "@wessberg/di-compiler";
+import {di} from "@wessberg/di-compiler";
 
 export default {
   input: "...",
@@ -217,9 +209,9 @@ export default {
   ],
   plugins: [
     ts({
-      transformers: [di],
-    }),
-  ],
+      transformers: [di]
+    })
+  ]
 };
 ```
 
@@ -227,7 +219,7 @@ export default {
 
 ```typescript
 import ts from "rollup-plugin-typescript2";
-import { di } from "@wessberg/di-compiler";
+import {di} from "@wessberg/di-compiler";
 
 export default {
   input: "...",
@@ -236,9 +228,9 @@ export default {
   ],
   plugins: [
     ts({
-      transformers: [(service) => di({ program: service.getProgram() })],
-    }),
-  ],
+      transformers: [service => di({program: service.getProgram()})]
+    })
+  ]
 };
 ```
 
@@ -252,7 +244,7 @@ There are two popular TypeScript loaders for Webpack that support Custom Transfo
 #### Usage with awesome-typescript-loader
 
 ```typescript
-import { di } from "@wessberg/di-compiler";
+import {di} from "@wessberg/di-compiler";
 const config = {
   // ...
   module: {
@@ -263,11 +255,11 @@ const config = {
         loader: "awesome-typescript-loader",
         options: {
           // ...
-          getCustomTransformers: (program) => di({ program }),
-        },
-      },
-    ],
-  },
+          getCustomTransformers: program => di({program})
+        }
+      }
+    ]
+  }
   // ...
 };
 ```
@@ -275,7 +267,7 @@ const config = {
 #### Usage with ts-loader
 
 ```typescript
-import { di } from "@wessberg/di";
+import {di} from "@wessberg/di";
 const config = {
   // ...
   module: {
@@ -286,11 +278,11 @@ const config = {
         loader: "ts-loader",
         options: {
           // ...
-          getCustomTransformers: (program) => di({ program }),
-        },
-      },
-    ],
-  },
+          getCustomTransformers: program => di({program})
+        }
+      }
+    ]
+  }
   // ...
 };
 ```
@@ -304,7 +296,7 @@ with the `require` property in the `ava` configuration:
 {
   // Other options...
   extensions: ["ts"],
-  require: ["@wessberg/di-compiler/register"],
+  require: ["@wessberg/di-compiler/register"]
 }
 ```
 
@@ -348,9 +340,9 @@ Then, instances of the [DIContainer](https://github.com/wessberg/di) will be dis
 For example, an expression such as:
 
 ```typescript
-import { DIContainer } from "@wessberg/di";
-import { MyInterface } from "./my-interface";
-import { MyImplementation } from "./my-implementation";
+import {DIContainer} from "@wessberg/di";
+import {MyInterface} from "./my-interface";
+import {MyImplementation} from "./my-implementation";
 
 const container = new DIContainer();
 container.registerSingleton<MyInterface, MyImplementation>();
@@ -362,7 +354,7 @@ Will be compiled into:
 // ...
 container.registerSingleton(undefined, {
   identifier: `MyInterface`,
-  implementation: MyImplementation,
+  implementation: MyImplementation
 });
 ```
 
