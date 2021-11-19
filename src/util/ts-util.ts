@@ -415,6 +415,7 @@ export function generateImportStatementForImportedSymbolInContext(
                 ? undefined
                 : factory.createNamedImports([
                     factory.createImportSpecifier(
+                      false,
                       importedSymbol.propertyName === importedSymbol.name
                         ? undefined
                         : factory.createIdentifier(importedSymbol.propertyName),
