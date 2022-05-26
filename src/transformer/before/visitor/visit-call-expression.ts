@@ -44,7 +44,7 @@ export function visitCallExpression(
               factory.createPropertyAssignment(
                 "identifier",
                 factory.createStringLiteral(
-                  node.typeArguments[0].getFullText().trim()
+                  node.typeArguments[0].getFirstToken()!.getFullText().trim()
                 )
               ),
             ]),
