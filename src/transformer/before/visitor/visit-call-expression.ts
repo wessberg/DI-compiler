@@ -35,6 +35,8 @@ export function visitCallExpression(
           return childContinuation(node);
         }
 
+        const [firstTypeArgument] = node.typeArguments;
+
         return factory.updateCallExpression(
           node,
           node.expression,
@@ -44,7 +46,7 @@ export function visitCallExpression(
               factory.createPropertyAssignment(
                 "identifier",
                 factory.createStringLiteral(
-                  node.typeArguments[0].getFirstToken()!.getFullText().trim()
+                  (firstTypeArgument.getFirstToken()?.getFullText() ?? firstTypeArgument.getFullText()).trim()
                 )
               ),
             ]),
