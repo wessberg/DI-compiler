@@ -1,10 +1,3 @@
-## [2.2.7](https://github.com/wessberg/di-compiler/compare/v2.2.6...v2.2.7) (2022-5-26)
-
-### Bug fixes
-
-* Fixed issue with generics to allow `container.register<IService<Generic>, Service<Generic>>()`.
-* Restricted `typescript` to minor version updates from `~4.6.4` as version 4.7 is currently incompatible.
-
 ## [2.2.6](https://github.com/wessberg/di-compiler/compare/v2.2.5...v2.2.6) (2021-11-19)
 
 
