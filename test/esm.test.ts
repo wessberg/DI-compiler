@@ -1,7 +1,7 @@
 import test from "ava";
-import { generateTransformerResult } from "./setup/setup-transformer";
-import { formatCode } from "./util/format-code";
-import { withTypeScript } from "./util/ts-macro";
+import { generateTransformerResult } from "./setup/setup-transformer.js";
+import { formatCode } from "./util/format-code.js";
+import { withTypeScript } from "./util/ts-macro.js";
 
 test("Preserves type-only imports. #1", withTypeScript, (t, { typescript }) => {
   const bundle = generateTransformerResult(

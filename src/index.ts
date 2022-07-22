@@ -1,2 +1,2 @@
-export * from "./transformer/di-options";
-export * from "./transformer/di";
+export * from "./transformer/di-options.js";
+export * from "./transformer/di.js";

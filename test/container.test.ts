@@ -1,11 +1,11 @@
 import test from "ava";
-import { generateTransformerResult } from "./setup/setup-transformer";
-import { formatCode } from "./util/format-code";
-import { withTypeScript } from "./util/ts-macro";
-import { gte } from "semver";
+import { generateTransformerResult } from "./setup/setup-transformer.js";
+import { formatCode } from "./util/format-code.js";
+import { withTypeScript } from "./util/ts-macro.js";
+import semver from "semver";
 
 test(
-  "Only considers containers that are instances of DIContainer. #1",
+  "Only considers containers that are instances of DIContainer when a Program is passed as an option. #1",
   withTypeScript,
   (t, { typescript }) => {
     const bundle = generateTransformerResult(
@@ -48,7 +48,7 @@ test(
 );
 
 test(
-  "Supports ElementAccessExpressions. #1",
+  "Supports ElementAccessExpressions when a Program is passed. #1",
   withTypeScript,
   (t, { typescript }) => {
     const bundle = generateTransformerResult(
@@ -83,7 +83,42 @@ test(
 );
 
 test(
-  "Supports ElementAccessExpressions. #2",
+  "Supports ElementAccessExpressions when a matcher is passed. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
+				import {DIContainer} from "@wessberg/di";
+				class Foo {}
+				const container = new DIContainer();
+
+				container["registerSingleton"]<Foo>();
+			`,
+        },
+      ],
+      { typescript, match: "container" }
+    );
+    const [file] = bundle;
+
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
+			import { DIContainer } from "@wessberg/di";
+			class Foo {
+			}
+			const container = new DIContainer();
+			container["registerSingleton"](undefined, { identifier: \`Foo\`, implementation: Foo });
+			`)
+    );
+  }
+);
+
+test(
+  "Supports ElementAccessExpressions when a Program is passed. #2",
   withTypeScript,
   (t, { typescript }) => {
     const bundle = generateTransformerResult(
@@ -120,7 +155,44 @@ test(
 );
 
 test(
-  "Supports PropertyAccessExpressions. #1",
+  "Supports ElementAccessExpressions when a matcher is passed. #2",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
+				import {DIContainer} from "@wessberg/di";
+				class Foo {}
+				const container = new DIContainer();
+				const argumentExpression = "registerSingleton";
+
+				container[argumentExpression]<Foo>();
+			`,
+        },
+      ],
+      { typescript, match: "container" }
+    );
+    const [file] = bundle;
+
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
+			import { DIContainer } from "@wessberg/di";
+			class Foo {
+			}
+			const container = new DIContainer();
+			const argumentExpression = "registerSingleton";
+			container[argumentExpression](undefined, { identifier: \`Foo\`, implementation: Foo });
+			`)
+    );
+  }
+);
+
+test(
+  "Supports PropertyAccessExpressions when a Program is passed. #1",
   withTypeScript,
   (t, { typescript }) => {
     const bundle = generateTransformerResult(
@@ -141,6 +213,44 @@ test(
         },
       ],
       { typescript }
+    );
+    const [file] = bundle;
+
+    t.deepEqual(
+      formatCode(file.text),
+      formatCode(`\
+			import { DIContainer } from "@wessberg/di";
+			class Foo {
+			}
+			const container = new DIContainer();
+			container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
+			`)
+    );
+  }
+);
+
+test(
+  "Supports PropertyAccessExpressions when a matcher is passed. #1",
+  withTypeScript,
+  (t, { typescript }) => {
+    const bundle = generateTransformerResult(
+      [
+        {
+          entry: true,
+          fileName: "index.ts",
+          text: `
+				import {DIContainer} from "@wessberg/di";
+				
+				interface IFoo {}
+				
+				class Foo implements IFoo {}
+				
+				const container = new DIContainer();
+				container.registerSingleton<IFoo, Foo>();
+			`,
+        },
+      ],
+      { typescript, match: "container" }
     );
     const [file] = bundle;
 
@@ -379,7 +489,7 @@ test(
       formatCode(file.text),
       formatCode(`\
 			import { DIContainer } from "@wessberg/di";
-      class Foo {${gte(typescript.version, "4.3.0") ? "\n\t\tbar" : ""}
+      class Foo {${semver.gte(typescript.version, "4.3.0") ? "\n\t\tbar" : ""}
       }
       const container = new DIContainer();
       container.registerSingleton(undefined, { identifier: \`IFoo["foo"]\`, implementation: Foo });

@@ -1,8 +1,8 @@
 import test from "ava";
-import { generateTransformerResult } from "./setup/setup-transformer";
-import { formatCode } from "./util/format-code";
-import { withTypeScript } from "./util/ts-macro";
-import { gte } from "semver";
+import { generateTransformerResult } from "./setup/setup-transformer.js";
+import { formatCode } from "./util/format-code.js";
+import { withTypeScript } from "./util/ts-macro.js";
+import semver from "semver";
 
 test(
   "Can parse constructor parameters and extend with an internal static class member. #1",
@@ -27,7 +27,7 @@ test(
     t.deepEqual(
       formatCode(file.text),
       formatCode(`\
-			class Foo {${gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
+			class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
 				constructor(foo) {
 					this.foo = foo;
 				}
@@ -61,7 +61,7 @@ test(
     t.deepEqual(
       formatCode(file.text),
       formatCode(`\
-			class Foo {${gte(typescript.version, "4.3.0") ? `\n\t\tfoo;\n\t\tbar;` : ""}
+			class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;\n\t\tbar;` : ""}
 				constructor(foo = {}, bar) {
 					this.foo = foo;
 					this.bar = bar;
@@ -97,7 +97,7 @@ test(
     t.deepEqual(
       formatCode(file.text),
       formatCode(`\
-      class Foo {${gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
+      class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
           constructor(foo) {
               this.foo = foo;
           }

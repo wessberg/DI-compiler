@@ -1,8 +1,8 @@
 import test from "ava";
-import { generateTransformerResult } from "./setup/setup-transformer";
-import { formatCode } from "./util/format-code";
-import { withTypeScript } from "./util/ts-macro";
-import { includeEmitHelper } from "./util/include-emit-helper";
+import { generateTransformerResult } from "./setup/setup-transformer.js";
+import { formatCode } from "./util/format-code.js";
+import { withTypeScript } from "./util/ts-macro.js";
+import { includeEmitHelper } from "./util/include-emit-helper.js";
 
 test("Preserves Type-only imports. #1", withTypeScript, (t, { typescript }) => {
   const bundle = generateTransformerResult(

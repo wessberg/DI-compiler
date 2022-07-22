@@ -144,11 +144,7 @@ const compilerOptions = getDefaultCompilerOptions();
 const compilerHost = createCompilerHost(compilerOptions);
 
 // Create a Typescript program
-const program = createProgram(
-  ["my-file-1.ts", "my-file-2.ts"],
-  compilerOptions,
-  compilerHost
-);
+const program = createProgram(["my-file-1.ts", "my-file-2.ts"], compilerOptions, compilerHost);
 
 // Transform the SourceFiles within the program, and pass them through the 'di' transformer
 program.emit(undefined, undefined, undefined, undefined, di({program}));
@@ -168,7 +164,7 @@ You can also do it programmatically. Here's an example using CommonJS:
 const {di} = require("@wessberg/rollup-plugin-ts");
 
 require("ts-node").register({
-  transformers: program => di({program})
+	transformers: program => di({program})
 });
 ```
 
@@ -180,11 +176,7 @@ const compilerOptions = getDefaultCompilerOptions();
 const compilerHost = createCompilerHost(compilerOptions);
 
 // Create a Typescript program
-const program = createProgram(
-  ["my-file-1.ts", "my-file-2.ts"],
-  compilerOptions,
-  compilerHost
-);
+const program = createProgram(["my-file-1.ts", "my-file-2.ts"], compilerOptions, compilerHost);
 
 // Transform the SourceFiles within the program, and pass them through the 'di' transformer
 program.emit(undefined, undefined, undefined, undefined, di({program}));
@@ -229,15 +221,15 @@ import ts from "@wessberg/rollup-plugin-ts";
 import {di} from "@wessberg/di-compiler";
 
 export default {
-  input: "...",
-  output: [
-    /* ... */
-  ],
-  plugins: [
-    ts({
-      transformers: [di]
-    })
-  ]
+	input: "...",
+	output: [
+		/* ... */
+	],
+	plugins: [
+		ts({
+			transformers: [di]
+		})
+	]
 };
 ```
 
@@ -248,15 +240,15 @@ import ts from "rollup-plugin-typescript2";
 import {di} from "@wessberg/di-compiler";
 
 export default {
-  input: "...",
-  output: [
-    /* ... */
-  ],
-  plugins: [
-    ts({
-      transformers: [service => di({program: service.getProgram()})]
-    })
-  ]
+	input: "...",
+	output: [
+		/* ... */
+	],
+	plugins: [
+		ts({
+			transformers: [service => di({program: service.getProgram()})]
+		})
+	]
 };
 ```
 
@@ -272,21 +264,21 @@ There are two popular TypeScript loaders for Webpack that support Custom Transfo
 ```typescript
 import {di} from "@wessberg/di-compiler";
 const config = {
-  // ...
-  module: {
-    rules: [
-      {
-        // Match .mjs, .js, .jsx, and .tsx files
-        test: /(\.mjs)|(\.[jt]sx?)$/,
-        loader: "awesome-typescript-loader",
-        options: {
-          // ...
-          getCustomTransformers: program => di({program})
-        }
-      }
-    ]
-  }
-  // ...
+	// ...
+	module: {
+		rules: [
+			{
+				// Match .mjs, .js, .jsx, and .tsx files
+				test: /(\.mjs)|(\.[jt]sx?)$/,
+				loader: "awesome-typescript-loader",
+				options: {
+					// ...
+					getCustomTransformers: program => di({program})
+				}
+			}
+		]
+	}
+	// ...
 };
 ```
 
@@ -295,21 +287,21 @@ const config = {
 ```typescript
 import {di} from "@wessberg/di";
 const config = {
-  // ...
-  module: {
-    rules: [
-      {
-        // Match .mjs, .js, .jsx, and .tsx files
-        test: /(\.mjs)|(\.[jt]sx?)$/,
-        loader: "ts-loader",
-        options: {
-          // ...
-          getCustomTransformers: program => di({program})
-        }
-      }
-    ]
-  }
-  // ...
+	// ...
+	module: {
+		rules: [
+			{
+				// Match .mjs, .js, .jsx, and .tsx files
+				test: /(\.mjs)|(\.[jt]sx?)$/,
+				loader: "ts-loader",
+				options: {
+					// ...
+					getCustomTransformers: program => di({program})
+				}
+			}
+		]
+	}
+	// ...
 };
 ```
 
@@ -320,9 +312,9 @@ with the `require` property in the `ava` configuration:
 
 ```json5
 {
-  // Other options...
-  extensions: ["ts"],
-  require: ["@wessberg/di-compiler/register"]
+	// Other options...
+	extensions: ["ts"],
+	require: ["@wessberg/di-compiler/register"]
 }
 ```
 
@@ -367,8 +359,8 @@ For example, an expression such as:
 
 ```typescript
 import {DIContainer} from "@wessberg/di";
-import {MyInterface} from "./my-interface";
-import {MyImplementation} from "./my-implementation";
+import {MyInterface} from "./my-interface.js";
+import {MyImplementation} from "./my-implementation.js";
 
 const container = new DIContainer();
 container.registerSingleton<MyInterface, MyImplementation>();
@@ -379,8 +371,8 @@ Will be compiled into:
 ```javascript
 // ...
 container.registerSingleton(undefined, {
-  identifier: `MyInterface`,
-  implementation: MyImplementation
+	identifier: `MyInterface`,
+	implementation: MyImplementation
 });
 ```
 
