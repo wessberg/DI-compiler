@@ -22,8 +22,15 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 					return childContinuation(node);
 				}
 
+				const [firstTypeArgument] = node.typeArguments;
+
 				return factory.updateCallExpression(node, node.expression, node.typeArguments, [
-					factory.createObjectLiteralExpression([factory.createPropertyAssignment("identifier", factory.createStringLiteral(node.typeArguments[0].getFullText().trim()))])
+					factory.createObjectLiteralExpression([
+						factory.createPropertyAssignment(
+							"identifier",
+							factory.createStringLiteral((firstTypeArgument.getFirstToken()?.getFullText() ?? firstTypeArgument.getFullText()).trim())
+						)
+					])
 				]);
 			}
 
