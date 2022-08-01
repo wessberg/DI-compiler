@@ -18,7 +18,7 @@ export function beforeTransformer(context: BaseVisitorContext): TS.TransformerFa
 	};
 }
 
-function transformSourceFile(sourceFile: TS.SourceFile, context: VisitorContext): TS.SourceFile {
+export function transformSourceFile(sourceFile: TS.SourceFile, context: VisitorContext): TS.SourceFile {
 	const requiredImportedSymbolSet = new Set<ImportedSymbol>();
 
 	/**
@@ -28,8 +28,10 @@ function transformSourceFile(sourceFile: TS.SourceFile, context: VisitorContext)
 	 */
 	const requiredImportedSymbolSetFlags = new Set<string>();
 
-	context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, false);
-	context.sourceFileToRequiredImportedSymbolSet.set(sourceFile.fileName, requiredImportedSymbolSet);
+	if (context.needsImportPreservationLogic) {
+		context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, false);
+		context.sourceFileToRequiredImportedSymbolSet.set(sourceFile.fileName, requiredImportedSymbolSet);
+	}
 
 	const computeImportedSymbolFlag = (symbol: ImportedSymbol): string =>
 		["name", "propertyName", "moduleSpecifier", "isNamespaceImport", "isDefaultImport"]
@@ -40,10 +42,13 @@ function transformSourceFile(sourceFile: TS.SourceFile, context: VisitorContext)
 		context,
 
 		addTslibDefinition: (): void => {
+			if (!context.needsImportPreservationLogic) return;
 			context.sourceFileToAddTslibDefinition.set(sourceFile.fileName, true);
 		},
 
 		requireImportedSymbol: (importedSymbol: ImportedSymbol): void => {
+			if (!context.needsImportPreservationLogic) return;
+
 			// Guard against duplicates and compute a string so we can do
 			// constant time lookups to compare against existing symbols
 			const flag = computeImportedSymbolFlag(importedSymbol);

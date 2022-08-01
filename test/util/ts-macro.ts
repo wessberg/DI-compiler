@@ -23,17 +23,18 @@ const pkg = getNearestPackageJson(import.meta.url);
 
 // ava macros
 export interface ExtendedImplementationArgumentOptions {
+	useProgram: boolean;
 	typescript: typeof TS;
 	typescriptModuleSpecifier: string;
 }
 export type ExtendedImplementation = (t: ExecutionContext, options: ExtendedImplementationArgumentOptions) => void | Promise<void>;
-function makeTypeScriptMacro(version: string, specifier: string) {
+function makeTypeScriptMacro(version: string, specifier: string, useProgram: boolean) {
 	const macro: Macro<[ExtendedImplementation]> = async (t, impl) => {
 		const typescript = await import(specifier);
-		return impl(t, {typescript: "default" in typescript ? typescript.default : typescript, typescriptModuleSpecifier: specifier});
+		return impl(t, {useProgram, typescript: "default" in typescript ? typescript.default : typescript, typescriptModuleSpecifier: specifier});
 	};
 
-	macro.title = (provided = "") => `${provided} (TypeScript v${version})`;
+	macro.title = (provided = "") => `${provided} (TypeScript v${version}) (Use Program: ${useProgram})`;
 
 	return macro;
 }
@@ -47,7 +48,7 @@ const {devDependencies} = pkg as {devDependencies: Record<string, string>};
 // Set of all TypeScript versions parsed from package.json
 const availableTsVersions = new Set<string>();
 // Map of TypeScript version to ava macro
-const macros = new Map<string, Macro<[ExtendedImplementation]>>();
+const macros = new Map<string, [Macro<[ExtendedImplementation]>, Macro<[ExtendedImplementation]>]>();
 
 const tsRangeRegex = /(npm:typescript@)?[\^~]*(.+)$/;
 const filter = process.env.TS_VERSION;
@@ -59,7 +60,7 @@ for (const [specifier, range] of Object.entries(devDependencies)) {
 		if (context === "npm:typescript@" || specifier === "typescript") {
 			availableTsVersions.add(version);
 			if (filter === undefined || (filter.toUpperCase() === "CURRENT" && specifier === "typescript") || semver.satisfies(version, filter, {includePrerelease: true})) {
-				macros.set(version, makeTypeScriptMacro(version, specifier));
+				macros.set(version, [makeTypeScriptMacro(version, specifier, true), makeTypeScriptMacro(version, specifier, false)]);
 			}
 		}
 	}
@@ -72,7 +73,7 @@ Available TypeScript versions: ${[...availableTsVersions].join(", ")}`);
 }
 
 export function withTypeScriptVersions(extraFilter: string): OneOrMoreMacros<[ExtendedImplementation], unknown> {
-	const filteredMacros = [...macros.entries()].filter(([version]) => semver.satisfies(version, extraFilter, {includePrerelease: true})).map(([, macro]) => macro);
+	const filteredMacros = [...macros.entries()].filter(([version]) => semver.satisfies(version, extraFilter, {includePrerelease: true})).flatMap(([, macro]) => macro);
 
 	if (filteredMacros.length === 0) {
 		filteredMacros.push(noMatchingVersionMacro);

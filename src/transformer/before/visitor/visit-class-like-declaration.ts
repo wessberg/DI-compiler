@@ -18,7 +18,7 @@ export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.Class
 		...(node.members.map(continuation) as TS.ClassElement[]),
 		factory.createGetAccessorDeclaration(
 			undefined,
-			[factory.createModifier(typescript.SyntaxKind.PublicKeyword), factory.createModifier(typescript.SyntaxKind.StaticKeyword)],
+			[factory.createModifier(typescript.SyntaxKind.StaticKeyword)],
 			factory.createComputedPropertyName(factory.createIdentifier(`Symbol.for("${CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER}")`)),
 			[],
 			undefined,

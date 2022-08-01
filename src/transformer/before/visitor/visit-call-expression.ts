@@ -1,7 +1,7 @@
 import {DI_CONTAINER_NAME} from "../../constant.js";
 import {TS} from "../../../type/type.js";
 import {BeforeVisitorOptions} from "../before-visitor-options.js";
-import {DiMethodKind} from "../../di-method-kind.js";
+import {DiMethodName} from "../../di-method-kind.js";
 import {VisitorContext} from "../../visitor-context.js";
 import {getImportDefaultHelper, getImportStarHelper, moduleKindDefinesDependencies, moduleKindSupportsImportHelpers} from "../../../util/ts-util.js";
 import {pickServiceOrImplementationName} from "../util.js";
@@ -9,9 +9,9 @@ import {ensureArray} from "../../../util/util.js";
 
 export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpression>): TS.VisitResult<TS.Node> {
 	const {node, childContinuation, continuation, context, addTslibDefinition, requireImportedSymbol} = options;
-	const {typescript, factory, compilerOptions, transformationContext} = context;
+	const {typescript, factory, compilerOptions, transformationContext, needsImportPreservationLogic} = context;
 
-	const diMethod = getDiMethodKind(node.expression, context);
+	const diMethod = getDiMethodName(node.expression, context);
 
 	if (diMethod != null) {
 		switch (diMethod) {
@@ -26,27 +26,25 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 
 				return factory.updateCallExpression(node, node.expression, node.typeArguments, [
 					factory.createObjectLiteralExpression([
-						factory.createPropertyAssignment(
-							"identifier",
-							factory.createStringLiteral((firstTypeArgument.getFirstToken()?.getFullText() ?? firstTypeArgument.getFullText()).trim())
-						)
+						factory.createPropertyAssignment("identifier", factory.createStringLiteral((firstTypeArgument.getFirstToken()?.getText() ?? firstTypeArgument.getText()).trim()))
 					])
 				]);
 			}
 
 			case "registerSingleton":
 			case "registerTransient": {
-				let [typeArg, implementationArg] = (node.typeArguments ?? []) as unknown as [TS.TypeNode | undefined, TS.TypeNode | TS.Expression | undefined];
+				const [typeArg, secondTypeArg] = (node.typeArguments ?? []) as unknown as [TS.TypeNode | undefined, TS.TypeNode | TS.Expression | undefined];
+				const [firstArgument] = node.arguments ?? [];
 
-				// If not implementation is provided, use the type argument *as* the implementation
-				if (implementationArg == null) {
-					implementationArg = typeArg;
-				}
+				// The user may explicitly pass 'undefined' as a value here, which shouldn't count as a custom implementation
+				const customImplementation = firstArgument == null || (typescript.isIdentifier(firstArgument) && firstArgument.text === "undefined") ? undefined : firstArgument;
 
-				// If another implementation is passed, used that one instead
-				if (node.arguments.length > 0) {
-					implementationArg = node.arguments[0];
-				}
+				const implementationArg =
+					// If another implementation is passed, used that one instead
+					customImplementation ??
+					// If not implementation is provided, use the type argument *as* the implementation
+					secondTypeArg ??
+					typeArg;
 
 				if (typeArg == null || implementationArg == null) {
 					return childContinuation(node);
@@ -57,8 +55,8 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 
 				// If the Implementation is a TypeNode, and if it originates from an ImportDeclaration, it may be stripped from the file since Typescript won't Type-check the updates from
 				// a CustomTransformer and such a node would normally be removed from the imports.
-				// to fix it, add an ImportDeclaration if needed
-				if (typescript.isTypeNode(implementationArg)) {
+				// to fix it, add an ImportDeclaration if needed. This is only needed if `preserveValueImports` is falsy
+				if (needsImportPreservationLogic && customImplementation == null) {
 					const matchingImport = findMatchingImportDeclarationForIdentifier(implementationArgText, options);
 					if (matchingImport != null && typescript.isStringLiteralLike(matchingImport.importDeclaration.moduleSpecifier)) {
 						switch (matchingImport.kind) {
@@ -113,10 +111,10 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 				}
 
 				return factory.updateCallExpression(node, node.expression, node.typeArguments, [
-					typescript.isTypeNode(implementationArg) ? factory.createIdentifier("undefined") : (continuation(implementationArg) as TS.Expression),
+					customImplementation == null ? factory.createIdentifier("undefined") : (continuation(implementationArg) as TS.Expression),
 					factory.createObjectLiteralExpression([
 						factory.createPropertyAssignment("identifier", factory.createNoSubstitutionTemplateLiteral(typeArgText)),
-						...(!typescript.isTypeNode(implementationArg)
+						...(customImplementation != null
 							? []
 							: [factory.createPropertyAssignment("implementation", factory.createIdentifier(rewriteImplementationName(implementationArgText, options)))])
 					])
@@ -208,6 +206,7 @@ function rewriteImplementationName(name: string, options: BeforeVisitorOptions<T
 	} = options;
 
 	switch (compilerOptions.module) {
+		case typescript.ModuleKind.ES2022:
 		case typescript.ModuleKind.ES2020:
 		case typescript.ModuleKind.ES2015:
 		case typescript.ModuleKind.ESNext:
@@ -241,51 +240,74 @@ function rewriteImplementationName(name: string, options: BeforeVisitorOptions<T
 	}
 }
 
-function getDiMethodKind(node: TS.Expression, context: VisitorContext): DiMethodKind | undefined {
+function getDiMethodName(node: TS.Expression, context: VisitorContext): DiMethodName | undefined {
 	if (!context.typescript.isPropertyAccessExpression(node) && !context.typescript.isElementAccessExpression(node)) {
 		return undefined;
 	}
 
-	if ("typeChecker" in context) {
-		// Don't proceed unless the left-hand expression is the DIServiceContainer
-		const type = context.typeChecker.getTypeAtLocation(node.expression);
-
-		if (type == null || type.symbol == null || type.symbol.escapedName !== DI_CONTAINER_NAME) {
-			return undefined;
-		}
-	} else {
-		// Pick the left-hand side of the expression here
-		const name = (node.expression.getFirstToken()?.getFullText() ?? node.expression.getFullText()).trim();
-
-		// If not a single matcher matches the text, this does not represent an instance of DIContainer.
-		if (!ensureArray(context.match).some(matcher => (typeof matcher === "string" ? name === matcher : matcher.test(name)))) {
-			return undefined;
-		}
-	}
-
-	let name: string;
-
 	// If it is an element access expression, evaluate the argument expression
 	if (context.typescript.isElementAccessExpression(node)) {
+		// Do nothing at this point if this isn't a DIContainer instance, as we can avoid invoking evaluate at this point
+		if (!isDiContainerInstance(node, context)) {
+			return undefined;
+		}
+
 		const evaluationResult = context.evaluate(node.argumentExpression);
 
 		// If no value could be computed, or if the value isn't of type string, do nothing
 		if (!evaluationResult.success || typeof evaluationResult.value !== "string") {
 			return undefined;
 		} else {
-			name = evaluationResult.value;
+			return isDiContainerMethodName(evaluationResult.value) ? evaluationResult.value : undefined;
 		}
 	} else {
-		name = node.name.text;
+		// If the name is any of the relevant ones, assert that it is invoked on an instance of DIContainer
+		return isDiContainerMethodName(node.name.text) && isDiContainerInstance(node, context) ? node.name.text : undefined;
 	}
+}
 
+function isDiContainerMethodName(name: string): name is DiMethodName {
 	switch (name) {
 		case "get":
 		case "has":
 		case "registerSingleton":
 		case "registerTransient":
-			return name;
+			return true;
 		default:
-			return undefined;
+			return false;
 	}
+}
+
+function isDiContainerInstance(node: TS.PropertyAccessExpression | TS.ElementAccessExpression, context: VisitorContext): boolean {
+	if ("typeChecker" in context) {
+		// Don't proceed unless the left-hand expression is the DIServiceContainer
+		const type = context.typeChecker.getTypeAtLocation(node.expression);
+
+		if (type == null || type.symbol == null || type.symbol.escapedName !== DI_CONTAINER_NAME) {
+			return false;
+		}
+	} else {
+		// If one or more variable names were passed in, check those directly
+		if (context.identifier != null && context.identifier.length > 0) {
+			// Pick the left-hand side of the expression here
+			const name = (node.expression.getFirstToken()?.getText() ?? node.expression.getText()).trim();
+			// If not a single matcher matches the text, this does not represent an instance of DIContainer.
+			if (!ensureArray(context.identifier).some(matcher => name === matcher)) {
+				return false;
+			}
+		} else {
+			// Otherwise, attempt to resolve the value of the expression and check if it is an instance of DIContainer
+			const evaluationResult = context.evaluate(node.expression);
+
+			if (
+				!evaluationResult.success ||
+				evaluationResult.value == null ||
+				typeof evaluationResult.value !== "object" ||
+				evaluationResult.value.constructor?.name !== DI_CONTAINER_NAME
+			) {
+				return false;
+			}
+		}
+	}
+	return true;
 }

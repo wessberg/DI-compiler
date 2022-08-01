@@ -1,16 +1,16 @@
 export interface ImportedSymbolBase {
-  moduleSpecifier: string;
+	moduleSpecifier: string;
 }
 
 export interface NamedImportedSymbol extends ImportedSymbolBase {
-  isDefaultImport: boolean;
-  name: string;
-  propertyName: string;
+	isDefaultImport: boolean;
+	name: string;
+	propertyName: string;
 }
 
 export interface NamespaceImportedSymbol extends ImportedSymbolBase {
-  isNamespaceImport: true;
-  name: string;
+	isNamespaceImport: true;
+	name: string;
 }
 
 export type ImportedSymbol = NamedImportedSymbol | NamespaceImportedSymbol;

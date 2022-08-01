@@ -1,46 +1,47 @@
 import test from "ava";
-import { generateTransformerResult } from "./setup/setup-transformer.js";
-import { formatCode } from "./util/format-code.js";
-import { withTypeScript } from "./util/ts-macro.js";
-import { includeEmitHelper } from "./util/include-emit-helper.js";
+import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
+import {formatCode} from "./util/format-code.js";
+import {withTypeScript} from "./util/ts-macro.js";
+import {includeEmitHelper} from "./util/include-emit-helper.js";
 
-test("Preserves Type-only imports. #1", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves Type-only imports. #1", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import Foo, {IFoo} from "./foo";
 				console.log(Foo);
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Foo implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
 			(function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -61,45 +62,46 @@ test("Preserves Type-only imports. #1", withTypeScript, (t, { typescript }) => {
       });
 
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #2", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #2", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import Foo, {IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Foo implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -117,45 +119,46 @@ test("Preserves type-only imports. #2", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #3", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #3", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import {Foo, IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export class Foo implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -173,46 +176,47 @@ test("Preserves type-only imports. #3", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Foo });
       });
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #4", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #4", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import * as Foo from "./foo";
 				import {IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export class Foo implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -230,45 +234,46 @@ test("Preserves type-only imports. #4", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
       });
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #5", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #5", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import {Bar as Foo, IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export class Bar implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -286,45 +291,46 @@ test("Preserves type-only imports. #5", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Bar });
       });
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #6", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #6", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import {default as Foo, IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Bar implements IFoo {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -342,47 +348,48 @@ test("Preserves type-only imports. #6", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
-  );
+	);
 });
 
-test("Preserves type-only imports. #7", withTypeScript, (t, { typescript }) => {
-  const bundle = generateTransformerResult(
-    [
-      {
-        entry: true,
-        fileName: "index.ts",
-        text: `
+test("Preserves type-only imports. #7", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import {Foo, Bar, IFoo} from "./foo";
 				console.log(Bar);
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-      },
-      {
-        entry: false,
-        fileName: "foo.ts",
-        text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export class Foo implements IFoo {}
 				export class Bar {}
-			`,
-      },
-    ],
-    {
-      typescript,
-      compilerOptions: {
-        module: typescript.ModuleKind.UMD,
-      },
-    }
-  );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-  const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-  t.deepEqual(
-    formatCode(file.text),
-    formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -402,50 +409,48 @@ test("Preserves type-only imports. #7", withTypeScript, (t, { typescript }) => {
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.Foo });
       });
 			`)
-  );
+	);
 });
 
-test(
-  "Preserves type-only imports with esModuleInterop and importHelpers. #1",
-  withTypeScript,
-  (t, { typescript }) => {
-    const bundle = generateTransformerResult(
-      [
-        {
-          entry: true,
-          fileName: "index.ts",
-          text: `
+test("Preserves type-only imports with esModuleInterop and importHelpers. #1", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import Foo, {IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-        },
-        {
-          entry: false,
-          fileName: "foo.ts",
-          text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Foo implements IFoo {}
-			`,
-        },
-      ],
-      {
-        typescript,
-        compilerOptions: {
-          esModuleInterop: true,
-          importHelpers: true,
-          module: typescript.ModuleKind.UMD,
-        },
-      }
-    );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				esModuleInterop: true,
+				importHelpers: true,
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-    const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-    t.deepEqual(
-      formatCode(file.text),
-      formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
               var v = factory(require, exports);
@@ -463,50 +468,47 @@ test(
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo.default });
       });
 			`)
-    );
-  }
-);
+	);
+});
 
-test(
-  "Preserves type-only imports with esModuleInterop. #1",
-  withTypeScript,
-  (t, { typescript }) => {
-    const bundle = generateTransformerResult(
-      [
-        {
-          entry: true,
-          fileName: "index.ts",
-          text: `
+test("Preserves type-only imports with esModuleInterop. #1", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import Foo, {IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-        },
-        {
-          entry: false,
-          fileName: "foo.ts",
-          text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Foo implements IFoo {}
-			`,
-        },
-      ],
-      {
-        typescript,
-        compilerOptions: {
-          esModuleInterop: true,
-          module: typescript.ModuleKind.UMD,
-        },
-      }
-    );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				esModuleInterop: true,
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-    const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-    t.deepEqual(
-      formatCode(file.text),
-      formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       ${includeEmitHelper(typescript, "__importDefault")}
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
@@ -526,51 +528,48 @@ test(
       });
 
 			`)
-    );
-  }
-);
+	);
+});
 
-test(
-  "Preserves type-only imports with esModuleInterop. #2",
-  withTypeScript,
-  (t, { typescript }) => {
-    const bundle = generateTransformerResult(
-      [
-        {
-          entry: true,
-          fileName: "index.ts",
-          text: `
+test("Preserves type-only imports with esModuleInterop. #2", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import Foo, {IFoo} from "./foo";
 				console.log(Foo);
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-        },
-        {
-          entry: false,
-          fileName: "foo.ts",
-          text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export default class Foo implements IFoo {}
-			`,
-        },
-      ],
-      {
-        typescript,
-        compilerOptions: {
-          esModuleInterop: true,
-          module: typescript.ModuleKind.UMD,
-        },
-      }
-    );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				esModuleInterop: true,
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-    const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-    t.deepEqual(
-      formatCode(file.text),
-      formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       ${includeEmitHelper(typescript, "__importDefault")}
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
@@ -592,51 +591,48 @@ test(
       });
 
 			`)
-    );
-  }
-);
+	);
+});
 
-test(
-  "Preserves type-only imports with esModuleInterop. #3",
-  withTypeScript,
-  (t, { typescript }) => {
-    const bundle = generateTransformerResult(
-      [
-        {
-          entry: true,
-          fileName: "index.ts",
-          text: `
+test("Preserves type-only imports with esModuleInterop. #3", withTypeScript, (t, {typescript, useProgram}) => {
+	const bundle = generateCustomTransformerResult(
+		[
+			{
+				entry: true,
+				fileName: "index.ts",
+				text: `
 				import {DIContainer} from "@wessberg/di";
 				import * as Foo from "./foo";
 				import {IFoo} from "./foo";
 				
 				const container = new DIContainer();
 				container.registerSingleton<IFoo, Foo>();
-			`,
-        },
-        {
-          entry: false,
-          fileName: "foo.ts",
-          text: `	
+			`
+			},
+			{
+				entry: false,
+				fileName: "foo.ts",
+				text: `	
 				export interface IFoo {}
 				export class Foo implements IFoo {}
-			`,
-        },
-      ],
-      {
-        typescript,
-        compilerOptions: {
-          esModuleInterop: true,
-          module: typescript.ModuleKind.UMD,
-        },
-      }
-    );
+			`
+			}
+		],
+		{
+			typescript,
+			useProgram,
+			compilerOptions: {
+				esModuleInterop: true,
+				module: typescript.ModuleKind.UMD
+			}
+		}
+	);
 
-    const file = bundle.find(({ fileName }) => fileName.includes("index.js"))!;
+	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-    t.deepEqual(
-      formatCode(file.text),
-      formatCode(`\
+	t.deepEqual(
+		formatCode(file.text),
+		formatCode(`\
       ${includeEmitHelper(typescript, "__importStar")}
       (function (factory) {
           if (typeof module === "object" && typeof module.exports === "object") {
@@ -655,6 +651,5 @@ test(
           container.registerSingleton(undefined, { identifier: \`IFoo\`, implementation: Foo });
       });
 			`)
-    );
-  }
-);
+	);
+});

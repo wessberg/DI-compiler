@@ -1,6 +1,6 @@
 import {TS} from "../type/type.js";
 import {ImportedSymbol} from "../type/imported-symbol.js";
-import {VisitorContext} from "../transformer/visitor-context.js";
+import {BaseVisitorContext, VisitorContext} from "../transformer/visitor-context.js";
 import {RootBlock} from "../type/root-block.js";
 
 type TSWithHelpers = typeof TS & {
@@ -22,6 +22,34 @@ const HELPERS = {
 		text: '\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];\n    result["default"] = mod;\n    return result;\n};'
 	}
 } as const;
+
+export function needsImportPreservationLogic(context: Pick<BaseVisitorContext, "compilerOptions" | "typescript">): boolean;
+export function needsImportPreservationLogic(typescript: typeof TS, compilerOptions: TS.CompilerOptions): boolean;
+export function needsImportPreservationLogic(
+	typescriptOrContext: Pick<BaseVisitorContext, "compilerOptions" | "typescript"> | typeof TS,
+	compilerOptionsOrUndefined?: TS.CompilerOptions
+): boolean {
+	const typescript = arguments.length >= 2 ? (typescriptOrContext as typeof TS) : (typescriptOrContext as Pick<BaseVisitorContext, "compilerOptions" | "typescript">).typescript;
+	const compilerOptions = arguments.length >= 2 ? compilerOptionsOrUndefined! : (typescriptOrContext as Pick<BaseVisitorContext, "compilerOptions" | "typescript">).compilerOptions;
+
+	// If value imports shouldn't always be preserved, we'll have to perform import preservation logic
+	if (!Boolean(compilerOptions.preserveValueImports)) return true;
+
+	// Only TypeScript v4.5 and newer supports the `preserValueImports` Compiler option
+	if (parseFloat(typescript.version) < 4.5) return true;
+
+	switch (compilerOptions.module) {
+		case typescript.ModuleKind.AMD:
+		case typescript.ModuleKind.UMD:
+		case typescript.ModuleKind.CommonJS:
+		case typescript.ModuleKind.System:
+		case typescript.ModuleKind.None:
+			// None of these module systems support the `preserValueImports` Compiler option
+			return true;
+		default:
+			return false;
+	}
+}
 
 export function getImportDefaultHelper(typescript: TSWithHelpers): TS.EmitHelper {
 	return typescript.importDefaultHelper ?? HELPERS.importDefaultHelper;
@@ -114,6 +142,7 @@ export function getDefineArrayLiteralExpression(sourceFile: TS.SourceFile, conte
 		case typescript.ModuleKind.ESNext:
 		case typescript.ModuleKind.ES2015:
 		case typescript.ModuleKind.ES2020:
+		case typescript.ModuleKind.ES2022:
 			// There are no such thing for these module types
 			return undefined;
 
@@ -253,6 +282,7 @@ export function isImportedSymbolImported(importedSymbol: ImportedSymbol, rootBlo
 	const {compilerOptions, typescript} = context;
 
 	switch (compilerOptions.module) {
+		case typescript.ModuleKind.ES2022:
 		case typescript.ModuleKind.ES2020:
 		case typescript.ModuleKind.ES2015:
 		case typescript.ModuleKind.ESNext: {
@@ -324,6 +354,7 @@ export function generateImportStatementForImportedSymbolInContext(importedSymbol
 	const {compilerOptions, typescript, factory} = context;
 
 	switch (compilerOptions.module) {
+		case typescript.ModuleKind.ES2022:
 		case typescript.ModuleKind.ES2020:
 		case typescript.ModuleKind.ES2015:
 		case typescript.ModuleKind.ESNext: {

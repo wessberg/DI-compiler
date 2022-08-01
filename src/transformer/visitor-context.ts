@@ -6,6 +6,7 @@ import {SourceFileToImportedSymbolSet} from "../type/imported-symbol.js";
 export interface BaseVisitorContextShared {
 	compilerOptions: TS.CompilerOptions;
 	evaluate(node: TS.Declaration | TS.Expression | TS.Statement): EvaluateResult;
+	needsImportPreservationLogic: boolean;
 
 	// Some files need to add 'tslib' to their 'define' arrays
 	sourceFileToAddTslibDefinition: Map<string, boolean>;

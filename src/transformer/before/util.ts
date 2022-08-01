@@ -13,6 +13,6 @@ export function pickServiceOrImplementationName(node: TS.Expression | TS.TypeNod
 	} else if (typescript.isIndexedAccessTypeNode(node)) {
 		return `${pickServiceOrImplementationName(node.objectType, context)}[${pickServiceOrImplementationName(node.indexType, context)}]`;
 	} else {
-		return node.getFullText().trim();
+		return node.getText().trim();
 	}
 }

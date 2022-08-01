@@ -1,1 +1,1 @@
-export type DiMethodKind = "get" | "has" | "registerSingleton" | "registerTransient";
+export type DiMethodName = "get" | "has" | "registerSingleton" | "registerTransient";

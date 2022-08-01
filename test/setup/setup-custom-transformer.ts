@@ -12,20 +12,23 @@ export interface ITestFile {
 
 export type TestFile = ITestFile | string;
 
-interface GenerateTransformerResultOptionsShared {
+interface GenerateCustomTransformerResultOptionsShared {
 	typescript: typeof TS;
 	cwd?: string;
 	compilerOptions?: Partial<TS.CompilerOptions>;
 	stackTraceLength?: number;
 }
 
-interface GenerateTransformerResultOptionsProgram extends GenerateTransformerResultOptionsShared {}
-
-interface GenerateTransformerResultOptionsIsolatedModules extends GenerateTransformerResultOptionsShared {
-	match: DiIsolatedModulesOptions["match"];
+interface GenerateCustomTransformerResultOptionsProgram extends GenerateCustomTransformerResultOptionsShared {
+	useProgram?: true;
 }
 
-export type GenerateTransformerResultOptions = GenerateTransformerResultOptionsProgram | GenerateTransformerResultOptionsIsolatedModules;
+interface GenerateCustomTransformerResultOptionsIsolatedModules extends GenerateCustomTransformerResultOptionsShared {
+	useProgram?: false;
+	identifier?: DiIsolatedModulesOptions["identifier"];
+}
+
+export type GenerateCustomTransformerResultOptions = GenerateCustomTransformerResultOptionsProgram | GenerateCustomTransformerResultOptionsIsolatedModules;
 
 const VIRTUAL_ROOT = "#root";
 const VIRTUAL_SRC = "src";
@@ -65,15 +68,9 @@ const BASE_FILES = [
 /**
  * Prepares a test
  */
-export function generateTransformerResult(
+export function generateCustomTransformerResult(
 	inputFiles: TestFile[] | TestFile,
-	{
-		typescript,
-		cwd = path.join(process.cwd(), VIRTUAL_ROOT),
-		compilerOptions: inputCompilerOptions,
-		stackTraceLength,
-		...rest
-	}: GenerateTransformerResultOptions
+	{typescript, cwd = path.join(process.cwd(), VIRTUAL_ROOT), compilerOptions: inputCompilerOptions, stackTraceLength, ...rest}: GenerateCustomTransformerResultOptions
 ): {fileName: string; text: string}[] {
 	// Optionally set the stack trace length limit
 	if (stackTraceLength != null) {
@@ -201,7 +198,12 @@ export function generateTransformerResult(
 		}
 	});
 
-	const transformers = "match" in rest && rest.match != null ? di({typescript, compilerOptions, match: rest.match}) : di({typescript, program});
+	const transformers =
+		"identifier" in rest && rest.identifier != null
+			? di({typescript, compilerOptions, identifier: rest.identifier})
+			: Boolean(rest.useProgram)
+			? di({typescript, program})
+			: di({typescript, compilerOptions});
 
 	program.emit(
 		undefined,
