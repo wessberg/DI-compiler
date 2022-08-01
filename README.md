@@ -280,7 +280,7 @@ You can pass in a few options to DI-Compiler via command line options:
 
 Alternatively, you can add a `di` property to your `tsconfig` where you can customize its behavior without setting environment variables:
 
-```json
+```js
 // Inside your tsconfig.json
 {
 	"di": {
@@ -472,7 +472,7 @@ See [this section](#usage-as-a-nodejs-loader) for more details on how to configu
 
 For a CommonJS project, you can use the `require` property in the `ava` configuration. For example:
 
-```json
+```js
 {
 	"ava": {
 		// Other options...
@@ -488,7 +488,7 @@ For a CommonJS project, you can use the `require` property in the `ava` configur
 
 Whereas for an ESM project, the syntax is a little different:
 
-```json
+```js
 {
 	"ava": {
 		// Other options...
