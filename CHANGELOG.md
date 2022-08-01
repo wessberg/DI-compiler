@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/wessberg/di-compiler/compare/v2.2.6...v3.0.0) (2022-08-01)
+
+
+### Features
+
+* add new sponsor: scrubtheweb ([80eb1e2](https://github.com/wessberg/di-compiler/commit/80eb1e2ecee16851de867eb50c4c2e53ea00653f))
+* add TypeScript v4.6 support ([7072df7](https://github.com/wessberg/di-compiler/commit/7072df7d83d93e29ad4662d39d6b6047ef84f1e5))
+* migrate to ESM. Make passing a TypeScript program optional ([e4d9d0b](https://github.com/wessberg/di-compiler/commit/e4d9d0bd1b75f0d7982375d739be634651b47056))
+* support operating without a Program ([d489cbc](https://github.com/wessberg/di-compiler/commit/d489cbc91b7434653f55f581295ea12843c993fd))
+
+
+
 ## [2.2.6](https://github.com/wessberg/di-compiler/compare/v2.2.5...v2.2.6) (2021-11-19)
 
 

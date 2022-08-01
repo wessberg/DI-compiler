@@ -36,7 +36,6 @@ Integration with popular tools such as Webpack, esbuild, Rollup, or something el
 It is optimized for _performance_, but how fast it can go depends on your setup. Please see the [Optimization](#optimization) section for details on how to tweak `DI-Compiler`
 so that it works most efficiently.
 
-
 <!-- SHADOW_SECTION_FEATURES_START -->
 
 ### Features
@@ -84,8 +83,9 @@ so that it works most efficiently.
 - [Usage](#usage)
   - [Usage as an API](#usage-as-an-api)
   - [Usage as a Node.js loader](#usage-as-a-nodejs-loader)
-    - [Loader caching](#loader-caching)
-    - [Customizing DI-Compiler when used as a loader](#customizing-di-compiler-when-used-as-a-loader)
+  - [Loader SourceMaps](#loader-sourcemaps)
+  - [Loader caching](#loader-caching)
+  - [Customizing DI-Compiler when used as a loader](#customizing-di-compiler-when-used-as-a-loader)
   - [Usage as a TypeScript Custom Transformer](#usage-as-a-typescript-custom-transformer)
   - [Usage with TypeScript's Compiler APIs](#usage-with-typescripts-compiler-apis)
   - [Usage with ts-nodes programmatic API](#usage-with-ts-nodes-programmatic-api)
