@@ -608,11 +608,11 @@ Do you want to contribute? Awesome! Please follow [these recommendations](./CONT
 
 #### DI-Compiler doesn't correctly update all my calls to the DIContainer methods
 
-If you pass a Program to DI-Compiler (such as you typically do when you use it as a Custom Transformer), this means that the Typechecker wasn't able to determine that one or mode identifiers in your
+If you pass a Program to DI-Compiler (such as you typically do when you use it as a Custom Transformer), this means that the Typechecker wasn't able to determine that one or more identifiers in your
 code was in fact instances of DIContainer. Please verify that TypeScript correctly tracks the type of the objects on which you invoke the relevant DIContainer methods.
 
 If you _don't_ pass a Program to DI-Compiler, then you're relying on DI-Compiler being able to statically infer whether or not identifiers are instances of DIContainer without having access to multiple files
-inside your application. This will very often lead to problems if you reference an instance of DIContainer from another file inside your application. To fix it, pass one or mode identifiers that should be
+inside your application. This will very often lead to problems if you reference an instance of DIContainer from another file inside your application. To fix it, pass one or more identifiers that should be
 considered instances of DIContainer as an option. Please see [this section](#optimization-2-pass-in-one-or-more-identifiers-to-consider-instances-of-dicontainer-instead-of-relying-on-partial-evaluation) for details
 on how you can do that.
 
