@@ -2,7 +2,7 @@ import {CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER} from "../../constant.js";
 import {TS} from "../../../type/type.js";
 import {BeforeVisitorOptions} from "../before-visitor-options.js";
 import {VisitorContext} from "../../visitor-context.js";
-import {pickServiceOrImplementationName} from "../util.js";
+import {getModifierLikes, pickServiceOrImplementationName} from "../util.js";
 
 export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.ClassLikeDeclaration>): TS.VisitResult<TS.Node> {
 	const {node, childContinuation, continuation, context} = options;
@@ -17,7 +17,6 @@ export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.Class
 	const updatedClassMembers: readonly TS.ClassElement[] = [
 		...(node.members.map(continuation) as TS.ClassElement[]),
 		factory.createGetAccessorDeclaration(
-			undefined,
 			[factory.createModifier(typescript.SyntaxKind.StaticKeyword)],
 			factory.createComputedPropertyName(factory.createIdentifier(`Symbol.for("${CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER}")`)),
 			[],
@@ -26,10 +25,13 @@ export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.Class
 		)
 	];
 
+	const modifierLikes = getModifierLikes(node);
+
+	
 	if (typescript.isClassDeclaration(node)) {
-		return factory.updateClassDeclaration(node, node.decorators, node.modifiers, node.name, node.typeParameters, node.heritageClauses, updatedClassMembers);
+		return factory.updateClassDeclaration(node, modifierLikes, node.name, node.typeParameters, node.heritageClauses, updatedClassMembers);
 	} else {
-		return factory.updateClassExpression(node, node.decorators, node.modifiers, node.name, node.typeParameters, node.heritageClauses, updatedClassMembers);
+		return factory.updateClassExpression(node, modifierLikes, node.name, node.typeParameters, node.heritageClauses, updatedClassMembers);
 	}
 }
 

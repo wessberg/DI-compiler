@@ -360,7 +360,6 @@ export function generateImportStatementForImportedSymbolInContext(importedSymbol
 		case typescript.ModuleKind.ESNext: {
 			return factory.createImportDeclaration(
 				undefined,
-				undefined,
 				"isDefaultImport" in importedSymbol
 					? factory.createImportClause(
 							false,
