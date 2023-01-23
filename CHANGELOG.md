@@ -1,3 +1,12 @@
+# [3.2.0](https://github.com/wessberg/di-compiler/compare/v3.1.0...v3.2.0) (2023-01-23)
+
+
+### Features
+
+* add .js extensions to built types to make them compatible with codebases running with Node16 or NodeNext module resolution ([87b74d1](https://github.com/wessberg/di-compiler/commit/87b74d16f0c3a431151bfb7869b914f7eba9620a))
+
+
+
 # [3.1.0](https://github.com/wessberg/di-compiler/compare/v3.0.0...v3.1.0) (2023-01-10)
 
 
