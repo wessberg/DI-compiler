@@ -74,13 +74,10 @@ export class FileCache<T> extends Map<string, T> {
 
 		if (cachedResult == null) {
 			// Remove broken cache file
-			fs.promises.unlink(cacheFilePath).then(
-				() => {
-					const index = this.cacheFiles.indexOf(diskCacheHit);
-					this.cacheFiles.splice(index, 1);
-				},
-				NOOP
-			);
+			fs.promises.unlink(cacheFilePath).then(() => {
+				const index = this.cacheFiles.indexOf(diskCacheHit);
+				this.cacheFiles.splice(index, 1);
+			}, NOOP);
 			return;
 		}
 

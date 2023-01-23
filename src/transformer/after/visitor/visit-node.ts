@@ -1,6 +1,6 @@
-import {TS} from "../../../type/type.js";
+import type {TS} from "../../../type/type.js";
 import {visitRootBlockSourceFile} from "./visit-root-block-source-file.js";
-import {AfterVisitorOptions} from "../after-visitor-options.js";
+import type {AfterVisitorOptions} from "../after-visitor-options.js";
 import {visitRootBlockBlock} from "./visit-root-block-block.js";
 import {visitDefineArrayLiteralExpression} from "./visit-define-array-literal-expression.js";
 

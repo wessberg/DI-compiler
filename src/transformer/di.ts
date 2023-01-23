@@ -1,5 +1,5 @@
-import {TS} from "../type/type.js";
-import {DiOptions} from "./di-options.js";
+import type {TS} from "../type/type.js";
+import type {DiOptions} from "./di-options.js";
 import {beforeTransformer} from "./before/before-transformer.js";
 import {afterTransformer} from "./after/after-transformer.js";
 import {getBaseVisitorContext} from "./get-base-visitor-context.js";

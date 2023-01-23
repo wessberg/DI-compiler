@@ -1,7 +1,7 @@
-import {TS} from "../../../type/type.js";
-import {AfterVisitorOptions} from "../after-visitor-options.js";
+import type {TS} from "../../../type/type.js";
+import type {AfterVisitorOptions} from "../after-visitor-options.js";
 import {generateImportStatementForImportedSymbolInContext, getRootBlockInsertionPosition, isImportedSymbolImported} from "../../../util/ts-util.js";
-import {RootBlock} from "../../../type/root-block.js";
+import type {RootBlock} from "../../../type/root-block.js";
 
 export function visitRootBlock(options: AfterVisitorOptions<RootBlock>): TS.Statement[] {
 	const {node, sourceFile, context} = options;

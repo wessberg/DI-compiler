@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {DiOptions} from "./di-options.js";
-import {BaseVisitorContext} from "./visitor-context.js";
+import type {DiOptions} from "./di-options.js";
+import type {BaseVisitorContext} from "./visitor-context.js";
 import {evaluate} from "ts-evaluator";
 import TSModule from "typescript";
 import {DI_CONTAINER_NAME} from "./constant.js";

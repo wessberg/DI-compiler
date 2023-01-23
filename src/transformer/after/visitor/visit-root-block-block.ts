@@ -1,5 +1,5 @@
-import {TS} from "../../../type/type.js";
-import {AfterVisitorOptions} from "../after-visitor-options.js";
+import type {TS} from "../../../type/type.js";
+import type {AfterVisitorOptions} from "../after-visitor-options.js";
 import {visitRootBlock} from "./visit-root-block.js";
 
 export function visitRootBlockBlock(options: AfterVisitorOptions<TS.Block>): TS.VisitResult<TS.Node> {

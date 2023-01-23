@@ -24,7 +24,7 @@ export interface TSEmitHost {
 }
 
 export type TSExtended = typeof TS & {
-    nullTransformationContext: TS.TransformationContext;
+	nullTransformationContext: TS.TransformationContext;
 	createGetCanonicalFileName(useCaseSensitiveFileNames: boolean): (input: string) => string;
 	createSourceMapGenerator(emitHost: TSEmitHost, file: string, sourceRoot: string, sourcesDirectoryPath: string, mapOptions: TSSourceMapGeneratorOptions): TSSourceMapGenerator;
 	createTextWriter(newLine: string): TSTextWriter;

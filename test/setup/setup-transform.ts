@@ -1,7 +1,7 @@
-import {TS} from "../../src/type/type.js";
-import {DiIsolatedModulesOptions} from "../../src/transformer/di-options.js";
+import type {TS} from "../../src/type/type.js";
+import type {DiIsolatedModulesOptions} from "../../src/transformer/di-options.js";
 import {transform} from "../../src/transformer/transform.js";
-import {TransformResult} from "../../src/transformer/transform-options.js";
+import type {TransformResult} from "../../src/transformer/transform-options.js";
 
 export interface ITestFile {
 	fileName: string;

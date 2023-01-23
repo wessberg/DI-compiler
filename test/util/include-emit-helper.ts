@@ -1,4 +1,4 @@
-import {TS} from "../../src/type/type.js";
+import type {TS} from "../../src/type/type.js";
 import {getImportDefaultHelper, getImportStarHelper} from "../../src/util/ts-util.js";
 
 export function includeEmitHelper(typescript: typeof TS, helperName: "__importStar" | "__importDefault"): string {

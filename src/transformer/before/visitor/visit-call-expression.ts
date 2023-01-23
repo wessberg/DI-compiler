@@ -1,8 +1,8 @@
 import {DI_CONTAINER_NAME} from "../../constant.js";
-import {TS} from "../../../type/type.js";
-import {BeforeVisitorOptions} from "../before-visitor-options.js";
-import {DiMethodName} from "../../di-method-kind.js";
-import {VisitorContext} from "../../visitor-context.js";
+import type {TS} from "../../../type/type.js";
+import type {BeforeVisitorOptions} from "../before-visitor-options.js";
+import type {DiMethodName} from "../../di-method-kind.js";
+import type {VisitorContext} from "../../visitor-context.js";
 import {getImportDefaultHelper, getImportStarHelper, moduleKindDefinesDependencies, moduleKindSupportsImportHelpers} from "../../../util/ts-util.js";
 import {pickServiceOrImplementationName} from "../util.js";
 import {ensureArray} from "../../../util/util.js";

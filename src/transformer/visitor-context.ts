@@ -1,7 +1,7 @@
-import {DiProgramOptions, DiIsolatedModulesOptions} from "./di-options.js";
-import {TS} from "../type/type.js";
-import {EvaluateResult} from "ts-evaluator";
-import {SourceFileToImportedSymbolSet} from "../type/imported-symbol.js";
+import type {DiProgramOptions, DiIsolatedModulesOptions} from "./di-options.js";
+import type {TS} from "../type/type.js";
+import type {EvaluateResult} from "ts-evaluator";
+import type {SourceFileToImportedSymbolSet} from "../type/imported-symbol.js";
 
 export interface BaseVisitorContextShared {
 	compilerOptions: TS.CompilerOptions;

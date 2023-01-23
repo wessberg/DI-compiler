@@ -2,7 +2,7 @@ import path from "crosspath";
 import fs from "fs";
 import semver from "semver";
 import type {ExecutionContext, OneOrMoreMacros, Macro} from "ava";
-import {TS} from "../../src/type/type.js";
+import type {TS} from "../../src/type/type.js";
 
 export function getNearestPackageJson(from = import.meta.url): Record<string, unknown> | undefined {
 	// There may be a file protocol in from of the path

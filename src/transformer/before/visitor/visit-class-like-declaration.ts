@@ -1,7 +1,7 @@
 import {CONSTRUCTOR_ARGUMENTS_SYMBOL_IDENTIFIER} from "../../constant.js";
-import {TS} from "../../../type/type.js";
-import {BeforeVisitorOptions} from "../before-visitor-options.js";
-import {VisitorContext} from "../../visitor-context.js";
+import type {TS} from "../../../type/type.js";
+import type {BeforeVisitorOptions} from "../before-visitor-options.js";
+import type {VisitorContext} from "../../visitor-context.js";
 import {getModifierLikes, pickServiceOrImplementationName} from "../util.js";
 
 export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.ClassLikeDeclaration>): TS.VisitResult<TS.Node> {
@@ -27,7 +27,6 @@ export function visitClassLikeDeclaration(options: BeforeVisitorOptions<TS.Class
 
 	const modifierLikes = getModifierLikes(node);
 
-	
 	if (typescript.isClassDeclaration(node)) {
 		return factory.updateClassDeclaration(node, modifierLikes, node.name, node.typeParameters, node.heritageClauses, updatedClassMembers);
 	} else {

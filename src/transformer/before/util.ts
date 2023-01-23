@@ -1,6 +1,6 @@
 /* eslint-disable deprecation/deprecation */
-import {TS} from "../../type/type.js";
-import {VisitorContext} from "../visitor-context.js";
+import type {TS} from "../../type/type.js";
+import type {VisitorContext} from "../visitor-context.js";
 
 /**
  * A TypeNode such as IFoo<string> should still yield the service name "IFoo".
@@ -18,10 +18,10 @@ export function pickServiceOrImplementationName(node: TS.Expression | TS.TypeNod
 	}
 }
 
-export function getModifierLikes (node: TS.Node): readonly TS.ModifierLike[] | undefined {
+export function getModifierLikes(node: TS.Node): readonly TS.ModifierLike[] | undefined {
 	if ("decorators" in node && Array.isArray(node.decorators)) {
-		 return [...node.decorators ?? [], ...(node.modifiers ?? [])];
-	 } else {
-		 return node.modifiers;
-	 }
- }
+		return [...(node.decorators ?? []), ...(node.modifiers ?? [])];
+	} else {
+		return node.modifiers;
+	}
+}

@@ -1,5 +1,5 @@
-import {TS} from "../../../type/type.js";
-import {AfterVisitorOptions} from "../after-visitor-options.js";
+import type {TS} from "../../../type/type.js";
+import type {AfterVisitorOptions} from "../after-visitor-options.js";
 
 export function visitDefineArrayLiteralExpression(options: AfterVisitorOptions<TS.ArrayLiteralExpression>): TS.ArrayLiteralExpression {
 	const {node, sourceFile, context} = options;

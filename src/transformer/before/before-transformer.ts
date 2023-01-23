@@ -1,8 +1,8 @@
-import {BaseVisitorContext, VisitorContext} from "../visitor-context.js";
-import {TS} from "../../type/type.js";
-import {BeforeVisitorOptions} from "./before-visitor-options.js";
+import type {BaseVisitorContext, VisitorContext} from "../visitor-context.js";
+import type {TS} from "../../type/type.js";
+import type {BeforeVisitorOptions} from "./before-visitor-options.js";
 import {visitNode} from "./visitor/visit-node.js";
-import {ImportedSymbol} from "../../type/imported-symbol.js";
+import type {ImportedSymbol} from "../../type/imported-symbol.js";
 import {ensureNodeFactory} from "compatfactory";
 
 export function beforeTransformer(context: BaseVisitorContext): TS.TransformerFactory<TS.SourceFile> {

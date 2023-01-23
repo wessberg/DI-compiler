@@ -1,8 +1,8 @@
-import {TS} from "../../src/type/type.js";
+import type {TS} from "../../src/type/type.js";
 import {di} from "../../src/transformer/di.js";
 import {ensureArray} from "../../src/util/util.js";
 import path from "crosspath";
-import {DiIsolatedModulesOptions} from "../../src/transformer/di-options.js";
+import type {DiIsolatedModulesOptions} from "../../src/transformer/di-options.js";
 
 export interface ITestFile {
 	fileName: string;

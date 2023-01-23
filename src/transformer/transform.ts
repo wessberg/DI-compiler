@@ -1,9 +1,9 @@
 import path from "crosspath";
 import {getBaseVisitorContext} from "./get-base-visitor-context.js";
-import {TransformOptions, TransformResult} from "./transform-options.js";
+import type {TransformOptions, TransformResult} from "./transform-options.js";
 import {ensureArray, sha1} from "../util/util.js";
-import {BaseVisitorContext} from "./visitor-context.js";
-import {TSEmitHost, TSExtended, TSExtendedPrinter, TSSourceMapGenerator, TSSourceMapGeneratorOptions} from "../type/type.js";
+import type {BaseVisitorContext} from "./visitor-context.js";
+import type {TSEmitHost, TSExtended, TSExtendedPrinter, TSSourceMapGenerator, TSSourceMapGeneratorOptions} from "../type/type.js";
 import {ensureNodeFactory} from "compatfactory";
 import {transformSourceFile} from "./before/before-transformer.js";
 
@@ -12,7 +12,7 @@ import {transformSourceFile} from "./before/before-transformer.js";
  */
 export function transform(source: string, options?: TransformOptions): TransformResult;
 export function transform(source: string, filename: string, options?: TransformOptions): TransformResult;
-export function transform(source: string, filenameOrOptions: string|TransformOptions|undefined, optionsOrUndefined?: TransformOptions): TransformResult {
+export function transform(source: string, filenameOrOptions: string | TransformOptions | undefined, optionsOrUndefined?: TransformOptions): TransformResult {
 	const filename = typeof filenameOrOptions === "string" ? filenameOrOptions : "file.ts";
 	const options = typeof filenameOrOptions === "string" ? optionsOrUndefined : filenameOrOptions;
 
@@ -86,7 +86,7 @@ export function transform(source: string, filenameOrOptions: string|TransformOpt
 	return result;
 }
 
-function generateCacheKey(source: string, context: BaseVisitorContext, options: TransformOptions|undefined): string | undefined {
+function generateCacheKey(source: string, context: BaseVisitorContext, options: TransformOptions | undefined): string | undefined {
 	// No point in calculating a hash if there's no cache in use
 	if (options?.cache == null) return undefined;
 

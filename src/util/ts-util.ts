@@ -1,7 +1,7 @@
 import {TS} from "../type/type.js";
-import {ImportedSymbol} from "../type/imported-symbol.js";
-import {BaseVisitorContext, VisitorContext} from "../transformer/visitor-context.js";
-import {RootBlock} from "../type/root-block.js";
+import type {ImportedSymbol} from "../type/imported-symbol.js";
+import type {BaseVisitorContext, VisitorContext} from "../transformer/visitor-context.js";
+import type {RootBlock} from "../type/root-block.js";
 
 type TSWithHelpers = typeof TS & {
 	importDefaultHelper?: TS.EmitHelper;

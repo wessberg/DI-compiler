@@ -1,5 +1,5 @@
-import {BeforeVisitorOptions} from "../before-visitor-options.js";
-import {TS} from "../../../type/type.js";
+import type {BeforeVisitorOptions} from "../before-visitor-options.js";
+import type {TS} from "../../../type/type.js";
 import {visitClassLikeDeclaration} from "./visit-class-like-declaration.js";
 import {visitCallExpression} from "./visit-call-expression.js";
 

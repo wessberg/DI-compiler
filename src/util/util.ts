@@ -1,4 +1,4 @@
-import {Nullable} from "helpertypes";
+import type {Nullable} from "helpertypes";
 import crypto from "crypto";
 
 /**

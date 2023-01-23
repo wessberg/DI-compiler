@@ -2,8 +2,8 @@
 	"extends": "@wessberg/ts-config",
 	"include": ["src/**/*.*", "register/**/*.*", "test/**/*.*", "loader.cjs"],
 	"compilerOptions": {
-		"module": "esnext",
 		"target": "es2019",
-		"importHelpers": false
+		"importHelpers": false,
+		"moduleResolution": "node"
 	}
 }

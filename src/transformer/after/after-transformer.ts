@@ -1,6 +1,6 @@
-import {BaseVisitorContext, VisitorContext} from "../visitor-context.js";
-import {TS} from "../../type/type.js";
-import {AfterVisitorOptions} from "./after-visitor-options.js";
+import type {BaseVisitorContext, VisitorContext} from "../visitor-context.js";
+import type {TS} from "../../type/type.js";
+import type {AfterVisitorOptions} from "./after-visitor-options.js";
 import {visitNode} from "./visitor/visit-node.js";
 import {getDefineArrayLiteralExpression, getRootBlock} from "../../util/ts-util.js";
 import {ensureNodeFactory} from "compatfactory";

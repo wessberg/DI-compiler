@@ -23,7 +23,6 @@ const transformOptions = resolveOptions(typescript);
 
 export const load: Load = async (url, context, nextLoad) => {
 	if (ALLOWED_EXTENSIONS.has(path.extname(url))) {
-
 		const fileName = urlModule.fileURLToPath(url);
 		const rawSource = await fs.readFile(fileName, "utf-8");
 
