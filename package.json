@@ -134,7 +134,7 @@
 	"main": "./dist/cjs/index.cjs",
 	"module": "./dist/esm/index.js",
 	"engines": {
-		"node": ">=16.14.0"
+		"node": ">=16.15.1"
 	},
 	"prettier": "@wessberg/prettier-config",
 	"ava": {
