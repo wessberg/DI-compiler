@@ -1,3 +1,18 @@
+# [3.3.0](https://github.com/wessberg/di-compiler/compare/v3.2.0...v3.3.0) (2023-08-04)
+
+
+### Bug Fixes
+
+* run tests on Node v16.14.0 and up ([1357846](https://github.com/wessberg/di-compiler/commit/1357846d1c9bfc6e4f01f618de8e8ed57d1dce88))
+* run tests on v16.15.1 instead ([b6bac40](https://github.com/wessberg/di-compiler/commit/b6bac405d50f803fbd77221a6fe07ed97d7b2b2a))
+
+
+### Features
+
+* add TypeScript v5.1 support ([3d0b582](https://github.com/wessberg/di-compiler/commit/3d0b582adee65dd54acdefed80ec337de6561809))
+
+
+
 # [3.2.0](https://github.com/wessberg/di-compiler/compare/v3.1.0...v3.2.0) (2023-01-23)
 
 
