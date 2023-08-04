@@ -5,6 +5,7 @@ import {evaluate} from "ts-evaluator";
 import TSModule from "typescript";
 import {DI_CONTAINER_NAME} from "./constant.js";
 import {needsImportPreservationLogic} from "../util/ts-util.js";
+import type {TS} from "../type/type.js";
 
 /**
  * Shim the @wessberg/di module
@@ -15,7 +16,7 @@ const EVALUATE_MODULE_OVERRIDES = {
 	}
 };
 
-export function getBaseVisitorContext({typescript = TSModule, ...rest}: DiOptions = {}): BaseVisitorContext {
+export function getBaseVisitorContext({typescript = TSModule as typeof TS, ...rest}: DiOptions = {}): BaseVisitorContext {
 	// Prepare a VisitorContext
 	const visitorContextShared = {
 		sourceFileToAddTslibDefinition: new Map(),

@@ -1,10 +1,9 @@
-import test from "ava";
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
-import {withTypeScript} from "./util/ts-macro.js";
 import {includeEmitHelper} from "./util/include-emit-helper.js";
+import {test} from "./util/test-runner.js";
 
-test("Preserves Type-only imports. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves Type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -65,7 +64,7 @@ test("Preserves Type-only imports. #1", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -122,7 +121,7 @@ test("Preserves type-only imports. #2", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #3", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -179,7 +178,7 @@ test("Preserves type-only imports. #3", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #4", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -237,7 +236,7 @@ test("Preserves type-only imports. #4", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #5", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -294,7 +293,7 @@ test("Preserves type-only imports. #5", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #6", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -351,7 +350,7 @@ test("Preserves type-only imports. #6", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports. #7", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #7", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -412,7 +411,7 @@ test("Preserves type-only imports. #7", withTypeScript, (t, {typescript, useProg
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop and importHelpers. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports with esModuleInterop and importHelpers. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -471,7 +470,7 @@ test("Preserves type-only imports with esModuleInterop and importHelpers. #1", w
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports with esModuleInterop. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -531,7 +530,7 @@ test("Preserves type-only imports with esModuleInterop. #1", withTypeScript, (t,
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports with esModuleInterop. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -594,7 +593,7 @@ test("Preserves type-only imports with esModuleInterop. #2", withTypeScript, (t,
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #3", withTypeScript, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports with esModuleInterop. #3", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{

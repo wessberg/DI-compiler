@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import urlModule from "url";
 import {transform} from "../transformer/transform.js";
 import {ALLOWED_EXTENSIONS, resolveOptions} from "./shared.js";
+import type { TS } from "../type/type.js";
 
 interface LoadContext {
 	format: string;
@@ -19,7 +20,7 @@ interface LoadResult {
 type NextLoad = (url: string, context: LoadContext) => Promise<LoadResult>;
 type Load = (url: string, context: LoadContext, nextLoad: NextLoad) => Promise<LoadResult>;
 
-const transformOptions = resolveOptions(typescript);
+const transformOptions = resolveOptions(typescript as typeof TS);
 
 export const load: Load = async (url, context, nextLoad) => {
 	if (ALLOWED_EXTENSIONS.has(path.extname(url))) {
@@ -29,7 +30,7 @@ export const load: Load = async (url, context, nextLoad) => {
 		if (rawSource != null) {
 			const {code: source} = transform(rawSource.toString(), fileName, {
 				...transformOptions,
-				typescript
+				typescript: typescript as typeof TS
 			});
 
 			return {

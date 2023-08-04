@@ -1,10 +1,9 @@
-import test from "ava";
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
-import {withTypeScript} from "./util/ts-macro.js";
 import semver from "semver";
+import { test } from "./util/test-runner.js";
 
-test("Can parse constructor parameters and extend with an internal static class member. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Can parse constructor parameters and extend with an internal static class member. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -34,7 +33,7 @@ test("Can parse constructor parameters and extend with an internal static class 
 	);
 });
 
-test("Can parse constructor parameters and extend with an internal static class member. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Can parse constructor parameters and extend with an internal static class member. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -65,7 +64,7 @@ test("Can parse constructor parameters and extend with an internal static class 
 	);
 });
 
-test("When declaring service dependencies via constructor arguments, their type arguments should be irrelevant. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("When declaring service dependencies via constructor arguments, their type arguments should be irrelevant. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{

@@ -1,8 +1,8 @@
 import {getTsconfig, parseTsconfig, type TsConfigResult, type TsConfigJsonResolved} from "get-tsconfig";
 import type {MaybeArray} from "helpertypes";
 import {FileCache} from "../transformer/cache.js";
-import type {TransformOptions, TransformResult} from "../transformer/transform-options";
-import type {TS} from "../type/type";
+import type {TransformOptions, TransformResult} from "../transformer/transform-options.js";
+import type {TS} from "../type/type.js";
 import {booleanize} from "../util/util.js";
 
 export const ENV_VARIABLE_TSCONFIG_PATH = "DI_COMPILER_TSCONFIG_PATH";

@@ -1,10 +1,9 @@
 import path from "crosspath";
-import test from "ava";
 import {generateTransformResult} from "./setup/setup-transform.js";
 import {formatCode} from "./util/format-code.js";
-import {withTypeScript} from "./util/ts-macro.js";
+import { test } from "./util/test-runner.js";
 
-test("The transform API goes from TypeScript to TypeScript. #1", withTypeScript, (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #1", "*", (t, {typescript}) => {
 	const {code} = generateTransformResult(
 		`import {DIContainer} from "@wessberg/di";
 		import Foo, {IFoo} from "./foo";
@@ -32,7 +31,7 @@ test("The transform API goes from TypeScript to TypeScript. #1", withTypeScript,
 	);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #2", withTypeScript, (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #2", "*", (t, {typescript}) => {
 	const {code, map, filename} = generateTransformResult(
 		`import {DIContainer} from "@wessberg/di";
 		import Foo, {IFoo} from "./foo";
@@ -63,7 +62,7 @@ test("The transform API goes from TypeScript to TypeScript. #2", withTypeScript,
 	t.true(map != null);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #3", withTypeScript, (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #3", "*", (t, {typescript}) => {
 	const {code} = generateTransformResult(
 		{
 			fileName: "file.ts",
@@ -96,7 +95,7 @@ test("The transform API goes from TypeScript to TypeScript. #3", withTypeScript,
 	);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #4", withTypeScript, (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #4", "*", (t, {typescript}) => {
 	const {code, map, filename} = generateTransformResult(
 		{
 			fileName: `C:/foo/bar/baz.ts`,

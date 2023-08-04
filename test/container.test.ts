@@ -1,10 +1,9 @@
-import test from "ava";
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
-import {withTypeScript} from "./util/ts-macro.js";
 import semver from "semver";
+import { test } from "./util/test-runner.js";
 
-test("Only considers containers that are instances of DIContainer. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Only considers containers that are instances of DIContainer. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -43,7 +42,7 @@ test("Only considers containers that are instances of DIContainer. #1", withType
 	);
 });
 
-test("Supports ElementAccessExpressions. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -74,7 +73,7 @@ test("Supports ElementAccessExpressions. #1", withTypeScript, (t, {typescript, u
 	);
 });
 
-test("Supports ElementAccessExpressions when an identifier is passed. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions when an identifier is passed. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -105,7 +104,7 @@ test("Supports ElementAccessExpressions when an identifier is passed. #1", withT
 	);
 });
 
-test("Supports ElementAccessExpressions. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -138,7 +137,7 @@ test("Supports ElementAccessExpressions. #2", withTypeScript, (t, {typescript, u
 	);
 });
 
-test("Supports ElementAccessExpressions when an identifier is passed. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions when an identifier is passed. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -171,7 +170,7 @@ test("Supports ElementAccessExpressions when an identifier is passed. #2", withT
 	);
 });
 
-test("Supports PropertyAccessExpressions. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -205,7 +204,7 @@ test("Supports PropertyAccessExpressions. #1", withTypeScript, (t, {typescript, 
 	);
 });
 
-test("Supports PropertyAccessExpressions when an identifier is passed. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions when an identifier is passed. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -239,7 +238,7 @@ test("Supports PropertyAccessExpressions when an identifier is passed. #1", with
 	);
 });
 
-test("Supports PropertyAccessExpressions. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -273,7 +272,7 @@ test("Supports PropertyAccessExpressions. #2", withTypeScript, (t, {typescript, 
 	);
 });
 
-test("Won't include imports multiple times when the same implementation is registered multiple times. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Won't include imports multiple times when the same implementation is registered multiple times. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -313,7 +312,7 @@ test("Won't include imports multiple times when the same implementation is regis
 	);
 });
 
-test("Supports custom implementation functions. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -345,7 +344,7 @@ test("Supports custom implementation functions. #1", withTypeScript, (t, {typesc
 	);
 });
 
-test("Supports custom implementation functions. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -384,7 +383,7 @@ test("Supports custom implementation functions. #2", withTypeScript, (t, {typesc
 	);
 });
 
-test("Supports custom implementation functions. #3", withTypeScript, (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #3", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -423,7 +422,7 @@ test("Supports custom implementation functions. #3", withTypeScript, (t, {typesc
 	);
 });
 
-test("When registering a service, the implementation type argument is treated as an optional argument. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the implementation type argument is treated as an optional argument. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -455,7 +454,7 @@ test("When registering a service, the implementation type argument is treated as
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -488,7 +487,7 @@ test("When registering a service, the type arguments should be irrelevant. #1", 
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #2", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #2", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -521,7 +520,7 @@ test("When registering a service, the type arguments should be irrelevant. #2", 
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #3", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #3", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -558,7 +557,7 @@ test("When registering a service, the type arguments should be irrelevant. #3", 
 	);
 });
 
-test("When registering a service, the type argument can be a PropertyAccessTypeNode. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the type argument can be a PropertyAccessTypeNode. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -586,7 +585,7 @@ test("When registering a service, the type argument can be a PropertyAccessTypeN
 	);
 });
 
-test("When registering a service, the type argument can be a TypeQueryNode. #1", withTypeScript, (t, {typescript, useProgram}) => {
+test("When registering a service, the type argument can be a TypeQueryNode. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{

@@ -3,7 +3,6 @@
 	"include": ["src/**/*.*", "register/**/*.*", "test/**/*.*", "loader.cjs"],
 	"compilerOptions": {
 		"target": "es2019",
-		"importHelpers": false,
-		"moduleResolution": "node"
+		"importHelpers": false
 	}
 }

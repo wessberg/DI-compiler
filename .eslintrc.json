@@ -7,6 +7,7 @@
   "extends": "./node_modules/@wessberg/ts-config/.eslintrc.json",
   "plugins": ["deprecation"],
   "rules": {
-		"deprecation/deprecation": ["error"]
+		"deprecation/deprecation": ["error"],
+    "@typescript-eslint/no-unnecessary-type-assertion": "off"
 	}
 }

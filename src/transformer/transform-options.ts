@@ -1,5 +1,5 @@
-import type {TS} from "../type/type";
-import type {DiOptions} from "./di-options";
+import type {TS} from "../type/type.js";
+import type {DiOptions} from "./di-options.js";
 
 export interface TransformResult {
 	code: string;
