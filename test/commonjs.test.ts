@@ -1,7 +1,7 @@
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
 import {includeEmitHelper} from "./util/include-emit-helper.js";
-import { test } from "./util/test-runner.js";
+import {test} from "./util/test-runner.js";
 
 test("Preserves Type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(

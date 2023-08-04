@@ -4,7 +4,7 @@ import fs from "fs/promises";
 import urlModule from "url";
 import {transform} from "../transformer/transform.js";
 import {ALLOWED_EXTENSIONS, resolveOptions} from "./shared.js";
-import type { TS } from "../type/type.js";
+import type {TS} from "../type/type.js";
 
 interface LoadContext {
 	format: string;

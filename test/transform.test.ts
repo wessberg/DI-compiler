@@ -1,7 +1,7 @@
 import path from "crosspath";
 import {generateTransformResult} from "./setup/setup-transform.js";
 import {formatCode} from "./util/format-code.js";
-import { test } from "./util/test-runner.js";
+import {test} from "./util/test-runner.js";
 
 test("The transform API goes from TypeScript to TypeScript. #1", "*", (t, {typescript}) => {
 	const {code} = generateTransformResult(

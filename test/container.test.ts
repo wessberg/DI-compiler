@@ -1,7 +1,7 @@
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
 import semver from "semver";
-import { test } from "./util/test-runner.js";
+import {test} from "./util/test-runner.js";
 
 test("Only considers containers that are instances of DIContainer. #1", "*", (t, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
