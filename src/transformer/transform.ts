@@ -40,7 +40,7 @@ export function transform(source: string, filenameOrOptions: string | TransformO
 	const transformationContext = typescript.nullTransformationContext;
 	const visitorContext = {...baseVisitorContext, transformationContext, factory};
 
-	const sourceFile = typescript.createSourceFile(filename, source, typescript.ScriptTarget.ESNext, true, typescript.ScriptKind.TS);
+	const sourceFile = typescript.createSourceFile(filename, source, typescript.ScriptTarget.ESNext, true);
 	const transformedSourceFile = transformSourceFile(sourceFile, visitorContext);
 
 	let result: TransformResult;
