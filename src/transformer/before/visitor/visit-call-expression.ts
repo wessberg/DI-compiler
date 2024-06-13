@@ -1,4 +1,3 @@
-import {DI_CONTAINER_NAME} from "../../constant.js";
 import type {TS} from "../../../type/type.js";
 import type {BeforeVisitorOptions} from "../before-visitor-options.js";
 import type {DiMethodName} from "../../di-method-kind.js";
@@ -6,6 +5,7 @@ import type {VisitorContext} from "../../visitor-context.js";
 import {getImportDefaultHelper, getImportStarHelper, moduleKindDefinesDependencies, moduleKindSupportsImportHelpers} from "../../../util/ts-util.js";
 import {pickServiceOrImplementationName} from "../util.js";
 import {ensureArray} from "../../../util/util.js";
+import { isDiClassName } from '../../../loader/shared.js';
 
 export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpression>): TS.VisitResult<TS.Node> {
 	const {node, childContinuation, continuation, context, addTslibDefinition, requireImportedSymbol} = options;
@@ -283,7 +283,7 @@ function isDiContainerInstance(node: TS.PropertyAccessExpression | TS.ElementAcc
 		// Don't proceed unless the left-hand expression is the DIServiceContainer
 		const type = context.typeChecker.getTypeAtLocation(node.expression);
 
-		if (type == null || type.symbol == null || type.symbol.escapedName !== DI_CONTAINER_NAME) {
+		if (type == null || type.symbol == null || !isDiClassName(type.symbol.escapedName)) {
 			return false;
 		}
 	} else {
@@ -303,7 +303,7 @@ function isDiContainerInstance(node: TS.PropertyAccessExpression | TS.ElementAcc
 				!evaluationResult.success ||
 				evaluationResult.value == null ||
 				typeof evaluationResult.value !== "object" ||
-				evaluationResult.value.constructor?.name !== DI_CONTAINER_NAME
+				!isDiClassName(evaluationResult.value.constructor?.name)
 			) {
 				return false;
 			}

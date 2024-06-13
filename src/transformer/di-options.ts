@@ -15,6 +15,11 @@ export interface DiIsolatedModulesOptions extends DiOptionsBase {
 	 * Providing one or more identifiers up front can be considered an optimization, as this step can be skipped that way
 	 */
 	identifier?: MaybeArray<string>;
+	/*
+	 * Additional class name(s) that should be considered as the implementation class DIContainer. Required when inheriting
+	 * from DIContainer to add functionality to have the transofmrer recognize the class as a DIContainer.
+	 */
+	diClassName?: MaybeArray<string>;
 	compilerOptions?: TS.CompilerOptions;
 }
 

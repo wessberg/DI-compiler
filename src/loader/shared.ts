@@ -4,10 +4,13 @@ import {FileCache} from "../transformer/cache.js";
 import type {TransformOptions, TransformResult} from "../transformer/transform-options.js";
 import type {TS} from "../type/type.js";
 import {booleanize} from "../util/util.js";
+import { DI_CONTAINER_NAME } from '../transformer/constant.js';
 
 export const ENV_VARIABLE_TSCONFIG_PATH = "DI_COMPILER_TSCONFIG_PATH";
 export const ENV_VARIABLE_IDENTIFIER = "DI_COMPILER_IDENTIFIER";
 export const ENV_VARIABLE_DISABLE_CACHE = "DI_COMPILER_DISABLE_CACHE";
+export const ENV_VARIABLE_CLASS_NAME = "DI_COMPILER_CLASS_NAME";
+
 // Only these formats have type information that can be transpiled with DICompiler
 export const ALLOWED_EXTENSIONS = new Set([".ts", ".mts", ".cts"]);
 
@@ -18,6 +21,11 @@ interface DiTsconfigOptions {
 	 * Providing one or more identifiers up front can be considered an optimization, as this step can be skipped that way
 	 */
 	identifier?: MaybeArray<string>;
+	/*
+	 * Additional class name(s) that should be considered as the implementation class DIContainer. Required when inheriting
+	 * from DIContainer to add functionality to have the transformer recognize the class as a DIContainer.
+	 */
+	diClassName?: MaybeArray<string>;
 	disableCache: boolean;
 }
 
@@ -25,6 +33,8 @@ interface ExtendedTsconfig {
 	di?: Partial<DiTsconfigOptions>;
 	compilerOptions: TS.CompilerOptions;
 }
+
+let diClassName: MaybeArray<string> | undefined;
 
 export function resolveOptions(typescript: typeof TS): Partial<TransformOptions> {
 	const tsconfig = upgradeTsconfig(
@@ -46,6 +56,15 @@ export function resolveOptions(typescript: typeof TS): Partial<TransformOptions>
 		identifier = identifier[0];
 	}
 
+	diClassName =
+		process.env[ENV_VARIABLE_CLASS_NAME]?.split(",")
+			.map(item => item.trim())
+			.filter(item => item.length > 0) ?? tsconfig.di?.diClassName;
+
+	if (Array.isArray(diClassName) && diClassName.length === 1) {
+		diClassName = diClassName[0];
+	}
+
 	const disableCache = process.env[ENV_VARIABLE_DISABLE_CACHE] == null ? tsconfig.di?.disableCache ?? false : booleanize(process.env[ENV_VARIABLE_DISABLE_CACHE]);
 
 	return {
@@ -55,6 +74,13 @@ export function resolveOptions(typescript: typeof TS): Partial<TransformOptions>
 		cache: disableCache ? new Map<string, TransformResult>() : new FileCache<TransformResult>(),
 		printer: typescript.createPrinter()
 	};
+}
+
+export function isDiClassName(name: string | TS.__String): boolean {
+	if (name === DI_CONTAINER_NAME) {
+		return true;
+	}
+	return diClassName == null ? false : Array.isArray(diClassName) ? diClassName.includes(<string> name) : diClassName === name;
 }
 
 function upgradeTsconfig(typescript: typeof TS, input?: TsConfigResult | TsConfigJsonResolved): ExtendedTsconfig {

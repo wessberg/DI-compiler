@@ -45,7 +45,8 @@ export function getBaseVisitorContext({typescript = TSModule as typeof TS, ...re
 	} else {
 		const compilerOptions = rest.compilerOptions ?? typescript.getDefaultCompilerOptions();
 		return {
-			identifier: [],
+			identifier: rest.identifier ?? [],
+			diClassName: rest.diClassName ?? [],
 
 			...rest,
 			...visitorContextShared,
