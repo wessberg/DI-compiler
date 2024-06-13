@@ -5,7 +5,7 @@ interface DiOptionsBase {
 }
 
 export interface DiProgramOptions extends DiOptionsBase {
-	program: TS.Program;
+	program: TS.Program & DiIsolatedModulesOptions;
 }
 
 export interface DiIsolatedModulesOptions extends DiOptionsBase {
