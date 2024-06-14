@@ -272,11 +272,12 @@ be extremely fast.
 
 You can pass in a few options to DI-Compiler via command line options:
 
-| Environment Variable        | Description                                                                                                                 |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `DI_COMPILER_TSCONFIG_PATH` | The path to the `tsconfig.json` file to use                                                                                 |
-| `DI_COMPILER_IDENTIFIER`    | A comma-separated list of identifiers that should be considered instances of DIContainer when transforming the source files |
-| `DI_COMPILER_DISABLE_CACHE` | If set, no disk caching will be used.                                                                                       |
+| Environment Variable        | Description                                                                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `DI_COMPILER_TSCONFIG_PATH` | The path to the `tsconfig.json` file to use                                                                                   |
+| `DI_COMPILER_IDENTIFIER`    | A comma-separated list of identifiers that should be considered instances of `DIContainer` when transforming the source files |
+| `DI_COMPILER_CLASS_NAME`    | A comma-separated list of additional class names for `DIContainer`, for custom extensions that inherit the class.             |
+| `DI_COMPILER_DISABLE_CACHE` | If set, no disk caching will be used.                                                                                         |
 
 Alternatively, you can add a `di` property to your `tsconfig` where you can customize its behavior without setting environment variables:
 
@@ -285,6 +286,7 @@ Alternatively, you can add a `di` property to your `tsconfig` where you can cust
 {
 	"di": {
 		"identifier": "container",
+		"diClassName": ["CustomDIContainer", "AnotherDIContainer"],
 		"disableCache": false
 	},
 	"compilerOptions": {
