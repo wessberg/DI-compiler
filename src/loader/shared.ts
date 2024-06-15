@@ -27,6 +27,10 @@ interface ExtendedTsconfig {
 }
 
 export function resolveOptions(typescript: typeof TS): Partial<TransformOptions> {
+	// check if a custom path is in use for the tsconfig.json file
+	const tsconfigFlagIndex = typescript.sys.args.findIndex(arg => arg === "-p" || arg === "--project");
+	const tsconfigFile = tsconfigFlagIndex !== -1 ? typescript.sys.args[tsconfigFlagIndex + 1] : undefined;
+
 	const tsconfig = upgradeTsconfig(
 		typescript,
 		process.env[ENV_VARIABLE_TSCONFIG_PATH] != null
@@ -34,7 +38,7 @@ export function resolveOptions(typescript: typeof TS): Partial<TransformOptions>
 					path: process.env[ENV_VARIABLE_TSCONFIG_PATH],
 					config: parseTsconfig(process.env[ENV_VARIABLE_TSCONFIG_PATH])
 			  }
-			: getTsconfig() ?? undefined
+			: getTsconfig(tsconfigFile) ?? undefined
 	);
 
 	let identifier =
