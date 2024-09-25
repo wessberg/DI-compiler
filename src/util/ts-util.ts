@@ -33,7 +33,9 @@ export function needsImportPreservationLogic(
 	const compilerOptions = arguments.length >= 2 ? compilerOptionsOrUndefined! : (typescriptOrContext as Pick<BaseVisitorContext, "compilerOptions" | "typescript">).compilerOptions;
 
 	// If value imports shouldn't always be preserved, we'll have to perform import preservation logic
-	if (!Boolean(compilerOptions.preserveValueImports)) return true;
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
+	const preserveValueImports = Boolean(compilerOptions.preserveValueImports) || Boolean(compilerOptions.verbatimModuleSyntax);
+	if (!Boolean(preserveValueImports)) return true;
 
 	// Only TypeScript v4.5 and newer supports the `preserValueImports` Compiler option
 	if (parseFloat(typescript.version) < 4.5) return true;
@@ -110,7 +112,7 @@ export function getRootBlockInsertionPosition(rootBlock: RootBlock, typescript: 
 	let insertPosition = 0;
 
 	for (let i = 0; i < rootBlock.statements.length; i++) {
-		const statement = rootBlock.statements[i];
+		const statement = rootBlock.statements[i]!;
 
 		const isUseStrict = typescript.isExpressionStatement(statement) && typescript.isStringLiteralLike(statement.expression) && statement.expression.text === "use strict";
 
@@ -123,9 +125,9 @@ export function getRootBlockInsertionPosition(rootBlock: RootBlock, typescript: 
 			statement.expression.expression.expression.text === "Object" &&
 			statement.expression.expression.name.text === "defineProperty" &&
 			statement.expression.arguments.length >= 2 &&
-			typescript.isIdentifier(statement.expression.arguments[0]) &&
+			typescript.isIdentifier(statement.expression.arguments[0]!) &&
 			statement.expression.arguments[0].text === "exports" &&
-			typescript.isStringLiteralLike(statement.expression.arguments[1]) &&
+			typescript.isStringLiteralLike(statement.expression.arguments[1]!) &&
 			statement.expression.arguments[1].text === "__esModule";
 
 		if (isUseStrict || isEsModuleSymbol) {
@@ -157,7 +159,7 @@ export function getDefineArrayLiteralExpression(sourceFile: TS.SourceFile, conte
 					statement.expression.expression.expression.parameters.length === 1
 				) {
 					const [firstParameter] = statement.expression.expression.expression.parameters;
-					if (typescript.isIdentifier(firstParameter.name)) {
+					if (firstParameter != null && typescript.isIdentifier(firstParameter.name)) {
 						if (firstParameter.name.text === "factory") {
 							for (const subStatement of statement.expression.expression.expression.body.statements) {
 								if (
@@ -175,7 +177,7 @@ export function getDefineArrayLiteralExpression(sourceFile: TS.SourceFile, conte
 											subSubStatement.expression.expression.text === "define"
 										) {
 											const [firstSubSubStatementExpressionArgument] = subSubStatement.expression.arguments;
-											if (typescript.isArrayLiteralExpression(firstSubSubStatementExpressionArgument)) {
+											if (firstSubSubStatementExpressionArgument != null && typescript.isArrayLiteralExpression(firstSubSubStatementExpressionArgument)) {
 												return firstSubSubStatementExpressionArgument;
 											}
 										}
@@ -199,10 +201,12 @@ export function getDefineArrayLiteralExpression(sourceFile: TS.SourceFile, conte
 					statement.expression.arguments.length === 2
 				) {
 					const [firstArgument, secondArgument] = statement.expression.arguments;
-					if (typescript.isArrayLiteralExpression(firstArgument)) {
+					if (firstArgument != null && secondArgument != null && typescript.isArrayLiteralExpression(firstArgument)) {
 						if (typescript.isFunctionExpression(secondArgument) && secondArgument.parameters.length >= 2) {
 							const [firstParameter, secondParameter] = secondArgument.parameters;
 							if (
+								firstParameter != null &&
+								secondParameter != null &&
 								typescript.isIdentifier(firstParameter.name) &&
 								typescript.isIdentifier(secondParameter.name) &&
 								firstParameter.name.text === "require" &&
@@ -230,9 +234,11 @@ export function getRootBlock(sourceFile: TS.SourceFile, context: VisitorContext)
 			for (const statement of sourceFile.statements) {
 				if (typescript.isExpressionStatement(statement) && typescript.isCallExpression(statement.expression) && statement.expression.arguments.length === 1) {
 					const [firstArgument] = statement.expression.arguments;
-					if (typescript.isFunctionExpression(firstArgument) && firstArgument.parameters.length === 2) {
+					if (firstArgument != null && typescript.isFunctionExpression(firstArgument) && firstArgument.parameters.length === 2) {
 						const [firstParameter, secondParameter] = firstArgument.parameters;
 						if (
+							firstParameter != null &&
+							secondParameter != null &&
 							typescript.isIdentifier(firstParameter.name) &&
 							typescript.isIdentifier(secondParameter.name) &&
 							firstParameter.name.text === "require" &&
@@ -258,9 +264,11 @@ export function getRootBlock(sourceFile: TS.SourceFile, context: VisitorContext)
 					statement.expression.arguments.length === 2
 				) {
 					const [, secondArgument] = statement.expression.arguments;
-					if (typescript.isFunctionExpression(secondArgument) && secondArgument.parameters.length >= 2) {
+					if (secondArgument != null && typescript.isFunctionExpression(secondArgument) && secondArgument.parameters.length >= 2) {
 						const [firstParameter, secondParameter] = secondArgument.parameters;
 						if (
+							firstParameter != null &&
+							secondParameter != null &&
 							typescript.isIdentifier(firstParameter.name) &&
 							typescript.isIdentifier(secondParameter.name) &&
 							firstParameter.name.text === "require" &&
@@ -372,11 +380,11 @@ export function generateImportStatementForImportedSymbolInContext(importedSymbol
 											importedSymbol.propertyName === importedSymbol.name ? undefined : factory.createIdentifier(importedSymbol.propertyName),
 											factory.createIdentifier(importedSymbol.name)
 										)
-								  ])
-					  )
+									])
+						)
 					: "isNamespaceImport" in importedSymbol
-					? factory.createImportClause(false, undefined, factory.createNamespaceImport(factory.createIdentifier(importedSymbol.name)))
-					: undefined,
+						? factory.createImportClause(false, undefined, factory.createNamespaceImport(factory.createIdentifier(importedSymbol.name)))
+						: undefined,
 				factory.createStringLiteral(importedSymbol.moduleSpecifier)
 			);
 		}
@@ -391,7 +399,7 @@ export function generateImportStatementForImportedSymbolInContext(importedSymbol
 			// We'll need to use a helper, '__importDefault', and wrap the require call with it
 			if (
 				compilerOptions.esModuleInterop === true &&
-				(("isDefaultImport" in importedSymbol && importedSymbol.isDefaultImport) || (!("isDefaultImport" in importedSymbol) && importedSymbol.isNamespaceImport))
+				(("isDefaultImport" in importedSymbol && importedSymbol.isDefaultImport) || (!("isDefaultImport" in importedSymbol) && Boolean(importedSymbol.isNamespaceImport)))
 			) {
 				// If tslib is being used, we can do something like 'require("tslib").__import{Default|Star}(<requireCall>)'
 				if (compilerOptions.importHelpers === true) {

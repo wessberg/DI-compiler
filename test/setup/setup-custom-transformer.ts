@@ -84,7 +84,7 @@ export function generateCustomTransformerResult(
 						text: file,
 						fileName: `auto-generated-${Math.floor(Math.random() * 100000)}.ts`,
 						entry: true
-				  }
+					}
 				: file
 		)
 		.map(file => ({
@@ -146,7 +146,8 @@ export function generateCustomTransformerResult(
 		sourceMap: false,
 		outDir: path.join(cwd, VIRTUAL_DIST),
 		rootDir: path.normalize(cwd),
-		moduleResolution: typescript.ModuleResolutionKind.NodeJs,
+		// eslint-disable-next-line @typescript-eslint/no-deprecated, @typescript-eslint/naming-convention
+		moduleResolution: (typescript.ModuleResolutionKind as {NodeNext?: TS.ModuleResolutionKind}).NodeNext ?? typescript.ModuleResolutionKind.NodeJs,
 		...inputCompilerOptions
 	};
 
@@ -173,7 +174,7 @@ export function generateCustomTransformerResult(
 			},
 
 			getDirectories(directoryName: string) {
-				return typescript.sys.getDirectories(directoryName).map(path.native.normalize);
+				return typescript.sys.getDirectories(directoryName).map(name => path.native.normalize(name));
 			},
 
 			getDefaultLibFileName(options: TS.CompilerOptions): string {
@@ -202,8 +203,8 @@ export function generateCustomTransformerResult(
 		"identifier" in rest && rest.identifier != null
 			? di({typescript, compilerOptions, identifier: rest.identifier})
 			: Boolean(rest.useProgram)
-			? di({typescript, program})
-			: di({typescript, compilerOptions});
+				? di({typescript, program})
+				: di({typescript, compilerOptions});
 
 	program.emit(
 		undefined,

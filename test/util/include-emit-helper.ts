@@ -6,9 +6,9 @@ export function includeEmitHelper(typescript: typeof TS, helperName: "__importSt
 
 	let str = "";
 	for (const dependency of helper.dependencies ?? []) {
-		str += dependency.text;
+		str += dependency.text as string;
 	}
-	str += helper.text;
+	str += helper.text as string;
 	if (str.startsWith("\n")) {
 		return str.slice(1);
 	} else {

@@ -2,8 +2,9 @@ import path from "crosspath";
 import {generateTransformResult} from "./setup/setup-transform.js";
 import {formatCode} from "./util/format-code.js";
 import {test} from "./util/test-runner.js";
+import assert from "node:assert";
 
-test("The transform API goes from TypeScript to TypeScript. #1", "*", (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #1", "*", (_, {typescript}) => {
 	const {code} = generateTransformResult(
 		`import {DIContainer} from "@wessberg/di";
 		import Foo, {IFoo} from "./foo";
@@ -18,7 +19,7 @@ test("The transform API goes from TypeScript to TypeScript. #1", "*", (t, {types
 		}
 	);
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(code),
 		formatCode(`\
 		import { DIContainer } from "@wessberg/di";
@@ -31,7 +32,7 @@ test("The transform API goes from TypeScript to TypeScript. #1", "*", (t, {types
 	);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #2", "*", (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #2", "*", (_, {typescript}) => {
 	const {code, map, filename} = generateTransformResult(
 		`import {DIContainer} from "@wessberg/di";
 		import Foo, {IFoo} from "./foo";
@@ -46,7 +47,7 @@ test("The transform API goes from TypeScript to TypeScript. #2", "*", (t, {types
 		}
 	);
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(code),
 		formatCode(`\
 		import { DIContainer } from "@wessberg/di";
@@ -59,10 +60,10 @@ test("The transform API goes from TypeScript to TypeScript. #2", "*", (t, {types
 		//# sourceMappingURL=${filename}.map`)
 	);
 
-	t.true(map != null);
+	assert(map != null);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #3", "*", (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #3", "*", (_, {typescript}) => {
 	const {code} = generateTransformResult(
 		{
 			fileName: "file.ts",
@@ -81,7 +82,7 @@ test("The transform API goes from TypeScript to TypeScript. #3", "*", (t, {types
 		}
 	);
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(code),
 		formatCode(`\
 		import { DIContainer } from "@wessberg/di";
@@ -95,7 +96,7 @@ test("The transform API goes from TypeScript to TypeScript. #3", "*", (t, {types
 	);
 });
 
-test("The transform API goes from TypeScript to TypeScript. #4", "*", (t, {typescript}) => {
+test("The transform API goes from TypeScript to TypeScript. #4", "*", (_, {typescript}) => {
 	const {code, map, filename} = generateTransformResult(
 		{
 			fileName: `C:/foo/bar/baz.ts`,
@@ -113,7 +114,7 @@ test("The transform API goes from TypeScript to TypeScript. #4", "*", (t, {types
 		}
 	);
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(code),
 		formatCode(`\
 		import { DIContainer } from "@wessberg/di";
@@ -126,24 +127,26 @@ test("The transform API goes from TypeScript to TypeScript. #4", "*", (t, {types
 		//# sourceMappingURL=${path.basename(filename)}.map`)
 	);
 
-	t.true(map != null);
+	assert(map != null);
 });
 
-test("The transform API allows JSX code. #1", "*", (t, {typescript}) => {
-	const {code } = generateTransformResult({
-		fileName: "file.tsx",
-		text: `import {IFoo} from "./foo";
+test("The transform API allows JSX code. #1", "*", (_, {typescript}) => {
+	const {code} = generateTransformResult(
+		{
+			fileName: "file.tsx",
+			text: `import {IFoo} from "./foo";
 		
 		const foo = container.get<IFoo>();
 
-		return <div id="wrapper">{foo.name}</div>;`},
+		return <div id="wrapper">{foo.name}</div>;`
+		},
 		{
 			typescript,
-			identifier: 'container'
+			identifier: "container"
 		}
 	);
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(code),
 		formatCode(`\
 		import { IFoo } from "./foo";
@@ -152,19 +155,21 @@ test("The transform API allows JSX code. #1", "*", (t, {typescript}) => {
 	);
 });
 
-test("The transform API allows JSX code. #2", "*", (t, {typescript}) => {
-	const {code} =  generateTransformResult({
+test("The transform API allows JSX code. #2", "*", (_, {typescript}) => {
+	const {code} = generateTransformResult(
+		{
 			fileName: "file.ts",
 			text: `import {IFoo} from "./foo";
 
 		const foo = container.get<IFoo>();
 
-		return <div id="wrapper">{foo.name}</div>;`},
+		return <div id="wrapper">{foo.name}</div>;`
+		},
 		{
 			typescript,
-			identifier: 'container'
+			identifier: "container"
 		}
 	);
 
-	t.throws(() => formatCode(code));
+	assert.throws(() => formatCode(code));
 });

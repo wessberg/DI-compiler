@@ -33,7 +33,7 @@ export class FileCache<T> extends Map<string, T> {
 		// Initialize the disk cache
 		fs.mkdirSync(this.cacheDirectory, {recursive: true});
 		this.cacheFiles = fs.readdirSync(this.cacheDirectory).map(fileName => {
-			const [time, key] = fileName.split("-");
+			const [time, key] = fileName.split("-") as [string, string];
 			return {
 				time: Number(time),
 				key,

@@ -2,8 +2,9 @@ import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.
 import {formatCode} from "./util/format-code.js";
 import semver from "semver";
 import {test} from "./util/test-runner.js";
+import assert from "node:assert";
 
-test("Can parse constructor parameters and extend with an internal static class member. #1", "*", (t, {typescript, useProgram}) => {
+test("Can parse constructor parameters and extend with an internal static class member. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -20,8 +21,8 @@ test("Can parse constructor parameters and extend with an internal static class 
 		{typescript, useProgram}
 	);
 	const [file] = bundle;
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
 				constructor(foo) {
@@ -33,7 +34,7 @@ test("Can parse constructor parameters and extend with an internal static class 
 	);
 });
 
-test("Can parse constructor parameters and extend with an internal static class member. #2", "*", (t, {typescript, useProgram}) => {
+test("Can parse constructor parameters and extend with an internal static class member. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -50,8 +51,8 @@ test("Can parse constructor parameters and extend with an internal static class 
 		{typescript, useProgram}
 	);
 	const [file] = bundle;
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;\n\t\tbar;` : ""}
 				constructor(foo = {}, bar) {
@@ -64,7 +65,7 @@ test("Can parse constructor parameters and extend with an internal static class 
 	);
 });
 
-test("When declaring service dependencies via constructor arguments, their type arguments should be irrelevant. #1", "*", (t, {typescript, useProgram}) => {
+test("When declaring service dependencies via constructor arguments, their type arguments should be irrelevant. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -82,8 +83,8 @@ test("When declaring service dependencies via constructor arguments, their type 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
       class Foo {${semver.gte(typescript.version, "4.3.0") ? `\n\t\tfoo;` : ""}
           constructor(foo) {

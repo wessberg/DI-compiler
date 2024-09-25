@@ -1,8 +1,9 @@
 import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.js";
 import {formatCode} from "./util/format-code.js";
 import {test} from "./util/test-runner.js";
+import assert from "node:assert";
 
-test("Preserves type-only imports. #1", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -30,7 +31,7 @@ test("Preserves type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       import Foo from "./foo";
@@ -41,7 +42,7 @@ test("Preserves type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -69,7 +70,7 @@ test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       import {Foo} from "./foo";
@@ -80,7 +81,7 @@ test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #3", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -109,7 +110,7 @@ test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       import * as Foo from "./foo";
@@ -120,7 +121,7 @@ test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #4", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -148,7 +149,7 @@ test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       import {Bar as Foo} from "./foo";
@@ -159,7 +160,7 @@ test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #5", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -187,7 +188,7 @@ test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       import {default as Foo} from "./foo";
@@ -198,7 +199,7 @@ test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
+test("Preserves type-only imports. #6", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -228,7 +229,7 @@ test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       	import {Foo} from "./foo";
@@ -241,7 +242,7 @@ test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports when the 'preserveValueImports' CompilerOption is set. #1", `>-4.5`, (t, {typescript, useProgram}) => {
+test("Preserves type-only imports when the 'preserveValueImports' CompilerOption is set. #1", `>-4.5`, (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -277,7 +278,7 @@ test("Preserves type-only imports when the 'preserveValueImports' CompilerOption
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
 		import { DIContainer } from "@wessberg/di";
@@ -289,7 +290,7 @@ test("Preserves type-only imports when the 'preserveValueImports' CompilerOption
 	);
 });
 
-test("Won't lead to duplicate imports. #1", "*", (t, {typescript, useProgram}) => {
+test("Won't lead to duplicate imports. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -318,7 +319,7 @@ test("Won't lead to duplicate imports. #1", "*", (t, {typescript, useProgram}) =
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";

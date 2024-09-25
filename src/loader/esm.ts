@@ -7,7 +7,7 @@ import {ALLOWED_EXTENSIONS, resolveOptions} from "./shared.js";
 import type {TS} from "../type/type.js";
 
 interface LoadContext {
-	format: string;
+	format: string | undefined;
 	importAssertions: Record<string, string>;
 }
 
@@ -27,18 +27,16 @@ export const load: Load = async (url, context, nextLoad) => {
 		const fileName = urlModule.fileURLToPath(url);
 		const rawSource = await fs.readFile(fileName, "utf-8");
 
-		if (rawSource != null) {
-			const {code: source} = transform(rawSource.toString(), fileName, {
-				...transformOptions,
-				typescript: typescript as typeof TS
-			});
+		const {code: source} = transform(rawSource.toString(), fileName, {
+			...transformOptions,
+			typescript: typescript as typeof TS
+		});
 
-			return {
-				format: context.format ?? "module",
-				shortCircuit: true,
-				source
-			};
-		}
+		return {
+			format: context.format ?? "module",
+			shortCircuit: true,
+			source
+		};
 	}
 
 	// Defer to the next hook in the chain.

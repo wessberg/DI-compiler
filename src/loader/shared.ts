@@ -37,8 +37,8 @@ export function resolveOptions(typescript: typeof TS): Partial<TransformOptions>
 			? {
 					path: process.env[ENV_VARIABLE_TSCONFIG_PATH],
 					config: parseTsconfig(process.env[ENV_VARIABLE_TSCONFIG_PATH])
-			  }
-			: getTsconfig(tsconfigFile) ?? undefined
+				}
+			: (getTsconfig(tsconfigFile) ?? undefined)
 	);
 
 	let identifier =
@@ -50,12 +50,12 @@ export function resolveOptions(typescript: typeof TS): Partial<TransformOptions>
 		identifier = identifier[0];
 	}
 
-	const disableCache = process.env[ENV_VARIABLE_DISABLE_CACHE] == null ? tsconfig.di?.disableCache ?? false : booleanize(process.env[ENV_VARIABLE_DISABLE_CACHE]);
+	const disableCache = process.env[ENV_VARIABLE_DISABLE_CACHE] == null ? (tsconfig.di?.disableCache ?? false) : booleanize(process.env[ENV_VARIABLE_DISABLE_CACHE]);
 
 	return {
 		identifier,
 
-		compilerOptions: tsconfig?.compilerOptions,
+		compilerOptions: tsconfig.compilerOptions,
 		cache: disableCache ? new Map<string, TransformResult>() : new FileCache<TransformResult>(),
 		printer: typescript.createPrinter()
 	};

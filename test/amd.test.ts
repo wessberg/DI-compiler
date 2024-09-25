@@ -2,8 +2,9 @@ import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.
 import {formatCode} from "./util/format-code.js";
 import {includeEmitHelper} from "./util/include-emit-helper.js";
 import {test} from "./util/test-runner.js";
+import assert from "node:assert";
 
-test("Preserves Type-only imports. #1", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves Type-only imports. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -38,7 +39,7 @@ test("Preserves Type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
 			define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1, foo_1) {
@@ -53,7 +54,7 @@ test("Preserves Type-only imports. #1", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -87,7 +88,7 @@ test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1) {
@@ -101,7 +102,7 @@ test("Preserves type-only imports. #2", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #3", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -135,7 +136,7 @@ test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1) {
@@ -149,7 +150,7 @@ test("Preserves type-only imports. #3", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #4", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -184,7 +185,7 @@ test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1) {
@@ -198,7 +199,7 @@ test("Preserves type-only imports. #4", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #5", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -232,7 +233,7 @@ test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1) {
@@ -246,7 +247,7 @@ test("Preserves type-only imports. #5", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #6", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -280,7 +281,7 @@ test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1) {
@@ -294,7 +295,7 @@ test("Preserves type-only imports. #6", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports. #7", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports. #7", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -330,7 +331,7 @@ test("Preserves type-only imports. #7", "*", (t, {typescript, useProgram}) => {
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1, foo_1) {
@@ -345,7 +346,7 @@ test("Preserves type-only imports. #7", "*", (t, {typescript, useProgram}) => {
 	);
 });
 
-test("Preserves type-only imports when 'preserveValueImports' is true. #1", `>=4.5`, (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports when 'preserveValueImports' is true. #1", `>=4.5`, (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -382,7 +383,7 @@ test("Preserves type-only imports when 'preserveValueImports' is true. #1", `>=4
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo"], function (require, exports, di_1, foo_1) {
@@ -397,7 +398,7 @@ test("Preserves type-only imports when 'preserveValueImports' is true. #1", `>=4
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop and importHelpers. #1", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports with esModuleInterop and importHelpers. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -433,7 +434,7 @@ test("Preserves type-only imports with esModuleInterop and importHelpers. #1", "
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       define(["require", "exports", "@wessberg/di", "./foo", "tslib"], function (require, exports, di_1) {
@@ -447,7 +448,7 @@ test("Preserves type-only imports with esModuleInterop and importHelpers. #1", "
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #1", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports with esModuleInterop. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -482,7 +483,7 @@ test("Preserves type-only imports with esModuleInterop. #1", "*", (t, {typescrip
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       ${includeEmitHelper(typescript, "__importDefault")}
@@ -497,7 +498,7 @@ test("Preserves type-only imports with esModuleInterop. #1", "*", (t, {typescrip
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #2", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports with esModuleInterop. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -533,7 +534,7 @@ test("Preserves type-only imports with esModuleInterop. #2", "*", (t, {typescrip
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       ${includeEmitHelper(typescript, "__importDefault")}
@@ -550,7 +551,7 @@ test("Preserves type-only imports with esModuleInterop. #2", "*", (t, {typescrip
 	);
 });
 
-test("Preserves type-only imports with esModuleInterop. #3", "*", (t, {typescript, useProgram}) => {
+test("AMD => Preserves type-only imports with esModuleInterop. #3", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -586,7 +587,7 @@ test("Preserves type-only imports with esModuleInterop. #3", "*", (t, {typescrip
 
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
       ${includeEmitHelper(typescript, "__importStar")}

@@ -7,7 +7,7 @@ import {ensureNodeFactory} from "compatfactory";
 
 export function beforeTransformer(context: BaseVisitorContext): TS.TransformerFactory<TS.SourceFile> {
 	return transformationContext => {
-		const factory = ensureNodeFactory(transformationContext.factory ?? context.typescript);
+		const factory = ensureNodeFactory((transformationContext as {factory?: TS.NodeFactory}).factory ?? context.typescript);
 
 		return sourceFile =>
 			transformSourceFile(sourceFile, {
@@ -35,7 +35,7 @@ export function transformSourceFile(sourceFile: TS.SourceFile, context: VisitorC
 
 	const computeImportedSymbolFlag = (symbol: ImportedSymbol): string =>
 		["name", "propertyName", "moduleSpecifier", "isNamespaceImport", "isDefaultImport"]
-			.map(property => `${property}:${symbol[property as keyof ImportedSymbol] ?? false}`)
+			.map(property => `${property}:${(symbol[property as keyof ImportedSymbol] as (typeof symbol)[keyof ImportedSymbol] | undefined) ?? false}`)
 			.join("|");
 
 	const visitorOptions: Omit<BeforeVisitorOptions<TS.Node>, "node" | "sourceFile"> = {

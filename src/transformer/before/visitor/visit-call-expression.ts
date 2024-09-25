@@ -18,7 +18,7 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 			case "get":
 			case "has": {
 				// If no type arguments are given, don't modify the node at all
-				if (node.typeArguments == null || node.typeArguments[0] == null) {
+				if (node.typeArguments?.[0] == null) {
 					return childContinuation(node);
 				}
 
@@ -34,7 +34,7 @@ export function visitCallExpression(options: BeforeVisitorOptions<TS.CallExpress
 			case "registerSingleton":
 			case "registerTransient": {
 				const [typeArg, secondTypeArg] = (node.typeArguments ?? []) as unknown as [TS.TypeNode | undefined, TS.TypeNode | TS.Expression | undefined];
-				const [firstArgument] = node.arguments ?? [];
+				const [firstArgument] = (node as {arguments?: TS.NodeArray<TS.Expression>}).arguments ?? [];
 
 				// The user may explicitly pass 'undefined' as a value here, which shouldn't count as a custom implementation
 				const customImplementation = firstArgument == null || (typescript.isIdentifier(firstArgument) && firstArgument.text === "undefined") ? undefined : firstArgument;
@@ -283,11 +283,13 @@ function isDiContainerInstance(node: TS.PropertyAccessExpression | TS.ElementAcc
 		// Don't proceed unless the left-hand expression is the DIServiceContainer
 		const type = context.typeChecker.getTypeAtLocation(node.expression);
 
-		if (type == null || type.symbol == null || type.symbol.escapedName !== DI_CONTAINER_NAME) {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison, @typescript-eslint/no-unnecessary-condition
+		if (type?.symbol == null || type.symbol.escapedName !== DI_CONTAINER_NAME) {
 			return false;
 		}
 	} else {
 		// If one or more variable names were passed in, check those directly
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (context.identifier != null && context.identifier.length > 0) {
 			// Pick the left-hand side of the expression here
 			const name = (node.expression.getFirstToken()?.getText() ?? node.expression.getText()).trim();
@@ -303,6 +305,7 @@ function isDiContainerInstance(node: TS.PropertyAccessExpression | TS.ElementAcc
 				!evaluationResult.success ||
 				evaluationResult.value == null ||
 				typeof evaluationResult.value !== "object" ||
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 				evaluationResult.value.constructor?.name !== DI_CONTAINER_NAME
 			) {
 				return false;

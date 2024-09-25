@@ -1,4 +1,3 @@
-/* eslint-disable deprecation/deprecation */
 import type {TS} from "../../type/type.js";
 import type {VisitorContext} from "../visitor-context.js";
 
@@ -21,8 +20,8 @@ export function pickServiceOrImplementationName(node: TS.Expression | TS.TypeNod
 export function getModifierLikes(node: TS.Node): readonly TS.ModifierLike[] | undefined {
 	const modifiers = "modifiers" in node && Array.isArray(node.modifiers) ? node.modifiers : [];
 	if ("decorators" in node && Array.isArray(node.decorators)) {
-		return [...node.decorators, ...modifiers];
+		return [...(node as {decorators: TS.Decorator[]}).decorators, ...(modifiers as TS.Modifier[])];
 	} else {
-		return modifiers;
+		return modifiers as TS.ModifierLike[];
 	}
 }

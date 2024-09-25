@@ -25,7 +25,7 @@ export function booleanize(str: string | boolean | undefined): boolean {
 }
 
 export function isTrueLike(str: Nullable<string | boolean>): boolean {
-	if (typeof str === "boolean") return str === true;
+	if (typeof str === "boolean") return str;
 	if (str == null) return false;
 
 	switch (str.toLowerCase().trim()) {
@@ -41,7 +41,7 @@ export function isTrueLike(str: Nullable<string | boolean>): boolean {
 }
 
 export function isFalseLike(str: Nullable<string | boolean>): boolean {
-	if (typeof str === "boolean") return str === false;
+	if (typeof str === "boolean") return !str;
 	if (str == null) return true;
 
 	switch (str.toLowerCase().trim()) {

@@ -12,6 +12,7 @@ import type {TS} from "../type/type.js";
  */
 const EVALUATE_MODULE_OVERRIDES = {
 	"@wessberg/di": {
+		// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 		[DI_CONTAINER_NAME]: class {}
 	}
 };

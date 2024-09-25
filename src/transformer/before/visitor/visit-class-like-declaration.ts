@@ -42,7 +42,7 @@ function getParameterTypeNamesAsArrayLiteral(parameters: TS.NodeArray<TS.Paramet
 	const constructorParams: TS.Expression[] = [];
 
 	for (let i = 0; i < parameters.length; i++) {
-		const parameter = parameters[i];
+		const parameter = parameters[i]!;
 		// If the parameter has no type, there's nothing to extract
 		if (parameter.type == null) {
 			constructorParams[i] = factory.createIdentifier("undefined");

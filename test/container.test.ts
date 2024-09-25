@@ -2,8 +2,9 @@ import {generateCustomTransformerResult} from "./setup/setup-custom-transformer.
 import {formatCode} from "./util/format-code.js";
 import semver from "semver";
 import {test} from "./util/test-runner.js";
+import assert from "node:assert";
 
-test("Only considers containers that are instances of DIContainer. #1", "*", (t, {typescript, useProgram}) => {
+test("Only considers containers that are instances of DIContainer. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -26,8 +27,8 @@ test("Only considers containers that are instances of DIContainer. #1", "*", (t,
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			class Foo {}
 			class MyContainer {
@@ -42,7 +43,7 @@ test("Only considers containers that are instances of DIContainer. #1", "*", (t,
 	);
 });
 
-test("Supports ElementAccessExpressions. #1", "*", (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -61,8 +62,8 @@ test("Supports ElementAccessExpressions. #1", "*", (t, {typescript, useProgram})
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -73,7 +74,7 @@ test("Supports ElementAccessExpressions. #1", "*", (t, {typescript, useProgram})
 	);
 });
 
-test("Supports ElementAccessExpressions when an identifier is passed. #1", "*", (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions when an identifier is passed. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -92,8 +93,8 @@ test("Supports ElementAccessExpressions when an identifier is passed. #1", "*", 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -104,7 +105,7 @@ test("Supports ElementAccessExpressions when an identifier is passed. #1", "*", 
 	);
 });
 
-test("Supports ElementAccessExpressions. #2", "*", (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -124,8 +125,8 @@ test("Supports ElementAccessExpressions. #2", "*", (t, {typescript, useProgram})
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -137,7 +138,7 @@ test("Supports ElementAccessExpressions. #2", "*", (t, {typescript, useProgram})
 	);
 });
 
-test("Supports ElementAccessExpressions when an identifier is passed. #2", "*", (t, {typescript, useProgram}) => {
+test("Supports ElementAccessExpressions when an identifier is passed. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -157,8 +158,8 @@ test("Supports ElementAccessExpressions when an identifier is passed. #2", "*", 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -170,7 +171,7 @@ test("Supports ElementAccessExpressions when an identifier is passed. #2", "*", 
 	);
 });
 
-test("Supports PropertyAccessExpressions. #1", "*", (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -192,8 +193,8 @@ test("Supports PropertyAccessExpressions. #1", "*", (t, {typescript, useProgram}
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -204,7 +205,7 @@ test("Supports PropertyAccessExpressions. #1", "*", (t, {typescript, useProgram}
 	);
 });
 
-test("Supports PropertyAccessExpressions when an identifier is passed. #1", "*", (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions when an identifier is passed. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -226,8 +227,8 @@ test("Supports PropertyAccessExpressions when an identifier is passed. #1", "*",
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -238,7 +239,7 @@ test("Supports PropertyAccessExpressions when an identifier is passed. #1", "*",
 	);
 });
 
-test("Supports PropertyAccessExpressions. #2", "*", (t, {typescript, useProgram}) => {
+test("Supports PropertyAccessExpressions. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -260,8 +261,8 @@ test("Supports PropertyAccessExpressions. #2", "*", (t, {typescript, useProgram}
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -272,7 +273,7 @@ test("Supports PropertyAccessExpressions. #2", "*", (t, {typescript, useProgram}
 	);
 });
 
-test("Won't include imports multiple times when the same implementation is registered multiple times. #1", "*", (t, {typescript, useProgram}) => {
+test("Won't include imports multiple times when the same implementation is registered multiple times. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -300,7 +301,7 @@ test("Won't include imports multiple times when the same implementation is regis
 	);
 	const file = bundle.find(({fileName}) => fileName.includes("index.js"))!;
 
-	t.deepEqual(
+	assert.deepEqual(
 		formatCode(file.text),
 		formatCode(`\
 			import { Foo } from "./foo";
@@ -312,7 +313,7 @@ test("Won't include imports multiple times when the same implementation is regis
 	);
 });
 
-test("Supports custom implementation functions. #1", "*", (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -334,8 +335,8 @@ test("Supports custom implementation functions. #1", "*", (t, {typescript, usePr
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			const container = new DIContainer();
@@ -344,7 +345,7 @@ test("Supports custom implementation functions. #1", "*", (t, {typescript, usePr
 	);
 });
 
-test("Supports custom implementation functions. #2", "*", (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -370,8 +371,8 @@ test("Supports custom implementation functions. #2", "*", (t, {typescript, usePr
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			function foo(options) {
@@ -383,7 +384,7 @@ test("Supports custom implementation functions. #2", "*", (t, {typescript, usePr
 	);
 });
 
-test("Supports custom implementation functions. #3", "*", (t, {typescript, useProgram}) => {
+test("Supports custom implementation functions. #3", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -409,8 +410,8 @@ test("Supports custom implementation functions. #3", "*", (t, {typescript, usePr
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			function foo(options) {
@@ -422,7 +423,7 @@ test("Supports custom implementation functions. #3", "*", (t, {typescript, usePr
 	);
 });
 
-test("When registering a service, the implementation type argument is treated as an optional argument. #1", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the implementation type argument is treated as an optional argument. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -442,8 +443,8 @@ test("When registering a service, the implementation type argument is treated as
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -454,7 +455,7 @@ test("When registering a service, the implementation type argument is treated as
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #1", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -475,8 +476,8 @@ test("When registering a service, the type arguments should be irrelevant. #1", 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -487,7 +488,7 @@ test("When registering a service, the type arguments should be irrelevant. #1", 
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #2", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #2", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -508,8 +509,8 @@ test("When registering a service, the type arguments should be irrelevant. #2", 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
 			class Foo {
@@ -520,7 +521,7 @@ test("When registering a service, the type arguments should be irrelevant. #2", 
 	);
 });
 
-test("When registering a service, the type arguments should be irrelevant. #3", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the type arguments should be irrelevant. #3", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -545,8 +546,8 @@ test("When registering a service, the type arguments should be irrelevant. #3", 
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
       class Foo {${semver.gte(typescript.version, "4.3.0") ? "\n\t\tbar" : ""}
@@ -557,7 +558,7 @@ test("When registering a service, the type arguments should be irrelevant. #3", 
 	);
 });
 
-test("When registering a service, the type argument can be a PropertyAccessTypeNode. #1", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the type argument can be a PropertyAccessTypeNode. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -575,8 +576,8 @@ test("When registering a service, the type argument can be a PropertyAccessTypeN
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();
@@ -585,7 +586,7 @@ test("When registering a service, the type argument can be a PropertyAccessTypeN
 	);
 });
 
-test("When registering a service, the type argument can be a TypeQueryNode. #1", "*", (t, {typescript, useProgram}) => {
+test("When registering a service, the type argument can be a TypeQueryNode. #1", "*", (_, {typescript, useProgram}) => {
 	const bundle = generateCustomTransformerResult(
 		[
 			{
@@ -603,8 +604,8 @@ test("When registering a service, the type argument can be a TypeQueryNode. #1",
 	);
 	const [file] = bundle;
 
-	t.deepEqual(
-		formatCode(file.text),
+	assert.deepEqual(
+		formatCode(file!.text),
 		formatCode(`\
 			import { DIContainer } from "@wessberg/di";
       const container = new DIContainer();

@@ -39,17 +39,21 @@ export function generateTransformResult(
 					text: file,
 					fileName: `auto-generated-${Math.floor(Math.random() * 100000)}.ts`,
 					entry: true
-			  }
+				}
 			: file
 	);
 
 	const [entryFile] = files;
+	if (entryFile == null) {
+		throw new ReferenceError("No entry file provided");
+	}
 
 	const compilerOptions: TS.CompilerOptions = {
 		module: typescript.ModuleKind.ESNext,
 		target: typescript.ScriptTarget.ESNext,
 		sourceMap: false,
-		moduleResolution: typescript.ModuleResolutionKind.NodeJs,
+		// eslint-disable-next-line @typescript-eslint/no-deprecated, @typescript-eslint/naming-convention
+		moduleResolution: (typescript.ModuleResolutionKind as {NodeNext?: TS.ModuleResolutionKind}).NodeNext ?? typescript.ModuleResolutionKind.NodeJs,
 		...inputCompilerOptions
 	};
 

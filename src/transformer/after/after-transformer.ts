@@ -13,7 +13,7 @@ type SourceFileWithEmitNodes = TS.SourceFile & {
 
 export function afterTransformer(context: BaseVisitorContext): TS.TransformerFactory<TS.SourceFile> {
 	return transformationContext => {
-		const factory = ensureNodeFactory(transformationContext.factory ?? context.typescript);
+		const factory = ensureNodeFactory((transformationContext as {factory?: TS.NodeFactory}).factory ?? context.typescript);
 
 		return sourceFile =>
 			transformSourceFile(sourceFile, {
@@ -28,7 +28,7 @@ function transformSourceFile(sourceFile: SourceFileWithEmitNodes, context: Visit
 	// For TypeScript versions below 3.5, there may be instances
 	// where EmitHelpers such as __importDefault or __importStar is duplicated.
 	// For these TypeScript versions, well have to guard against this behavior
-	if (sourceFile.emitNode != null && sourceFile.emitNode.helpers != null) {
+	if (sourceFile.emitNode?.helpers != null) {
 		const seenNames = new Set();
 		const filtered = sourceFile.emitNode.helpers.filter(helper => {
 			if (seenNames.has(helper.name)) return false;

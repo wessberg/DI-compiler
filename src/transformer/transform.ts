@@ -20,7 +20,8 @@ export function transform(source: string, filenameOrOptions: string | TransformO
 
 	// By preserving value imports, we can avoid the `after` transformer entirely,
 	// as well as adding/tracking imports,since nothing will be stripped away.
-	baseVisitorContext.compilerOptions.preserveValueImports = true;
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
+	baseVisitorContext.compilerOptions.verbatimModuleSyntax = baseVisitorContext.compilerOptions.preserveValueImports = true;
 
 	const {compilerOptions} = baseVisitorContext;
 	const typescript = baseVisitorContext.typescript as TSExtended;
@@ -71,6 +72,7 @@ export function transform(source: string, filenameOrOptions: string | TransformO
 
 		result = {
 			code: writer.getText(),
+			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			map: Boolean(compilerOptions.inlineSourceMap) ? undefined : sourceMapGenerator.toString()
 		};
 	} else {
@@ -90,19 +92,20 @@ function generateCacheKey(source: string, context: BaseVisitorContext, options: 
 	// No point in calculating a hash if there's no cache in use
 	if (options?.cache == null) return undefined;
 
-	const identifier = options != null && "identifier" in options ? options.identifier : undefined;
+	const identifier = "identifier" in options ? options.identifier : undefined;
 	let key = source;
 	if (identifier != null) {
 		key += ensureArray(identifier).join(",");
 	}
 
-	key += Boolean(context.compilerOptions.sourceMap);
+	key += String(Boolean(context.compilerOptions.sourceMap));
 	return sha1(key);
 }
 
 function getSourceMappingUrl(sourceMapGenerator: TSSourceMapGenerator, filePath: string, inline: boolean) {
 	if (inline) {
 		// Encode the sourceMap into the sourceMap url
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		const sourceMapText = sourceMapGenerator.toString();
 		const base64SourceMapText = Buffer.from(sourceMapText).toString("base64");
 		return "data:application/json;base64,".concat(base64SourceMapText);
