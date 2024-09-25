@@ -128,3 +128,43 @@ test("The transform API goes from TypeScript to TypeScript. #4", "*", (t, {types
 
 	t.true(map != null);
 });
+
+test("The transform API allows JSX code. #1", "*", (t, {typescript}) => {
+	const {code } = generateTransformResult({
+		fileName: "file.tsx",
+		text: `import {IFoo} from "./foo";
+		
+		const foo = container.get<IFoo>();
+
+		return <div id="wrapper">{foo.name}</div>;`},
+		{
+			typescript,
+			identifier: 'container'
+		}
+	);
+
+	t.deepEqual(
+		formatCode(code),
+		formatCode(`\
+		import { IFoo } from "./foo";
+		const foo = container.get<IFoo>({ identifier: "IFoo" });
+		return <div id="wrapper">{foo.name}</div>;`)
+	);
+});
+
+test("The transform API allows JSX code. #2", "*", (t, {typescript}) => {
+	const {code} =  generateTransformResult({
+			fileName: "file.ts",
+			text: `import {IFoo} from "./foo";
+
+		const foo = container.get<IFoo>();
+
+		return <div id="wrapper">{foo.name}</div>;`},
+		{
+			typescript,
+			identifier: 'container'
+		}
+	);
+
+	t.throws(() => formatCode(code));
+});
