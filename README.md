@@ -56,10 +56,6 @@ so that it works most efficiently.
 
 ## Backers
 
-| <a href="https://changelog.me"><img alt="Trent Raymond" src="https://avatars.githubusercontent.com/u/1509616?v=4" height="70"   /></a> | <a href="https://scrubtheweb.com/computers/programming/1"><img alt="scrubtheweb" src="https://avatars.githubusercontent.com/u/41668218?v=4" height="70"   /></a> |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Trent Raymond](https://changelog.me)                                                                                                  | [scrubtheweb](https://scrubtheweb.com/computers/programming/1)                                                                                                   |
-
 ### Patreon
 
 <a href="https://www.patreon.com/bePatron?u=11315442"><img alt="Patrons on Patreon" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dwessberg%26type%3Dpatrons"  width="200"  /></a>
@@ -89,14 +85,11 @@ so that it works most efficiently.
   - [Usage as a TypeScript Custom Transformer](#usage-as-a-typescript-custom-transformer)
   - [Usage with TypeScript's Compiler APIs](#usage-with-typescripts-compiler-apis)
   - [Usage with ts-nodes programmatic API](#usage-with-ts-nodes-programmatic-api)
-  - [Usage with ttypescript](#usage-with-ttypescript)
   - [Usage with Rollup](#usage-with-rollup)
-    - [Usage with rollup-plugin-ts](#usage-with-rollup-plugin-ts)
-    - [Usage with rollup-plugin-typescript2](#usage-with-rollup-plugin-typescript2)
+    - [Usage with @rollup/plugin-typescript](#usage-with-rollupplugin-typescript)
   - [Usage with Webpack](#usage-with-webpack)
     - [Usage with awesome-typescript-loader](#usage-with-awesome-typescript-loader)
     - [Usage with ts-loader](#usage-with-ts-loader)
-  - [Usage with ava](#usage-with-ava)
 - [Options](#options)
 - [Optimization](#optimization)
   - [Optimization 1: Activate `preserveValueImports` in your tsconfig CompilerOptions](#optimization-1-activate-preservevalueimports-in-your-tsconfig-compileroptions)
@@ -135,6 +128,8 @@ $ pnpm add @wessberg/di-compiler
 ### Peer Dependencies
 
 `@wessberg/di-compiler` depends on `typescript`, so you need to manually install this as well.
+
+You may also need to install `pirates` depending on the features you are going to use. Refer to the documentation for the specific cases where it may be relevant.
 
 <!-- SHADOW_SECTION_INSTALL_END -->
 
@@ -219,7 +214,7 @@ A very convenient way to use `DI-Compiler` is as a loader directly with Node.js.
 If your codebase is based on **native ESM**, and **if you use Node.js v.18.6.0 or newer**, pass it as a loader via the command line
 
 ```
-node --loader @wessberg/di-compiler/loader
+node --import @wessberg/di-compiler/loader
 ```
 
 This is not enough on its own to teach Node.js to understand TypeScript syntax, so you'll still need to couple it with a loader like [`ts-node`](https://github.com/TypeStrong/ts-node), [`tsx`](https://github.com/esbuild-kit/tsx) or [`esm-loader`](https://github.com/esbuild-kit/esm-loader).
@@ -227,19 +222,19 @@ This is not enough on its own to teach Node.js to understand TypeScript syntax, 
 For example, here's how to use it with the native ESM loader for [`ts-node`](https://github.com/TypeStrong/ts-node):
 
 ```
-node --loader @wessberg/di-compiler/loader --loader ts-node/esm
+node --import @wessberg/di-compiler/loader --import ts-node/esm
 ```
 
 And, here's how to use it with [`tsx`](https://github.com/esbuild-kit/tsx):
 
 ```
-node --loader @wessberg/di-compiler/loader --loader tsx
+node --import @wessberg/di-compiler/loader --import tsx
 ```
 
 Finally, here's how you can use it with [`esm-loader`](https://github.com/esbuild-kit/esm-loader):
 
 ```
-node --loader @wessberg/di-compiler/loader --loader @esbuild-kit/esm-loader
+node --import @wessberg/di-compiler/loader --import @esbuild-kit/esm-loader
 ```
 
 Alternatively, if you don't use ESM in your project, or if you're running an older version of Node.js, DI-Compiler can be used as a loader too.
@@ -250,14 +245,6 @@ node -r @wessberg/di-compiler/loader -r ts-node
 ```
 
 > In all of the above configurations, for both ESM and CommonJS loaders, there is no TypeScript _Program_ context, nor is there a Type checker, so `DI-Compiler` will attempt to determinate programmatically whether or not the identifiers across your files reference instances of `DIContainer` or not, by performing partial evaluation on compile time. Please see the [Optimization](#optimization) section for details on how this process can be optimized.
-
-A convenience loader is exposed that combines `ts-node` and DI-Compiler in a single loader for CommonJS projects, which also exposes a TypeScript Program to DI-Compiler, which is the most robust way to use it as a loader, at the expense of slower performance:
-
-```
-node -r @wessberg/di-compiler/ts-node-loader
-```
-
-> Note: You must install ts-node yourself for this configuration to work, as it is not listed as a dependency of DI-Compiler.
 
 ### Loader SourceMaps
 
@@ -303,7 +290,6 @@ A few examples of ways to use DI-Compiler as a Custom Transformer include:
 
 - [With TypeScript's Compiler APIs](#usage-with-typescripts-compiler-apis)
 - [With ts-nodes programmatic API](#usage-with-ts-nodes-programmatic-api)
-- [With ttypescript](#usage-with-ttypescript)
 - [With Rollup](#usage-with-rollup)
 
 ### Usage with TypeScript's Compiler APIs
@@ -336,42 +322,16 @@ require("ts-node").register({
 });
 ```
 
-### Usage with ttypescript
-
-To use DI-compiler with [`ttypescript`](https://github.com/cevek/ttypescript), create a file that wraps the invocation of `di`:
-
-```typescript:transformer.ts
-import type { Program } from 'typescript'
-import { di } from "@wessberg/di-compiler";
-
-const transformer = (program: Program) => di({ program })
-
-export default transformer
-```
-
-Then add a record to the `plugins` array of your `tsconfig.json` that maps a key named `transform` to the relative path to the file you just created:
-
-```json
-{
-	"compilerOptions": {
-		"plugins": [{"transform": "path/to/transformer.ts"}]
-	}
-}
-```
-
 ### Usage with Rollup
 
-There are a few TypeScript plugins for Rollup that support Custom Transformers, and DI-Compiler can be easily integrated with them:
+There are a few TypeScript plugins for Rollup that support Custom Transformers, and DI-Compiler can be easily integrated with them.
 
-- [Usage with rollup-plugin-ts](#usage-with-rollup-plugin-ts)
-- [Usage with rollup-plugin-typescript2](#usage-with-rollup-plugin-typescript2)
+#### Usage with @rollup/plugin-typescript
 
-#### Usage with rollup-plugin-ts
-
-To use DI-Compiler with [rollup-plugin-ts](https://github.com/wessberg/rollup-plugin-ts), all you have to do is pass it to the list of transformers given as a plugin option:
+Here's how you may integrate DI-Compiler with [@rollup/plugin-typescript](https://www.npmjs.com/package/@rollup/plugin-typescript):
 
 ```typescript
-import ts from "rollup-plugin-ts";
+import ts from "@rollup/plugin-typescript";
 import {di} from "@wessberg/di-compiler";
 
 export default {
@@ -381,28 +341,7 @@ export default {
 	],
 	plugins: [
 		ts({
-			transformers: [di]
-		})
-	]
-};
-```
-
-#### Usage with rollup-plugin-typescript2
-
-Here's how you may integrate DI-Compiler with [rollup-plugin-typescript2](https://github.com/ezolenko/rollup-plugin-typescript2):
-
-```typescript
-import ts from "rollup-plugin-typescript2";
-import {di} from "@wessberg/di-compiler";
-
-export default {
-	input: "...",
-	output: [
-		/* ... */
-	],
-	plugins: [
-		ts({
-			transformers: [service => di({program: service.getProgram()})]
+			transformers: program => di({program})
 		})
 	]
 };
@@ -464,47 +403,6 @@ const config = {
 	// ...
 };
 ```
-
-### Usage with ava
-
-You can also use DI-compiler with the [`ava`](https://github.com/avajs/ava) test runner by using DI-Compiler as a loader.
-See [this section](#usage-as-a-nodejs-loader) for more details on how to configure it.
-
-For a CommonJS project, you can use the `require` property in the `ava` configuration. For example:
-
-```js
-{
-	"ava": {
-		// Other options...
-		"extensions": ["ts"],
-		"require": [
-			"@wessberg/di-compiler/loader",
-			// For teaching Node.js about TypeScript specific syntax and extensions
-			"ts-node"
-		]
-	}
-}
-```
-
-Whereas for an ESM project, the syntax is a little different:
-
-```js
-{
-	"ava": {
-		// Other options...
-		"extensions": {
-			"ts": "module"
-		},
-		"nodeArguments": [
-			"--loader=@wessberg/di-compiler/loader",
-			// For teaching Node.js about TypeScript specific syntax and extensions.
-			"--loader=ts-node/esm"
-		]
-	}
-}
-```
-
-> Note, we use ts-node in this example, but we could have used other tools like tsx or esm-loader just as well.
 
 ## Options
 

@@ -20,7 +20,7 @@ function getNearestPackageJson(from = import.meta.url): Record<string, unknown> 
 }
 
 const pkg = getNearestPackageJson();
-// ava macros
+
 export interface ExecutionContextOptions {
 	typescript: typeof TS;
 	typescriptModuleSpecifier: string;

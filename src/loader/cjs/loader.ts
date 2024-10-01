@@ -1,8 +1,8 @@
 import typescript from "typescript";
-import {transform} from "../transformer/transform.js";
+import {transform} from "../../transformer/transform.js";
 import pirates from "pirates";
-import {ALLOWED_EXTENSIONS, resolveOptions} from "./shared.js";
-import type {TS} from "../type/type.js";
+import {ALLOWED_EXTENSIONS, resolveOptions} from "../shared.js";
+import type {TS} from "../../type/type.js";
 
 const transformOptions = resolveOptions(typescript as typeof TS);
 
