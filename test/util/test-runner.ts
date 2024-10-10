@@ -80,7 +80,6 @@ export function test(title: string, tsVersionGlob: string | undefined, impl: Ext
 			const fullTitle = `${title} (TypeScript v${nextCurrentOptions.typescriptVersion}) (Use Program: ${useProgram})`;
 
 			if (Boolean(runOptions?.only)) {
-				console.log(`only!`);
 				testModule(fullTitle, {only: true}, async t => impl(t, nextCurrentOptions));
 			} else {
 				testModule(fullTitle, async t => impl(t, nextCurrentOptions));
