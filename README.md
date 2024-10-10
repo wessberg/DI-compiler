@@ -95,7 +95,6 @@ so that it works most efficiently.
   - [Optimization 1: Activate `preserveValueImports` in your tsconfig CompilerOptions](#optimization-1-activate-preservevalueimports-in-your-tsconfig-compileroptions)
   - [Optimization 2: Pass in one or more identifiers to consider instances of DIContainer instead of relying on partial evaluation](#optimization-2-pass-in-one-or-more-identifiers-to-consider-instances-of-dicontainer-instead-of-relying-on-partial-evaluation)
 - [Contributing](#contributing)
-- [Maintainers](#maintainers)
 - [FAQ](#faq)
   - [DI-Compiler doesn't correctly update all my calls to the DIContainer methods](#di-compiler-doesnt-correctly-update-all-my-calls-to-the-dicontainer-methods)
   - [How does it work, exactly?](#how-does-it-work-exactly)
@@ -490,12 +489,6 @@ Do you want to contribute? Awesome! Please follow [these recommendations](./CONT
 
 <!-- SHADOW_SECTION_MAINTAINERS_START -->
 
-## Maintainers
-
-| <a href="mailto:frederikwessberg@hotmail.com"><img alt="Frederik Wessberg" src="https://avatars2.githubusercontent.com/u/20454213?s=460&v=4" height="70"   /></a>                                                                |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Frederik Wessberg](mailto:frederikwessberg@hotmail.com)<br><strong>Twitter</strong>: [@FredWessberg](https://twitter.com/FredWessberg)<br><strong>Github</strong>: [@wessberg](https://github.com/wessberg)<br>_Lead Developer_ |
-
 <!-- SHADOW_SECTION_MAINTAINERS_END -->
 
 <!-- SHADOW_SECTION_FAQ_START -->
@@ -543,6 +536,6 @@ container.registerSingleton(undefined, {
 
 ## License
 
-MIT © [Frederik Wessberg](mailto:frederikwessberg@hotmail.com) ([@FredWessberg](https://twitter.com/FredWessberg)) ([Website](https://github.com/wessberg))
+MIT ©
 
 <!-- SHADOW_SECTION_LICENSE_END -->

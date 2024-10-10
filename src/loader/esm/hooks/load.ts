@@ -15,7 +15,7 @@ export const load: LoadHook = async (url, context, nextLoad) => {
 	if (ALLOWED_EXTENSIONS.has(path.extname(filePath))) {
 		const rawSource = await fs.readFile(new URL(url), "utf-8");
 
-		const {code: source} = transform(rawSource.toString(), filePath, data);
+		const {code: source} = transform(rawSource.toString(), filePath, data?.transformOptions);
 		loaded.source = source;
 	}
 

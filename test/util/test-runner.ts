@@ -71,7 +71,7 @@ interface TestRunOptions {
 export function test(title: string, tsVersionGlob: string | undefined, impl: ExtendedImplementation, runOptions?: Partial<TestRunOptions>): void {
 	const allOptions =
 		tsVersionGlob == null || tsVersionGlob === "*"
-			? TS_OPTIONS_RECORDS.values()
+			? [...TS_OPTIONS_RECORDS.values()]
 			: [...TS_OPTIONS_RECORDS.entries()].filter(([version]) => semver.satisfies(version, tsVersionGlob, {includePrerelease: true})).map(([, options]) => options);
 
 	for (const useProgram of [true, false]) {
