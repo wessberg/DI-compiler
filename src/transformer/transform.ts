@@ -21,7 +21,7 @@ export function transform(source: string, filenameOrOptions: string | TransformO
 	// By preserving value imports, we can avoid the `after` transformer entirely,
 	// as well as adding/tracking imports,since nothing will be stripped away.
 	// eslint-disable-next-line @typescript-eslint/no-deprecated
-	baseVisitorContext.compilerOptions.verbatimModuleSyntax = baseVisitorContext.compilerOptions.preserveValueImports = true;
+	baseVisitorContext.compilerOptions.preserveValueImports = true;
 
 	const {compilerOptions} = baseVisitorContext;
 	const typescript = baseVisitorContext.typescript as TSExtended;

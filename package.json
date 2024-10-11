@@ -68,7 +68,7 @@
 		"pnpm": "^9.12.1",
 		"prettier": "^3.3.3",
 		"rimraf": "^6.0.1",
-		"sandhog": "^3.0.0",
+		"sandhog": "^3.0.1",
 		"semver": "^7.6.3",
 		"standard-changelog": "^6.0.0",
 		"tsup": "^8.3.0",

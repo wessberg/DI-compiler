@@ -78,8 +78,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       sandhog:
-        specifier: ^3.0.0
-        version: 3.0.0(@types/node@22.7.5)
+        specifier: ^3.0.1
+        version: 3.0.1(@types/node@22.7.5)
       semver:
         specifier: ^7.6.3
         version: 7.6.3
@@ -2350,8 +2350,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sandhog@3.0.0:
-    resolution: {integrity: sha512-Dt20mvwckIXktjAXrCIT+GYztShmH+Rzb+eoPubu4qK9DoTS6tTZPoGKGRw3LpgEmEjIQLkna4RLmGZ0VIHSwQ==}
+  sandhog@3.0.1:
+    resolution: {integrity: sha512-FQZPmrTlWQ+Vk5yGfN20InM5z31E+HURapQZE0dR2/kRfV1xMChUv4vSympudom31II5zM50L27aXIioiqGScw==}
     engines: {node: ">=18.20.0"}
     hasBin: true
 
@@ -5087,7 +5087,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sandhog@3.0.0(@types/node@22.7.5):
+  sandhog@3.0.1(@types/node@22.7.5):
     dependencies:
       "@inquirer/prompts": 7.0.0(@types/node@22.7.5)
       ansi-colors: 4.1.3
