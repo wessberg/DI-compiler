@@ -34,7 +34,7 @@ export function needsImportPreservationLogic(
 
 	// If value imports shouldn't always be preserved, we'll have to perform import preservation logic
 	// eslint-disable-next-line @typescript-eslint/no-deprecated
-	const preserveValueImports = Boolean(compilerOptions.preserveValueImports);
+	const preserveValueImports = !Boolean(compilerOptions.verbatimModuleSyntax) && Boolean(compilerOptions.preserveValueImports);
 	if (!Boolean(preserveValueImports)) return true;
 
 	// Only TypeScript v4.5 and newer supports the `preserValueImports` Compiler option
